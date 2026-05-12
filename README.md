@@ -1,2 +1,61 @@
-# kids_romanian
-Helping my kids practice romanian after their tutor lessons - purely vibe coded with claude
+# Romanian for Kids 🇷🇴
+
+A single-file web app for practicing Romanian vocabulary and sentences between tutor lessons.
+
+Built for my 9-year-old daughter — Hebrew interface, RTL, no build step. Open `index.html` in any modern browser.
+
+## Features
+
+- **5 practice modes** — flashcards, multiple-choice quiz, listening (text-to-speech), matching pairs, and a pronunciation guide
+- **200+ sentences** with word-by-word breakdowns, organized to repeat dictionary words across many contexts
+- **Speech synthesis** — words and sentences are read aloud using the browser's `ro-RO` voice
+- **Extensible dictionary** — add words and sentences from the UI, or bulk-upload a Markdown table / JSON file from the user tab
+- **Local persistence** — score, streak, and user-added vocabulary are saved to `localStorage`
+- **Export / import backup** — full state to JSON, restorable on another device
+
+## Run it locally
+
+Open the file directly:
+
+```sh
+open index.html
+```
+
+Or serve over HTTP if your browser blocks anything:
+
+```sh
+python3 -m http.server 8000
+# then visit http://localhost:8000
+```
+
+## Clone
+
+```sh
+git clone git@github.com:raficohen17/kids_romanian.git
+```
+
+Or with HTTPS:
+
+```sh
+git clone https://github.com/raficohen17/kids_romanian.git
+```
+
+## Adding more vocabulary
+
+Two paths:
+
+1. **One word at a time** — open the `📝 הוסיפי` tab and fill the form.
+2. **Bulk upload** — open the `👤 שלי` tab → Admin section → paste a Markdown table or JSON, preview, and merge.
+
+Markdown table format (categories are sticky — empty cell inherits the previous category):
+
+```markdown
+| קטגוריה | עברית | רומנית | הגייה | הערות |
+| :--- | :--- | :--- | :--- | :--- |
+| **חיות** | חתול | Pisică | פִּיסִיקָה | בנקבה |
+|         | סוס  | Cal    | קָאל     |       |
+```
+
+## Credit
+
+Vibe-coded with [Claude Code](https://claude.com/claude-code).

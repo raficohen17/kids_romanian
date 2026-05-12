@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>רומנית עם חיוך 🇷🇴</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Heebo", "Arial Hebrew", Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fce4ec 0%, #e3f2fd 50%, #fff9c4 100%);
+    color: #333;
+    direction: rtl;
+  }
+  body { padding: 16px; padding-bottom: 80px; }
+
+  header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  h1 { font-size: 2.2rem; color: #d81b60; }
+  h1 .flag { font-size: 1.8rem; }
+  .subtitle { color: #555; margin-top: 4px; font-size: 1.05rem; }
+
+  .panel {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    max-width: 720px;
+    margin: 0 auto 16px;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: linear-gradient(135deg, #f8bbd0, #ce93d8);
+    border-radius: 16px;
+    padding: 10px 16px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    min-width: 100px;
+  }
+  .stat .num { font-size: 1.6rem; display: block; }
+  .stat .lbl { font-size: 0.85rem; opacity: 0.95; }
+  .stat.streak { background: linear-gradient(135deg, #ff7043, #ffa726); }
+  .stat.score  { background: linear-gradient(135deg, #66bb6a, #26c6da); }
+  .stat.total  { background: linear-gradient(135deg, #5c6bc0, #42a5f5); }
+
+  /* mode tabs */
+  .modes {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .modes button {
+    background: white;
+    border: 3px solid #e0e0e0;
+    border-radius: 18px;
+    padding: 10px 18px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .modes button:hover { border-color: #ba68c8; transform: translateY(-2px); }
+  .modes button.active {
+    background: linear-gradient(135deg, #ba68c8, #7e57c2);
+    color: white;
+    border-color: transparent;
+  }
+
+  /* category filter */
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .chip {
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .chip.active {
+    background: #fff59d;
+    border-color: #fbc02d;
+    font-weight: bold;
+  }
+
+  /* flashcard */
+  .flashcard-area { text-align: center; }
+  .card {
+    background: linear-gradient(135deg, #fff, #f3e5f5);
+    border-radius: 28px;
+    padding: 40px 24px;
+    margin: 16px auto;
+    max-width: 480px;
+    min-height: 260px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(126, 87, 194, 0.18);
+    border: 4px solid #ce93d8;
+    transition: transform 0.25s;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .card:active { transform: scale(0.98); }
+  .card .emoji { font-size: 4rem; margin-bottom: 12px; }
+  .card .he { font-size: 2.4rem; font-weight: bold; color: #4527a0; }
+  .card .ro { font-size: 2.2rem; font-weight: bold; color: #c2185b; margin-bottom: 8px; }
+  .card .pron { font-size: 1.3rem; color: #555; margin-bottom: 12px; }
+  .card .note { font-size: 0.95rem; color: #888; font-style: italic; max-width: 380px; }
+  .card .hint { color: #999; margin-top: 14px; font-size: 0.9rem; }
+
+  .nav-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: linear-gradient(135deg, #42a5f5, #1e88e5);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 12px 22px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+    font-family: inherit;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
+  .btn.speak { background: linear-gradient(135deg, #66bb6a, #43a047); }
+  .btn.prev  { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
+  .btn.shuffle { background: linear-gradient(135deg, #ff7043, #f4511e); }
+
+  /* quiz */
+  .quiz-q {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4527a0;
+    margin: 12px 0 4px;
+  }
+  .quiz-q .emoji { font-size: 2.2rem; display: block; margin-bottom: 4px; }
+  .quiz-q .prompt { font-size: 1rem; color: #777; font-weight: normal; margin-top: 4px;}
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  @media (max-width: 480px) {
+    .options { grid-template-columns: 1fr; }
+  }
+  .opt {
+    background: white;
+    border: 3px solid #e1bee7;
+    border-radius: 18px;
+    padding: 16px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    font-family: inherit;
+    color: #4a148c;
+    transition: all 0.12s;
+  }
+  .opt:hover { background: #f3e5f5; transform: translateY(-2px); }
+  .opt.correct {
+    background: linear-gradient(135deg, #a5d6a7, #66bb6a);
+    color: white;
+    border-color: #2e7d32;
+    animation: pop 0.4s;
+  }
+  .opt.wrong {
+    background: linear-gradient(135deg, #ef9a9a, #e57373);
+    color: white;
+    border-color: #c62828;
+    animation: shake 0.4s;
+  }
+  .opt:disabled { cursor: default; }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .feedback {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    min-height: 1.6rem;
+  }
+  .feedback.good { color: #2e7d32; }
+  .feedback.bad  { color: #c62828; }
+
+  /* match game */
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .match-grid .opt {
+    font-size: 1.15rem;
+    padding: 14px 10px;
+    min-height: 56px;
+  }
+  .match-grid .opt.selected {
+    background: linear-gradient(135deg, #fff59d, #ffee58);
+    border-color: #fbc02d;
+  }
+  .match-grid .opt.matched {
+    background: linear-gradient(135deg, #c5e1a5, #aed581);
+    border-color: #689f38;
+    color: #33691e;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* pronunciation guide */
+  .guide {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+    background: #fff8e1;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-top: 8px;
+  }
+  .guide .letter {
+    font-weight: bold;
+    color: #c2185b;
+    font-size: 1.2rem;
+  }
+  .guide .desc { color: #555; }
+
+  /* confetti */
+  .confetti {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.8rem;
+    animation: fall 1.6s linear forwards;
+    z-index: 9999;
+  }
+  @keyframes fall {
+    to { transform: translateY(100vh) rotate(540deg); opacity: 0; }
+  }
+
+  .end-screen {
+    text-align: center;
+    padding: 24px;
+  }
+  .end-screen .big { font-size: 5rem; }
+  .end-screen h2 { color: #d81b60; margin: 12px 0; }
+
+  /* listen mode */
+  .listen-area {
+    text-align: center;
+  }
+  .listen-btn {
+    background: linear-gradient(135deg, #66bb6a, #43a047);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 140px;
+    height: 140px;
+    font-size: 4rem;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(67, 160, 71, 0.4);
+    margin: 20px auto;
+    display: block;
+    transition: transform 0.15s;
+  }
+  .listen-btn:hover { transform: scale(1.05); }
+  .listen-btn:active { transform: scale(0.95); }
+
+  /* sentences */
+  .sentence-card { padding: 28px 20px; }
+  .words-breakdown {
+    background: #fff8e1;
+    border-radius: 20px;
+    padding: 16px 18px;
+    margin-top: 18px;
+    text-align: right;
+  }
+  .words-breakdown h3 { color: #c2185b; margin-bottom: 6px; }
+  .word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .word-chip {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 14px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: right;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 180px;
+  }
+  .word-chip.known { border-color: #aed581; background: #f1f8e9; }
+  .word-chip.new   { border-color: #ffb74d; background: #fff3e0; }
+  .word-chip b { color: #c2185b; }
+  .word-pron { display:block; color: #777; font-size: 0.9rem; margin-top: 2px; }
+  .legend {
+    display:flex; gap:14px; justify-content:center; margin-top:12px;
+    font-size:0.9rem; color:#555;
+  }
+  .legend .dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-left:4px; vertical-align:middle; }
+  .legend .dot.known { background:#aed581; }
+  .legend .dot.new   { background:#ffb74d; }
+
+  /* manage */
+  .manage-tabs {
+    display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap;
+  }
+  .m-tab {
+    background:white; border:3px solid #e0e0e0; border-radius:14px;
+    padding:8px 16px; font-weight:bold; cursor:pointer; font-family:inherit; font-size:1rem;
+  }
+  .m-tab.active { background:linear-gradient(135deg,#ffb74d,#fb8c00); color:white; border-color:transparent; }
+  .m-heading { color:#4527a0; margin:18px 0 10px; }
+  .form-grid {
+    display:grid; grid-template-columns: 1fr 1fr; gap:10px;
+  }
+  @media (max-width:520px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-grid label {
+    display:flex; flex-direction:column; font-weight:bold; color:#555; font-size:0.95rem; gap:4px;
+  }
+  .form-grid input, .words-textarea {
+    border:2px solid #e0e0e0; border-radius:12px; padding:10px 12px; font-size:1.05rem;
+    font-family:inherit; outline:none; transition: border-color 0.15s;
+  }
+  .form-grid input:focus, .words-textarea:focus { border-color:#ba68c8; }
+  .words-textarea { width:100%; min-height:120px; margin-top:8px; resize:vertical; direction:ltr; }
+  .req { color:#e53935; }
+  .m-table {
+    width:100%; border-collapse:collapse; margin-top:8px; background:white; border-radius:12px; overflow:hidden;
+  }
+  .m-table th { background:#f3e5f5; color:#4a148c; padding:8px 6px; font-size:0.9rem; text-align:right; }
+  .m-table td { padding:8px 6px; border-bottom:1px solid #f0f0f0; font-size:0.95rem; }
+  .row-actions { display:flex; gap:4px; justify-content:flex-end; }
+  .mini {
+    background:white; border:2px solid #e0e0e0; border-radius:10px; padding:4px 8px;
+    cursor:pointer; font-size:0.95rem; font-family:inherit;
+  }
+  .mini:hover { border-color:#ba68c8; }
+  .mini.danger:hover { border-color:#e53935; background:#ffebee; }
+  .empty-note { color:#888; text-align:center; padding:16px; background:#fafafa; border-radius:12px; }
+  .io-row { display:flex; gap:8px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .builtin-list { margin-top:16px; background:#fafafa; border-radius:12px; padding:8px 14px; }
+  .builtin-list summary { cursor:pointer; font-weight:bold; color:#555; }
+  code { background:#f3e5f5; padding:2px 6px; border-radius:6px; font-size:0.9rem; }
+
+  /* user / admin tab */
+  .user-stats {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap:10px; margin-bottom:20px;
+  }
+  .ustat {
+    background: linear-gradient(135deg, #fce4ec, #e1bee7);
+    border-radius:16px; padding:14px 8px; text-align:center;
+    color:#4a148c; font-weight:bold;
+  }
+  .ustat .big { font-size:1.8rem; color:#d81b60; }
+
+  .admin-box {
+    background: #fafafa;
+    border: 2px dashed #ce93d8;
+    border-radius:18px; padding:14px 18px;
+  }
+  .admin-box > summary {
+    cursor:pointer; font-weight:bold; color:#6a1b9a; font-size:1.1rem;
+    padding:4px 0;
+  }
+  .admin-body { padding-top:8px; }
+  .ext-row { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
+  .ext-textarea {
+    width:100%; min-height:180px; padding:12px 14px; border-radius:14px;
+    border:2px solid #e0e0e0; font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size:0.95rem; outline:none; resize:vertical;
+  }
+  .ext-textarea:focus { border-color:#ba68c8; }
+  .preview-box {
+    background:#fff8e1; border-radius:16px; padding:14px 16px; margin-top:14px;
+    border:2px solid #ffd54f;
+  }
+  .preview-box h4 { color:#e65100; margin-bottom:6px; }
+
+  footer {
+    text-align: center;
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>רומנית עם חיוך <span class="flag">🇷🇴</span> 🌈</h1>
+  <p class="subtitle">תרגול בין שיעורים — בהצלחה! ✨</p>
+</header>
+
+<div class="panel">
+  <div class="stats">
+    <div class="stat score"><span class="num" id="score">0</span><span class="lbl">⭐ נקודות</span></div>
+    <div class="stat streak"><span class="num" id="streak">0</span><span class="lbl">🔥 ברצף</span></div>
+    <div class="stat total"><span class="num" id="seen">0</span><span class="lbl">📚 תרגלת</span></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="modes">
+    <button data-mode="flash" class="active">🎴 כרטיסיות</button>
+    <button data-mode="quiz">🎯 חידון</button>
+    <button data-mode="listen">🔊 הקשבה</button>
+    <button data-mode="match">🧩 התאמה</button>
+    <button data-mode="sentences">🗣️ משפטים</button>
+    <button data-mode="guide">📖 הגייה</button>
+    <button data-mode="manage">📝 הוסיפי</button>
+    <button data-mode="user">👤 שלי</button>
+  </div>
+
+  <div class="filter-row" id="filters"></div>
+
+  <div id="content"></div>
+</div>
+
+<footer>נבנה באהבה ❤️ • לחיצה על המילה ברומנית = שמיעת ההגייה</footer>
+
+<script>
+// ====== Vocabulary ======
+const VOCAB = [
+  // ברכות ונימוסים
+  { he: "שלום / היי",      ro: "Bună",          pron: "בּוּנָה",                 cat: "ברכות",  emoji: "👋", note: "המילה הכי שימושית ל\"שלום\" יומיומי" },
+  { he: "ביי ביי",          ro: "Pa pa",         pron: "פָּה פָּה",              cat: "ברכות",  emoji: "👋", note: "פרידה חברותית וקלילה" },
+  { he: "תודה",             ro: "Mulțumesc",     pron: "מוּל-צוּ-מֶסְק",          cat: "ברכות",  emoji: "🙏", note: "ה-ț נהגית כ-\"צ\"" },
+  { he: "טוב מאוד / יפה מאוד", ro: "Foarte bine", pron: "פֿוֹ-אָר-טֶה בִּי-נֶה", cat: "ברכות",  emoji: "👍", note: "תשובה מצוינת ל\"מה נשמע\"" },
+
+  // אנשים וזמן
+  { he: "שמי...",           ro: "Mă cheamă",     pron: "מָה קְיָא-מָה",          cat: "אנשים",  emoji: "🙋‍♀️", note: "che נהגה כ-\"ק\"" },
+  { he: "ילדים",            ro: "Copii",         pron: "קוֹ-פִּיי",              cat: "אנשים",  emoji: "🧒", note: "ה-\"יי\" בסוף ארוך וברור" },
+  { he: "אחים",             ro: "Frați",         pron: "פְרָאץ'",                cat: "אנשים",  emoji: "👫", note: "ה-i בסוף כמעט נעלמת ומרככת את ה-צ'" },
+  { he: "אתמול",            ro: "Ieri",          pron: "יֶר",                    cat: "אנשים",  emoji: "📅", note: "ה-i בהתחלה נשמעת כמו \"י\"" },
+
+  // צבעים
+  { he: "ירוק",             ro: "Verde",         pron: "וֶר-דֶה",                cat: "צבעים",  emoji: "🟢", note: "דומה לשפות לטיניות אחרות" },
+  { he: "צהוב",             ro: "Galben",        pron: "גָאל-בֶּן",              cat: "צבעים",  emoji: "🟡", note: "ה-n בסוף נשמעת בבירור" },
+  { he: "כחול",             ro: "Albastru",      pron: "אָל-בָּאס-טְרוּ",         cat: "צבעים",  emoji: "🔵", note: "שימי לב ל-u בסוף" },
+  { he: "לבן",              ro: "Alb",           pron: "אָלְבּ",                 cat: "צבעים",  emoji: "⚪", note: "קל לזכור דרך \"אלבינו\"" },
+  { he: "אפור",             ro: "Gri",           pron: "גְרִי",                  cat: "צבעים",  emoji: "⚫", note: "כמו Grey באנגלית" },
+
+  // מטבח ואוכל
+  { he: "מים",              ro: "Apă",           pron: "אָ-פָּה",                cat: "אוכל",   emoji: "💧", note: "מילה בנקבה" },
+  { he: "בננה",             ro: "Banană",        pron: "בָּ-נָא-נָה",            cat: "אוכל",   emoji: "🍌", note: "כמעט כמו בעברית, שימי לב ל-ă בסוף" },
+  { he: "תפוחים",           ro: "Mere",          pron: "מֶ-רֶה",                 cat: "אוכל",   emoji: "🍎", note: "צורת רבים (יחיד: Măr)" },
+  { he: "מזלג",             ro: "Furculiță",     pron: "פוּר-קוּ-לִי-צָה",        cat: "אוכל",   emoji: "🍴", note: "המילה כוללת את ה-ț (צ)" },
+  { he: "כפיות",            ro: "Linguri",       pron: "לִין-גוּר",              cat: "אוכל",   emoji: "🥄", note: "ה-i בסוף כמעט לא נשמעת" },
+  { he: "סכינים",           ro: "Cuțite",        pron: "קוּ-צִי-טֶה",            cat: "אוכל",   emoji: "🔪", note: "צורת רבים (יחיד: Cuțit)" },
+
+  // שונות
+  { he: "עט",               ro: "Pix",           pron: "פִּיקְס",                cat: "שונות",  emoji: "🖊️", note: "מילה קצרה ושימושית" },
+  { he: "משחק (אחד)",       ro: "Un joc",        pron: "אוּן ז'וֹק",             cat: "שונות",  emoji: "🎮", note: "ה-j נהגית תמיד כ-\"ז'\"" },
+  { he: "כלבים",            ro: "Câini",         pron: "קְאִינִי",               cat: "שונות",  emoji: "🐶", note: "ה-â הוא צליל גרוני עמוק" },
+  { he: "פרפרים",           ro: "Fluturi",       pron: "פְלוּ-טוּר",             cat: "שונות",  emoji: "🦋", note: "צורת רבים (יחיד: Fluture)" },
+  { he: "מלכותי",           ro: "Regal",         pron: "רֶ-גָאל",                cat: "שונות",  emoji: "👑", note: "דומה למילה האנגלית Regal" },
+  { he: "תן לי",            ro: "Dă-mi",         pron: "דָא-מִי",                cat: "שונות",  emoji: "🤲", note: "מורכב מהפועל \"תן\" והמילה \"לי\"" },
+];
+
+// ====== Sentences ======
+// Each sentence has a word-by-word breakdown. New words (not in VOCAB) become learning opportunities.
+const BUILTIN_SENTENCES = [
+  // === Bună ===
+  { he:"שלום, אמא!", ro:"Bună, mamă!", pron:"בּוּנָה, מאמא!", emoji:"👋", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"mamă",he:"אמא",pron:"מאמא"}]},
+  { he:"בוקר טוב!", ro:"Bună dimineața!", pron:"בּוּנָה דִימִינֶאצָה!", emoji:"🌅", theme:"ברכות", words:[{ro:"Bună",he:"טוב/שלום",pron:"בּוּנָה"},{ro:"dimineața",he:"בוקר",pron:"דִימִינֶאצָה"}]},
+  { he:"שלום ילדים!", ro:"Bună, copii!", pron:"בּוּנָה, קוֹפִּיי!", emoji:"👋", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"}]},
+  { he:"שלום, מה שלומך?", ro:"Bună, ce mai faci?", pron:"בּוּנָה, צֶ' מאי פאצ'?", emoji:"😊", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"ce",he:"מה",pron:"צֶ'"},{ro:"mai",he:"עוד",pron:"מאי"},{ro:"faci",he:"את עושה",pron:"פאצ'"}]},
+  { he:"ערב טוב!", ro:"Bună seara!", pron:"בּוּנָה סֶאארָה!", emoji:"🌆", theme:"ברכות", words:[{ro:"Bună",he:"טוב",pron:"בּוּנָה"},{ro:"seara",he:"ערב",pron:"סֶאארָה"}]},
+  { he:"שלום, אבא!", ro:"Bună, tată!", pron:"בּוּנָה, טאטא!", emoji:"👋", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"tată",he:"אבא",pron:"טאטא"}]},
+  { he:"שלום, מורה!", ro:"Bună, doamnă!", pron:"בּוּנָה, דוֹאמְנָה!", emoji:"👋", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"doamnă",he:"גברת/מורה",pron:"דוֹאמְנָה"}]},
+  { he:"שלום, איך את היום?", ro:"Bună, cum ești azi?", pron:"בּוּנָה, קוּם יֶשט אַזי?", emoji:"😀", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"cum",he:"איך",pron:"קוּם"},{ro:"ești",he:"את",pron:"יֶשט"},{ro:"azi",he:"היום",pron:"אַזי"}]},
+  // === Pa pa ===
+  { he:"ביי, חברים!", ro:"Pa pa, prieteni!", pron:"פָּה פָּה, פּרִיֶטֶני!", emoji:"👋", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"prieteni",he:"חברים",pron:"פּרִיֶטֶני"}]},
+  { he:"ביי, נתראה מחר!", ro:"Pa pa, ne vedem mâine!", pron:"פָּה פָּה, נֶה וֶדֶם מְאינֶה!", emoji:"👋", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"ne vedem",he:"נתראה",pron:"נֶה וֶדֶם"},{ro:"mâine",he:"מחר",pron:"מְאינֶה"}]},
+  { he:"ביי, אמא!", ro:"Pa pa, mama!", pron:"פָּה פָּה, מאמא!", emoji:"💋", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"mama",he:"אמא",pron:"מאמא"}]},
+  { he:"ביי, ילדים!", ro:"Pa pa, copii!", pron:"פָּה פָּה, קוֹפִּיי!", emoji:"👋", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"}]},
+  { he:"ביי, עד מחר!", ro:"Pa pa, pe mâine!", pron:"פָּה פָּה, פֶּה מְאינֶה!", emoji:"👋", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"pe mâine",he:"עד מחר",pron:"פֶּה מְאינֶה"}]},
+  { he:"ביי, חברה שלי!", ro:"Pa pa, prietena mea!", pron:"פָּה פָּה, פּרִיֶטֶנָה מֶאָה!", emoji:"💞", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"prietena",he:"חברה",pron:"פּרִיֶטֶנָה"},{ro:"mea",he:"שלי",pron:"מֶאָה"}]},
+  // === Mulțumesc ===
+  { he:"תודה, אמא!", ro:"Mulțumesc, mamă!", pron:"מוּל-צוּ-מֶסְק, מאמא!", emoji:"🙏", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"mamă",he:"אמא",pron:"מאמא"}]},
+  { he:"תודה רבה!", ro:"Mulțumesc mult!", pron:"מוּל-צוּ-מֶסְק מוּלְט!", emoji:"🙏", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"mult",he:"הרבה",pron:"מוּלְט"}]},
+  { he:"תודה על העזרה", ro:"Mulțumesc pentru ajutor", pron:"מוּל-צוּ-מֶסְק פֶּנְטרוּ אַז'וּטוֹר", emoji:"🤝", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"pentru",he:"בשביל/על",pron:"פֶּנְטרוּ"},{ro:"ajutor",he:"עזרה",pron:"אַז'וּטוֹר"}]},
+  { he:"תודה על הבננה", ro:"Mulțumesc pentru banană", pron:"מוּל-צוּ-מֶסְק פֶּנְטרוּ בָּנָנָה", emoji:"🍌", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"pentru",he:"על",pron:"פֶּנְטרוּ"},{ro:"banană",he:"בננה",pron:"בָּנָנָה"}]},
+  { he:"תגידי תודה", ro:"Spune mulțumesc", pron:"ספּוּנֶה מוּל-צוּ-מֶסְק", emoji:"🙏", theme:"נימוסים", words:[{ro:"Spune",he:"תגיד/י",pron:"ספּוּנֶה"},{ro:"mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"}]},
+  { he:"תודה, חבר", ro:"Mulțumesc, prietene", pron:"מוּל-צוּ-מֶסְק, פּרִיֶטֶנֶה", emoji:"👫", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"prietene",he:"חבר",pron:"פּרִיֶטֶנֶה"}]},
+  { he:"תודה יפה", ro:"Mulțumesc frumos", pron:"מוּל-צוּ-מֶסְק פרוּמוֹס", emoji:"🌷", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"frumos",he:"יפה",pron:"פרוּמוֹס"}]},
+  { he:"תודה על המתנה", ro:"Mulțumesc pentru cadou", pron:"מוּל-צוּ-מֶסְק פֶּנְטרוּ קָדוֹאוּ", emoji:"🎁", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"pentru",he:"על",pron:"פֶּנְטרוּ"},{ro:"cadou",he:"מתנה",pron:"קָדוֹאוּ"}]},
+  // === Foarte bine ===
+  { he:"אני טוב מאוד, תודה", ro:"Sunt foarte bine, mulțumesc", pron:"סוּנְט פֿוֹאַרְטֶה בִּינֶה, מוּל-צוּ-מֶסְק", emoji:"😊", theme:"תחושות", words:[{ro:"Sunt",he:"אני",pron:"סוּנְט"},{ro:"foarte bine",he:"טוב מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"},{ro:"mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"}]},
+  { he:"יפה מאוד, חבר!", ro:"Foarte bine, prietene!", pron:"פֿוֹאַרְטֶה בִּינֶה, פּרִיֶטֶנֶה!", emoji:"👏", theme:"עידוד", words:[{ro:"Foarte bine",he:"יפה מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"},{ro:"prietene",he:"חבר",pron:"פּרִיֶטֶנֶה"}]},
+  { he:"את שרה יפה מאוד", ro:"Cânți foarte bine", pron:"קְאנְץ' פֿוֹאַרְטֶה בִּינֶה", emoji:"🎤", theme:"עידוד", words:[{ro:"Cânți",he:"את שרה",pron:"קְאנְץ'"},{ro:"foarte bine",he:"יפה מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  { he:"את קוראת יפה מאוד", ro:"Citești foarte bine", pron:"צ'יטֶשטי פֿוֹאַרְטֶה בִּינֶה", emoji:"📖", theme:"עידוד", words:[{ro:"Citești",he:"את קוראת",pron:"צ'יטֶשטי"},{ro:"foarte bine",he:"יפה מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  { he:"את משחקת יפה מאוד", ro:"Joci foarte bine", pron:"ז'וֹצ' פֿוֹאַרְטֶה בִּינֶה", emoji:"🎮", theme:"עידוד", words:[{ro:"Joci",he:"את משחקת",pron:"ז'וֹצ'"},{ro:"foarte bine",he:"יפה מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  { he:"את מדברת יפה מאוד", ro:"Vorbești foarte bine", pron:"ווֹרְבֶּשטִי פֿוֹאַרְטֶה בִּינֶה", emoji:"💬", theme:"עידוד", words:[{ro:"Vorbești",he:"את מדברת",pron:"ווֹרְבֶּשטִי"},{ro:"foarte bine",he:"יפה מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  { he:"אני לומדת טוב מאוד", ro:"Învăț foarte bine", pron:"אִינְוָץ פֿוֹאַרְטֶה בִּינֶה", emoji:"📚", theme:"לימודים", words:[{ro:"Învăț",he:"אני לומדת",pron:"אִינְוָץ"},{ro:"foarte bine",he:"טוב מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  { he:"זה ילך טוב מאוד", ro:"Va merge foarte bine", pron:"וָה מֶרְג'ֶה פֿוֹאַרְטֶה בִּינֶה", emoji:"👍", theme:"עידוד", words:[{ro:"Va merge",he:"ילך",pron:"וָה מֶרְג'ֶה"},{ro:"foarte bine",he:"טוב מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  // === Mă cheamă ===
+  { he:"שמי מריה", ro:"Mă cheamă Maria", pron:"מָה קְיָאמָה מָריָה", emoji:"🙋‍♀️", theme:"על עצמי", words:[{ro:"Mă cheamă",he:"שמי",pron:"מָה קְיָאמָה"},{ro:"Maria",he:"מריה",pron:"מָריָה"}]},
+  { he:"איך קוראים לך?", ro:"Cum te cheamă?", pron:"קוּם טֶה קְיָאמָה?", emoji:"❓", theme:"פגישה", words:[{ro:"Cum",he:"איך",pron:"קוּם"},{ro:"te cheamă",he:"קוראים לך",pron:"טֶה קְיָאמָה"}]},
+  { he:"קוראים לה אנה", ro:"Pe ea o cheamă Ana", pron:"פֶּה יָה אוֹ קְיָאמָה אנא", emoji:"👧", theme:"אנשים", words:[{ro:"Pe ea",he:"אותה",pron:"פֶּה יָה"},{ro:"o cheamă",he:"קוראים לה",pron:"אוֹ קְיָאמָה"}]},
+  { he:"קוראים לו דוד", ro:"Pe el îl cheamă David", pron:"פֶּה יֶל אִיל קְיָאמָה דָוויד", emoji:"👦", theme:"אנשים", words:[{ro:"Pe el",he:"אותו",pron:"פֶּה יֶל"},{ro:"îl cheamă",he:"קוראים לו",pron:"אִיל קְיָאמָה"}]},
+  { he:"שמי דנה ויש לי שני אחים", ro:"Mă cheamă Dana și am doi frați", pron:"מָה קְיָאמָה דָנָה שי אם דוֹי פְרָאץ'", emoji:"👫", theme:"על עצמי", words:[{ro:"Mă cheamă",he:"שמי",pron:"מָה קְיָאמָה"},{ro:"și",he:"ו-",pron:"שי"},{ro:"am",he:"יש לי",pron:"אם"},{ro:"frați",he:"אחים",pron:"פְרָאץ'"}]},
+  { he:"לכלב שלי קוראים מקס", ro:"Pe câinele meu îl cheamă Max", pron:"פֶּה קְאינֶלֶה מֶאוּ אִיל קְיָאמָה מקס", emoji:"🐶", theme:"חיות", words:[{ro:"câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"îl cheamă",he:"קוראים לו",pron:"אִיל קְיָאמָה"}]},
+  { he:"שמי דנה ואני בת תשע", ro:"Mă cheamă Dana și am nouă ani", pron:"מָה קְיָאמָה דָנָה שי אם נוֹאָה אַני", emoji:"🎂", theme:"על עצמי", words:[{ro:"Mă cheamă",he:"שמי",pron:"מָה קְיָאמָה"},{ro:"am",he:"יש לי",pron:"אם"},{ro:"nouă",he:"תשע",pron:"נוֹאָה"},{ro:"ani",he:"שנים",pron:"אַני"}]},
+  // === Copii ===
+  { he:"הילדים משחקים", ro:"Copiii se joacă", pron:"קוֹפִּיי סֶה ז'וֹאקה", emoji:"🧒", theme:"ילדים", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"se joacă",he:"משחקים",pron:"סֶה ז'וֹאקה"}]},
+  { he:"אנחנו ילדים טובים", ro:"Suntem copii buni", pron:"סוּנְטֶם קוֹפִּיי בּוּני", emoji:"😇", theme:"ילדים", words:[{ro:"Suntem",he:"אנחנו",pron:"סוּנְטֶם"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"},{ro:"buni",he:"טובים",pron:"בּוּני"}]},
+  { he:"הילדים הולכים לבית ספר", ro:"Copiii merg la școală", pron:"קוֹפִּיי מֶרְג לָה שקוֹאלָה", emoji:"🎒", theme:"בית ספר", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"merg",he:"הולכים",pron:"מֶרְג"},{ro:"la",he:"ל-",pron:"לָה"},{ro:"școală",he:"בית ספר",pron:"שקוֹאלָה"}]},
+  { he:"הילדים שותים מים", ro:"Copiii beau apă", pron:"קוֹפִּיי בֶּאוּ אָפָּה", emoji:"💧", theme:"ילדים", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"beau",he:"שותים",pron:"בֶּאוּ"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  { he:"הילדים אוכלים תפוחים", ro:"Copiii mănâncă mere", pron:"קוֹפִּיי מָנְאנְקָה מֶרֶה", emoji:"🍎", theme:"אוכל", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"mănâncă",he:"אוכלים",pron:"מָנְאנְקָה"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"}]},
+  { he:"שני ילדים משחקים", ro:"Doi copii se joacă", pron:"דוֹי קוֹפִּיי סֶה ז'וֹאקה", emoji:"👯", theme:"ילדים", words:[{ro:"Doi",he:"שני",pron:"דוֹי"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"},{ro:"se joacă",he:"משחקים",pron:"סֶה ז'וֹאקה"}]},
+  { he:"לילדים יש כלבים", ro:"Copiii au câini", pron:"קוֹפִּיי אאוּ קְאיני", emoji:"🐕", theme:"ילדים", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"au",he:"יש להם",pron:"אאוּ"},{ro:"câini",he:"כלבים",pron:"קְאיני"}]},
+  { he:"הילדים אומרים תודה", ro:"Copiii spun mulțumesc", pron:"קוֹפִּיי ספּוּן מוּל-צוּ-מֶסְק", emoji:"🙏", theme:"ילדים", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"spun",he:"אומרים",pron:"ספּוּן"},{ro:"mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"}]},
+  { he:"הילדים מציירים פרפרים", ro:"Copiii desenează fluturi", pron:"קוֹפִּיי דֶסֶנֶאזה פלוּטוּרי", emoji:"🦋", theme:"ילדים", words:[{ro:"Copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"desenează",he:"מציירים",pron:"דֶסֶנֶאזה"},{ro:"fluturi",he:"פרפרים",pron:"פלוּטוּרי"}]},
+  // === Frați ===
+  { he:"יש לי שני אחים", ro:"Am doi frați", pron:"אם דוֹי פְרָאץ'", emoji:"👫", theme:"משפחה", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"doi",he:"שני",pron:"דוֹי"},{ro:"frați",he:"אחים",pron:"פְרָאץ'"}]},
+  { he:"האחים שלי גדולים", ro:"Frații mei sunt mari", pron:"פְרָאצי מֶי סוּנְט מָארי", emoji:"👨‍👨‍👦", theme:"משפחה", words:[{ro:"Frații",he:"האחים",pron:"פְרָאצי"},{ro:"mei",he:"שלי",pron:"מֶי"},{ro:"sunt",he:"הם",pron:"סוּנְט"},{ro:"mari",he:"גדולים",pron:"מָארי"}]},
+  { he:"אני והאחים שלי משחקים", ro:"Eu și frații mei ne jucăm", pron:"אֶאוּ שי פְרָאצי מֶי נֶה ז'וקאם", emoji:"🎮", theme:"משפחה", words:[{ro:"Eu",he:"אני",pron:"אֶאוּ"},{ro:"frații mei",he:"האחים שלי",pron:"פְרָאצי מֶי"},{ro:"ne jucăm",he:"משחקים",pron:"נֶה ז'וקאם"}]},
+  { he:"אחים הם חברים", ro:"Frații sunt prieteni", pron:"פְרָאצי סוּנְט פּרִיֶטֶני", emoji:"🤗", theme:"משפחה", words:[{ro:"Frații",he:"האחים",pron:"פְרָאצי"},{ro:"prieteni",he:"חברים",pron:"פּרִיֶטֶני"}]},
+  { he:"האחים שלי אוכלים תפוחים", ro:"Frații mei mănâncă mere", pron:"פְרָאצי מֶי מָנְאנְקָה מֶרֶה", emoji:"🍎", theme:"משפחה", words:[{ro:"Frații mei",he:"האחים שלי",pron:"פְרָאצי מֶי"},{ro:"mănâncă",he:"אוכלים",pron:"מָנְאנְקָה"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"}]},
+  { he:"כמה אחים יש לך?", ro:"Câți frați ai?", pron:"קְאצי פְרָאץ' אַי?", emoji:"❓", theme:"משפחה", words:[{ro:"Câți",he:"כמה",pron:"קְאצי"},{ro:"frați",he:"אחים",pron:"פְרָאץ'"},{ro:"ai",he:"יש לך",pron:"אַי"}]},
+  { he:"לאחים שלי יש כלבים", ro:"Frații mei au câini", pron:"פְרָאצי מֶי אאוּ קְאיני", emoji:"🐕", theme:"משפחה", words:[{ro:"Frații mei",he:"האחים שלי",pron:"פְרָאצי מֶי"},{ro:"au",he:"יש להם",pron:"אאוּ"},{ro:"câini",he:"כלבים",pron:"קְאיני"}]},
+  { he:"האחים שלי שותים מים", ro:"Frații mei beau apă", pron:"פְרָאצי מֶי בֶּאוּ אָפָּה", emoji:"💧", theme:"משפחה", words:[{ro:"Frații mei",he:"האחים שלי",pron:"פְרָאצי מֶי"},{ro:"beau",he:"שותים",pron:"בֶּאוּ"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  // === Ieri ===
+  { he:"אתמול הייתי בבית ספר", ro:"Ieri am fost la școală", pron:"יֶרי אם פוֹסט לָה שקוֹאלָה", emoji:"🏫", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"am fost",he:"הייתי",pron:"אם פוֹסט"},{ro:"școală",he:"בית ספר",pron:"שקוֹאלָה"}]},
+  { he:"אתמול אכלתי בננה", ro:"Ieri am mâncat o banană", pron:"יֶרי אם מנקאט אוֹ בָּנָנָה", emoji:"🍌", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"am mâncat",he:"אכלתי",pron:"אם מנקאט"},{ro:"banană",he:"בננה",pron:"בָּנָנָה"}]},
+  { he:"אתמול שיחקתי עם אחי", ro:"Ieri m-am jucat cu fratele meu", pron:"יֶרי מאם ז'וקאט קוּ פרָאטֶלֶה מֶאוּ", emoji:"🎮", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"m-am jucat",he:"שיחקתי",pron:"מאם ז'וקאט"},{ro:"cu",he:"עם",pron:"קוּ"},{ro:"fratele meu",he:"אחי",pron:"פרָאטֶלֶה מֶאוּ"}]},
+  { he:"אתמול ירד גשם", ro:"Ieri a plouat", pron:"יֶרי אה פלואט", emoji:"🌧️", theme:"מזג אוויר", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"a plouat",he:"ירד גשם",pron:"אה פלואט"}]},
+  { he:"אתמול ציירתי פרפרים", ro:"Ieri am desenat fluturi", pron:"יֶרי אם דֶסֶנאט פלוּטוּרי", emoji:"🦋", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"am desenat",he:"ציירתי",pron:"אם דֶסֶנאט"},{ro:"fluturi",he:"פרפרים",pron:"פלוּטוּרי"}]},
+  { he:"אתמול ראיתי כלבים בפארק", ro:"Ieri am văzut câini în parc", pron:"יֶרי אם וָזוּט קְאיני אִין פארק", emoji:"🐕", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"am văzut",he:"ראיתי",pron:"אם וָזוּט"},{ro:"câini",he:"כלבים",pron:"קְאיני"},{ro:"în parc",he:"בפארק",pron:"אִין פארק"}]},
+  { he:"אתמול קראתי ספר", ro:"Ieri am citit o carte", pron:"יֶרי אם צ'יטיט אוֹ קארטֶה", emoji:"📖", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"am citit",he:"קראתי",pron:"אם צ'יטיט"},{ro:"carte",he:"ספר",pron:"קארטֶה"}]},
+  { he:"אתמול שתיתי מים קרים", ro:"Ieri am băut apă rece", pron:"יֶרי אם בָּאוּט אָפָּה רֶצֶ'ה", emoji:"💧", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"am băut",he:"שתיתי",pron:"אם בָּאוּט"},{ro:"apă",he:"מים",pron:"אָפָּה"},{ro:"rece",he:"קרים",pron:"רֶצֶ'ה"}]},
+  // === Verde ===
+  { he:"הדשא ירוק", ro:"Iarba este verde", pron:"יָארבָּה יֶסטֶה וֶרדֶה", emoji:"🌱", theme:"צבעים", words:[{ro:"Iarba",he:"הדשא",pron:"יָארבָּה"},{ro:"este",he:"היא",pron:"יֶסטֶה"},{ro:"verde",he:"ירוקה",pron:"וֶרדֶה"}]},
+  { he:"אני אוהבת ירוק", ro:"Îmi place verde", pron:"אִימְי פלָאצֶ'ה וֶרדֶה", emoji:"💚", theme:"צבעים", words:[{ro:"Îmi place",he:"אני אוהבת",pron:"אִימְי פלָאצֶ'ה"},{ro:"verde",he:"ירוק",pron:"וֶרדֶה"}]},
+  { he:"התפוח ירוק", ro:"Mărul este verde", pron:"מָרוּל יֶסטֶה וֶרדֶה", emoji:"🍏", theme:"צבעים", words:[{ro:"Mărul",he:"התפוח",pron:"מָרוּל"},{ro:"verde",he:"ירוק",pron:"וֶרדֶה"}]},
+  { he:"העלים ירוקים", ro:"Frunzele sunt verzi", pron:"פרוּנזֶלֶה סוּנְט וֶרזי", emoji:"🍃", theme:"צבעים", words:[{ro:"Frunzele",he:"העלים",pron:"פרוּנזֶלֶה"},{ro:"verzi",he:"ירוקים",pron:"וֶרזי"}]},
+  { he:"יש לי שמלה ירוקה", ro:"Am o rochie verde", pron:"אם אוֹ רוֹקיֶה וֶרדֶה", emoji:"👗", theme:"בגדים", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"rochie",he:"שמלה",pron:"רוֹקיֶה"},{ro:"verde",he:"ירוקה",pron:"וֶרדֶה"}]},
+  { he:"לכלב יש צעצוע ירוק", ro:"Câinele are o jucărie verde", pron:"קְאינֶלֶה אַרֶה אוֹ ז'וקָריֶה וֶרדֶה", emoji:"🐕", theme:"צבעים", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"are",he:"יש לו",pron:"אַרֶה"},{ro:"jucărie",he:"צעצוע",pron:"ז'וקָריֶה"},{ro:"verde",he:"ירוק",pron:"וֶרדֶה"}]},
+  { he:"שמי דנה והצבע האהוב עלי ירוק", ro:"Mă cheamă Dana și culoarea mea preferată e verde", pron:"מָה קְיָאמָה דָנָה שי קוּלוארֶיָה מֶאָה פּרֶפֶרָאטָה יֶה וֶרדֶה", emoji:"💚", theme:"על עצמי", words:[{ro:"Mă cheamă",he:"שמי",pron:"מָה קְיָאמָה"},{ro:"culoarea",he:"הצבע",pron:"קוּלוארֶיָה"},{ro:"preferată",he:"מועדף",pron:"פּרֶפֶרָאטָה"},{ro:"verde",he:"ירוק",pron:"וֶרדֶה"}]},
+  { he:"העט ירוק", ro:"Pixul este verde", pron:"פּיקסוּל יֶסטֶה וֶרדֶה", emoji:"🖊️", theme:"צבעים", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"verde",he:"ירוק",pron:"וֶרדֶה"}]},
+  // === Galben ===
+  { he:"הבננה צהובה", ro:"Banana este galbenă", pron:"בָּנָנָה יֶסטֶה גָאלבֶּנָה", emoji:"🍌", theme:"צבעים", words:[{ro:"Banana",he:"הבננה",pron:"בָּנָנָה"},{ro:"galbenă",he:"צהובה",pron:"גָאלבֶּנָה"}]},
+  { he:"השמש צהובה", ro:"Soarele este galben", pron:"סוארֶלֶה יֶסטֶה גָאלבֶּן", emoji:"☀️", theme:"צבעים", words:[{ro:"Soarele",he:"השמש",pron:"סוארֶלֶה"},{ro:"galben",he:"צהוב",pron:"גָאלבֶּן"}]},
+  { he:"הפרח צהוב", ro:"Floarea este galbenă", pron:"פלוארֶיָה יֶסטֶה גָאלבֶּנָה", emoji:"🌻", theme:"צבעים", words:[{ro:"Floarea",he:"הפרח",pron:"פלוארֶיָה"},{ro:"galbenă",he:"צהוב",pron:"גָאלבֶּנָה"}]},
+  { he:"יש לי עט צהוב", ro:"Am un pix galben", pron:"אם אוּן פּיקס גָאלבֶּן", emoji:"🖊️", theme:"צבעים", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"pix",he:"עט",pron:"פּיקס"},{ro:"galben",he:"צהוב",pron:"גָאלבֶּן"}]},
+  { he:"הפרפר צהוב", ro:"Fluturele este galben", pron:"פלוּטוּרֶלֶה יֶסטֶה גָאלבֶּן", emoji:"🦋", theme:"צבעים", words:[{ro:"Fluturele",he:"הפרפר",pron:"פלוּטוּרֶלֶה"},{ro:"galben",he:"צהוב",pron:"גָאלבֶּן"}]},
+  { he:"אני אוהבת צהוב", ro:"Îmi place galben", pron:"אִימְי פלָאצֶ'ה גָאלבֶּן", emoji:"💛", theme:"צבעים", words:[{ro:"Îmi place",he:"אני אוהבת",pron:"אִימְי פלָאצֶ'ה"},{ro:"galben",he:"צהוב",pron:"גָאלבֶּן"}]},
+  { he:"המזלג צהוב", ro:"Furculița este galbenă", pron:"פוּרקוּליצָה יֶסטֶה גָאלבֶּנָה", emoji:"🍴", theme:"צבעים", words:[{ro:"Furculița",he:"המזלג",pron:"פוּרקוּליצָה"},{ro:"galbenă",he:"צהובה",pron:"גָאלבֶּנָה"}]},
+  // === Albastru ===
+  { he:"השמיים כחולים", ro:"Cerul este albastru", pron:"צֶ'רוּל יֶסטֶה אָלבָּסטרוּ", emoji:"☁️", theme:"צבעים", words:[{ro:"Cerul",he:"השמיים",pron:"צֶ'רוּל"},{ro:"albastru",he:"כחול",pron:"אָלבָּסטרוּ"}]},
+  { he:"הים כחול", ro:"Marea este albastră", pron:"מָארֶיָה יֶסטֶה אָלבָּסטרָה", emoji:"🌊", theme:"צבעים", words:[{ro:"Marea",he:"הים",pron:"מָארֶיָה"},{ro:"albastră",he:"כחול",pron:"אָלבָּסטרָה"}]},
+  { he:"המים כחולים", ro:"Apa este albastră", pron:"אָפָּה יֶסטֶה אָלבָּסטרָה", emoji:"💙", theme:"צבעים", words:[{ro:"Apa",he:"המים",pron:"אָפָּה"},{ro:"albastră",he:"כחולים",pron:"אָלבָּסטרָה"}]},
+  { he:"יש לי עיניים כחולות", ro:"Am ochii albaștri", pron:"אם אוֹקיי אָלבָּשטרי", emoji:"👀", theme:"גוף", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"ochii",he:"עיניים",pron:"אוֹקיי"},{ro:"albaștri",he:"כחולות",pron:"אָלבָּשטרי"}]},
+  { he:"העט שלי כחול", ro:"Pixul meu este albastru", pron:"פּיקסוּל מֶאוּ יֶסטֶה אָלבָּסטרוּ", emoji:"🖊️", theme:"צבעים", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"albastru",he:"כחול",pron:"אָלבָּסטרוּ"}]},
+  { he:"אני אוהבת חולצה כחולה", ro:"Îmi place tricoul albastru", pron:"אִימְי פלָאצֶ'ה טריקואוּל אָלבָּסטרוּ", emoji:"👕", theme:"בגדים", words:[{ro:"Îmi place",he:"אני אוהבת",pron:"אִימְי פלָאצֶ'ה"},{ro:"tricoul",he:"החולצה",pron:"טריקואוּל"},{ro:"albastru",he:"כחולה",pron:"אָלבָּסטרוּ"}]},
+  { he:"האוטו כחול", ro:"Mașina este albastră", pron:"מָשינָה יֶסטֶה אָלבָּסטרָה", emoji:"🚗", theme:"צבעים", words:[{ro:"Mașina",he:"האוטו",pron:"מָשינָה"},{ro:"albastră",he:"כחולה",pron:"אָלבָּסטרָה"}]},
+  // === Alb ===
+  { he:"השלג לבן", ro:"Zăpada este albă", pron:"זָפָּדָה יֶסטֶה אָלבָּה", emoji:"❄️", theme:"צבעים", words:[{ro:"Zăpada",he:"השלג",pron:"זָפָּדָה"},{ro:"albă",he:"לבן",pron:"אָלבָּה"}]},
+  { he:"הכלב שלי לבן", ro:"Câinele meu este alb", pron:"קְאינֶלֶה מֶאוּ יֶסטֶה אָלב", emoji:"🐕", theme:"צבעים", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  { he:"החלב לבן", ro:"Laptele este alb", pron:"לָפּטֶלֶה יֶסטֶה אָלב", emoji:"🥛", theme:"צבעים", words:[{ro:"Laptele",he:"החלב",pron:"לָפּטֶלֶה"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  { he:"יש לי חולצה לבנה", ro:"Am o cămașă albă", pron:"אם אוֹ קָמָשָה אָלבָּה", emoji:"👚", theme:"בגדים", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"cămașă",he:"חולצה",pron:"קָמָשָה"},{ro:"albă",he:"לבנה",pron:"אָלבָּה"}]},
+  { he:"הענן לבן", ro:"Norul este alb", pron:"נוֹרוּל יֶסטֶה אָלב", emoji:"☁️", theme:"צבעים", words:[{ro:"Norul",he:"הענן",pron:"נוֹרוּל"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  { he:"העט לבן", ro:"Pixul este alb", pron:"פּיקסוּל יֶסטֶה אָלב", emoji:"🖊️", theme:"צבעים", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  { he:"הארנב לבן", ro:"Iepurele este alb", pron:"יֶפּוּרֶלֶה יֶסטֶה אָלב", emoji:"🐇", theme:"חיות", words:[{ro:"Iepurele",he:"הארנב",pron:"יֶפּוּרֶלֶה"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  // === Gri ===
+  { he:"הפיל אפור", ro:"Elefantul este gri", pron:"אֶלֶפָנטוּל יֶסטֶה גרי", emoji:"🐘", theme:"צבעים", words:[{ro:"Elefantul",he:"הפיל",pron:"אֶלֶפָנטוּל"},{ro:"gri",he:"אפור",pron:"גרי"}]},
+  { he:"החתולה שלי אפורה", ro:"Pisica mea este gri", pron:"פּיסיקה מֶאָה יֶסטֶה גרי", emoji:"🐱", theme:"חיות", words:[{ro:"Pisica",he:"החתולה",pron:"פּיסיקה"},{ro:"mea",he:"שלי",pron:"מֶאָה"},{ro:"gri",he:"אפורה",pron:"גרי"}]},
+  { he:"השמיים אפורים היום", ro:"Cerul e gri azi", pron:"צֶ'רוּל יֶה גרי אַזי", emoji:"☁️", theme:"מזג אוויר", words:[{ro:"Cerul",he:"השמיים",pron:"צֶ'רוּל"},{ro:"gri",he:"אפור",pron:"גרי"},{ro:"azi",he:"היום",pron:"אַזי"}]},
+  { he:"יש לי מעיל אפור", ro:"Am o haină gri", pron:"אם אוֹ הָאינָה גרי", emoji:"🧥", theme:"בגדים", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"haină",he:"מעיל",pron:"הָאינָה"},{ro:"gri",he:"אפור",pron:"גרי"}]},
+  { he:"הכלב אפור", ro:"Câinele este gri", pron:"קְאינֶלֶה יֶסטֶה גרי", emoji:"🐕", theme:"צבעים", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"gri",he:"אפור",pron:"גרי"}]},
+  { he:"העט שלי אפור", ro:"Pixul meu este gri", pron:"פּיקסוּל מֶאוּ יֶסטֶה גרי", emoji:"🖊️", theme:"צבעים", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"gri",he:"אפור",pron:"גרי"}]},
+  // === Apă ===
+  { he:"אני שותה מים", ro:"Beau apă", pron:"בֶּאוּ אָפָּה", emoji:"💧", theme:"אוכל", words:[{ro:"Beau",he:"אני שותה",pron:"בֶּאוּ"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  { he:"אני רוצה מים בבקשה", ro:"Vreau apă, te rog", pron:"וְרֶאוּ אָפָּה, טֶה רוֹג", emoji:"💧", theme:"בקשות", words:[{ro:"Vreau",he:"אני רוצה",pron:"וְרֶאוּ"},{ro:"apă",he:"מים",pron:"אָפָּה"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"המים קרים", ro:"Apa este rece", pron:"אָפָּה יֶסטֶה רֶצֶ'ה", emoji:"❄️", theme:"אוכל", words:[{ro:"Apa",he:"המים",pron:"אָפָּה"},{ro:"rece",he:"קרים",pron:"רֶצֶ'ה"}]},
+  { he:"הכלב שותה מים", ro:"Câinele bea apă", pron:"קְאינֶלֶה בֶּאָה אָפָּה", emoji:"🐕", theme:"חיות", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"bea",he:"שותה",pron:"בֶּאָה"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  { he:"מים בכוס", ro:"Apa din pahar", pron:"אָפָּה דין פָּהָאר", emoji:"🥛", theme:"אוכל", words:[{ro:"Apa",he:"המים",pron:"אָפָּה"},{ro:"din",he:"מ-",pron:"דין"},{ro:"pahar",he:"כוס",pron:"פָּהָאר"}]},
+  { he:"אני רוצה עוד מים", ro:"Mai vreau apă", pron:"מאי וְרֶאוּ אָפָּה", emoji:"💧", theme:"בקשות", words:[{ro:"Mai",he:"עוד",pron:"מאי"},{ro:"vreau",he:"אני רוצה",pron:"וְרֶאוּ"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  { he:"המים נקיים", ro:"Apa e curată", pron:"אָפָּה יֶה קוּרָאטָה", emoji:"💧", theme:"אוכל", words:[{ro:"Apa",he:"המים",pron:"אָפָּה"},{ro:"curată",he:"נקיים",pron:"קוּרָאטָה"}]},
+  { he:"תודה על המים", ro:"Mulțumesc pentru apă", pron:"מוּל-צוּ-מֶסְק פֶּנְטרוּ אָפָּה", emoji:"🙏", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"pentru",he:"על",pron:"פֶּנְטרוּ"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  { he:"תני לי מים, בבקשה", ro:"Dă-mi apă, te rog", pron:"דָה-מי אָפָּה, טֶה רוֹג", emoji:"💧", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"apă",he:"מים",pron:"אָפָּה"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  // === Banană ===
+  { he:"אני אוהבת בננה", ro:"Îmi place banana", pron:"אִימְי פלָאצֶ'ה בָּנָנָה", emoji:"🍌", theme:"אוכל", words:[{ro:"Îmi place",he:"אני אוהבת",pron:"אִימְי פלָאצֶ'ה"},{ro:"banana",he:"הבננה",pron:"בָּנָנָה"}]},
+  { he:"אני אוכלת בננה", ro:"Mănânc o banană", pron:"מָנְאנְק אוֹ בָּנָנָה", emoji:"🍌", theme:"אוכל", words:[{ro:"Mănânc",he:"אני אוכלת",pron:"מָנְאנְק"},{ro:"banană",he:"בננה",pron:"בָּנָנָה"}]},
+  { he:"הקוף אוכל בננות", ro:"Maimuța mănâncă banane", pron:"מָאימוּצָה מָנְאנְקָה בָּנָנֶה", emoji:"🐒", theme:"חיות", words:[{ro:"Maimuța",he:"הקוף",pron:"מָאימוּצָה"},{ro:"mănâncă",he:"אוכל",pron:"מָנְאנְקָה"},{ro:"banane",he:"בננות",pron:"בָּנָנֶה"}]},
+  { he:"אני רוצה בננה", ro:"Vreau o banană", pron:"וְרֶאוּ אוֹ בָּנָנָה", emoji:"🍌", theme:"רצונות", words:[{ro:"Vreau",he:"אני רוצה",pron:"וְרֶאוּ"},{ro:"banană",he:"בננה",pron:"בָּנָנָה"}]},
+  { he:"תני לי בננה בבקשה", ro:"Dă-mi o banană, te rog", pron:"דָה-מי אוֹ בָּנָנָה, טֶה רוֹג", emoji:"🍌", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"banană",he:"בננה",pron:"בָּנָנָה"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"הבננה מתוקה", ro:"Banana este dulce", pron:"בָּנָנָה יֶסטֶה דוּלצֶ'ה", emoji:"🍌", theme:"אוכל", words:[{ro:"Banana",he:"הבננה",pron:"בָּנָנָה"},{ro:"dulce",he:"מתוקה",pron:"דוּלצֶ'ה"}]},
+  { he:"הבננה צהובה ומתוקה", ro:"Banana e galbenă și dulce", pron:"בָּנָנָה יֶה גָאלבֶּנָה שי דוּלצֶ'ה", emoji:"🍌", theme:"אוכל", words:[{ro:"Banana",he:"הבננה",pron:"בָּנָנָה"},{ro:"galbenă",he:"צהובה",pron:"גָאלבֶּנָה"},{ro:"și",he:"ו-",pron:"שי"},{ro:"dulce",he:"מתוקה",pron:"דוּלצֶ'ה"}]},
+  // === Mere ===
+  { he:"אני אוהבת תפוחים", ro:"Îmi plac merele", pron:"אִימְי פלָאק מֶרֶלֶה", emoji:"🍎", theme:"אוכל", words:[{ro:"Îmi plac",he:"אני אוהבת",pron:"אִימְי פלָאק"},{ro:"merele",he:"התפוחים",pron:"מֶרֶלֶה"}]},
+  { he:"אני אוכלת תפוחים אדומים", ro:"Mănânc mere roșii", pron:"מָנְאנְק מֶרֶה רוֹשי", emoji:"🍎", theme:"אוכל", words:[{ro:"Mănânc",he:"אני אוכלת",pron:"מָנְאנְק"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"},{ro:"roșii",he:"אדומים",pron:"רוֹשי"}]},
+  { he:"התפוחים ירוקים", ro:"Merele sunt verzi", pron:"מֶרֶלֶה סוּנְט וֶרזי", emoji:"🍏", theme:"אוכל", words:[{ro:"Merele",he:"התפוחים",pron:"מֶרֶלֶה"},{ro:"verzi",he:"ירוקים",pron:"וֶרזי"}]},
+  { he:"קונים תפוחים בשוק", ro:"Cumpărăm mere de la piață", pron:"קוּמפָּרָם מֶרֶה דֶה לָה פּיָאצָה", emoji:"🛒", theme:"קניות", words:[{ro:"Cumpărăm",he:"קונים",pron:"קוּמפָּרָם"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"},{ro:"piață",he:"שוק",pron:"פּיָאצָה"}]},
+  { he:"שני תפוחים בבקשה", ro:"Două mere, te rog", pron:"דוֹאָה מֶרֶה, טֶה רוֹג", emoji:"🍎", theme:"בקשות", words:[{ro:"Două",he:"שני",pron:"דוֹאָה"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"התפוחים מתוקים", ro:"Merele sunt dulci", pron:"מֶרֶלֶה סוּנְט דוּלצ'י", emoji:"🍎", theme:"אוכל", words:[{ro:"Merele",he:"התפוחים",pron:"מֶרֶלֶה"},{ro:"dulci",he:"מתוקים",pron:"דוּלצ'י"}]},
+  { he:"אמא מכינה עוגת תפוחים", ro:"Mama face plăcintă cu mere", pron:"מאמא פאצֶ'ה פּלָאצ'ינטָה קוּ מֶרֶה", emoji:"🥧", theme:"אוכל", words:[{ro:"Mama",he:"אמא",pron:"מאמא"},{ro:"face",he:"מכינה",pron:"פאצֶ'ה"},{ro:"plăcintă",he:"עוגה",pron:"פּלָאצ'ינטָה"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"}]},
+  { he:"תני לי תפוח", ro:"Dă-mi un măr", pron:"דָה-מי אוּן מָאר", emoji:"🍎", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"măr",he:"תפוח",pron:"מָאר"}]},
+  // === Furculiță ===
+  { he:"אני אוכלת עם מזלג", ro:"Mănânc cu furculița", pron:"מָנְאנְק קוּ פוּרקוּליצָה", emoji:"🍴", theme:"אוכל", words:[{ro:"Mănânc",he:"אני אוכלת",pron:"מָנְאנְק"},{ro:"cu",he:"עם",pron:"קוּ"},{ro:"furculița",he:"המזלג",pron:"פוּרקוּליצָה"}]},
+  { he:"המזלג על השולחן", ro:"Furculița este pe masă", pron:"פוּרקוּליצָה יֶסטֶה פֶּה מָאסָה", emoji:"🍴", theme:"בית", words:[{ro:"Furculița",he:"המזלג",pron:"פוּרקוּליצָה"},{ro:"pe",he:"על",pron:"פֶּה"},{ro:"masă",he:"השולחן",pron:"מָאסָה"}]},
+  { he:"אני צריכה מזלג", ro:"Am nevoie de o furculiță", pron:"אם נֶבוֹיֶה דֶה אוֹ פוּרקוּליצָה", emoji:"🍴", theme:"בקשות", words:[{ro:"Am nevoie de",he:"אני צריכה",pron:"אם נֶבוֹיֶה דֶה"},{ro:"furculiță",he:"מזלג",pron:"פוּרקוּליצָה"}]},
+  { he:"תני לי את המזלג בבקשה", ro:"Dă-mi furculița, te rog", pron:"דָה-מי פוּרקוּליצָה, טֶה רוֹג", emoji:"🍴", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"furculița",he:"המזלג",pron:"פוּרקוּליצָה"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"המזלג נקי", ro:"Furculița este curată", pron:"פוּרקוּליצָה יֶסטֶה קוּרָאטָה", emoji:"✨", theme:"בית", words:[{ro:"Furculița",he:"המזלג",pron:"פוּרקוּליצָה"},{ro:"curată",he:"נקי",pron:"קוּרָאטָה"}]},
+  { he:"מזלג וסכין", ro:"Furculița și cuțitul", pron:"פוּרקוּליצָה שי קוּציטוּל", emoji:"🍴", theme:"בית", words:[{ro:"Furculița",he:"המזלג",pron:"פוּרקוּליצָה"},{ro:"și",he:"ו-",pron:"שי"},{ro:"cuțitul",he:"הסכין",pron:"קוּציטוּל"}]},
+  // === Linguri ===
+  { he:"אני אוכלת מרק עם כפית", ro:"Mănânc supa cu lingura", pron:"מָנְאנְק סוּפָּה קוּ לינגוּרָה", emoji:"🥄", theme:"אוכל", words:[{ro:"Mănânc",he:"אני אוכלת",pron:"מָנְאנְק"},{ro:"supa",he:"המרק",pron:"סוּפָּה"},{ro:"lingura",he:"הכפית",pron:"לינגוּרָה"}]},
+  { he:"שתי כפיות בבקשה", ro:"Două linguri, te rog", pron:"דוֹאָה לינגוּרי, טֶה רוֹג", emoji:"🥄", theme:"בקשות", words:[{ro:"Două",he:"שתי",pron:"דוֹאָה"},{ro:"linguri",he:"כפיות",pron:"לינגוּרי"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"הכפית קטנה", ro:"Lingura este mică", pron:"לינגוּרָה יֶסטֶה מיקָה", emoji:"🥄", theme:"בית", words:[{ro:"Lingura",he:"הכפית",pron:"לינגוּרָה"},{ro:"mică",he:"קטנה",pron:"מיקָה"}]},
+  { he:"כפיות לקינוח", ro:"Linguri pentru desert", pron:"לינגוּרי פֶּנְטרוּ דֶסֶרט", emoji:"🍨", theme:"אוכל", words:[{ro:"Linguri",he:"כפיות",pron:"לינגוּרי"},{ro:"pentru",he:"בשביל",pron:"פֶּנְטרוּ"},{ro:"desert",he:"קינוח",pron:"דֶסֶרט"}]},
+  { he:"תני לי כפית", ro:"Dă-mi o lingură", pron:"דָה-מי אוֹ לינגוּרָה", emoji:"🥄", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"lingură",he:"כפית",pron:"לינגוּרָה"}]},
+  { he:"הכפיות במגירה", ro:"Lingurile sunt în sertar", pron:"לינגוּרילֶה סוּנְט אִין סֶרטָאר", emoji:"🥄", theme:"בית", words:[{ro:"Lingurile",he:"הכפיות",pron:"לינגוּרילֶה"},{ro:"sertar",he:"מגירה",pron:"סֶרטָאר"}]},
+  // === Cuțite ===
+  { he:"הסכינים במגירה", ro:"Cuțitele sunt în sertar", pron:"קוּציטֶלֶה סוּנְט אִין סֶרטָאר", emoji:"🔪", theme:"בית", words:[{ro:"Cuțitele",he:"הסכינים",pron:"קוּציטֶלֶה"},{ro:"sertar",he:"מגירה",pron:"סֶרטָאר"}]},
+  { he:"הסכינים חותכות טוב", ro:"Cuțitele taie bine", pron:"קוּציטֶלֶה טאיֶה בִּינֶה", emoji:"🔪", theme:"בית", words:[{ro:"Cuțitele",he:"הסכינים",pron:"קוּציטֶלֶה"},{ro:"taie",he:"חותכות",pron:"טאיֶה"},{ro:"bine",he:"טוב",pron:"בִּינֶה"}]},
+  { he:"לא לגעת בסכינים!", ro:"Nu atinge cuțitele!", pron:"נוּ אָטינג'ֶה קוּציטֶלֶה!", emoji:"⚠️", theme:"בטיחות", words:[{ro:"Nu",he:"לא",pron:"נוּ"},{ro:"atinge",he:"לגעת",pron:"אָטינג'ֶה"},{ro:"cuțitele",he:"בסכינים",pron:"קוּציטֶלֶה"}]},
+  { he:"יש לנו סכינים חדשות", ro:"Avem cuțite noi", pron:"אָוֶם קוּציטֶה נוֹי", emoji:"🔪", theme:"בית", words:[{ro:"Avem",he:"יש לנו",pron:"אָוֶם"},{ro:"cuțite",he:"סכינים",pron:"קוּציטֶה"},{ro:"noi",he:"חדשות",pron:"נוֹי"}]},
+  { he:"הסכין והמזלג", ro:"Cuțitul și furculița", pron:"קוּציטוּל שי פוּרקוּליצָה", emoji:"🍴", theme:"בית", words:[{ro:"Cuțitul",he:"הסכין",pron:"קוּציטוּל"},{ro:"furculița",he:"המזלג",pron:"פוּרקוּליצָה"}]},
+  // === Pix ===
+  { he:"אני כותבת עם העט", ro:"Scriu cu pixul", pron:"סקריוּ קוּ פּיקסוּל", emoji:"✍️", theme:"בית ספר", words:[{ro:"Scriu",he:"אני כותבת",pron:"סקריוּ"},{ro:"cu",he:"עם",pron:"קוּ"},{ro:"pixul",he:"העט",pron:"פּיקסוּל"}]},
+  { he:"יש לי עט חדש", ro:"Am un pix nou", pron:"אם אוּן פּיקס נוֹאוּ", emoji:"🖊️", theme:"בית ספר", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"pix",he:"עט",pron:"פּיקס"},{ro:"nou",he:"חדש",pron:"נוֹאוּ"}]},
+  { he:"העט על השולחן", ro:"Pixul este pe masă", pron:"פּיקסוּל יֶסטֶה פֶּה מָאסָה", emoji:"🖊️", theme:"בית", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"pe masă",he:"על השולחן",pron:"פֶּה מָאסָה"}]},
+  { he:"תני לי את העט בבקשה", ro:"Dă-mi pixul, te rog", pron:"דָה-מי פּיקסוּל, טֶה רוֹג", emoji:"🖊️", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"pixul",he:"העט",pron:"פּיקסוּל"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"העט לא כותב", ro:"Pixul nu scrie", pron:"פּיקסוּל נוּ סקריֶה", emoji:"🖊️", theme:"בית ספר", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"nu",he:"לא",pron:"נוּ"},{ro:"scrie",he:"כותב",pron:"סקריֶה"}]},
+  { he:"אני מחפשת עט ירוק", ro:"Caut un pix verde", pron:"קָאוּט אוּן פּיקס וֶרדֶה", emoji:"🖊️", theme:"בית ספר", words:[{ro:"Caut",he:"אני מחפשת",pron:"קָאוּט"},{ro:"pix",he:"עט",pron:"פּיקס"},{ro:"verde",he:"ירוק",pron:"וֶרדֶה"}]},
+  { he:"העט הכחול שלי", ro:"Pixul meu albastru", pron:"פּיקסוּל מֶאוּ אָלבָּסטרוּ", emoji:"🖊️", theme:"בית ספר", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"albastru",he:"כחול",pron:"אָלבָּסטרוּ"}]},
+  // === Un joc ===
+  { he:"אני רוצה לשחק משחק", ro:"Vreau să joc un joc", pron:"וְרֶאוּ סָה ז'וֹק אוּן ז'וֹק", emoji:"🎮", theme:"משחקים", words:[{ro:"Vreau",he:"אני רוצה",pron:"וְרֶאוּ"},{ro:"să joc",he:"לשחק",pron:"סָה ז'וֹק"},{ro:"un joc",he:"משחק",pron:"אוּן ז'וֹק"}]},
+  { he:"משחק חדש", ro:"Un joc nou", pron:"אוּן ז'וֹק נוֹאוּ", emoji:"🎮", theme:"משחקים", words:[{ro:"Un joc",he:"משחק",pron:"אוּן ז'וֹק"},{ro:"nou",he:"חדש",pron:"נוֹאוּ"}]},
+  { he:"מה המשחק האהוב עליך?", ro:"Care e jocul tău preferat?", pron:"קָארֶה יֶה ז'וקוּל טָאוּ פּרֶפֶרָאט?", emoji:"❓", theme:"משחקים", words:[{ro:"Care",he:"איזה",pron:"קָארֶה"},{ro:"jocul",he:"המשחק",pron:"ז'וקוּל"},{ro:"tău",he:"שלך",pron:"טָאוּ"},{ro:"preferat",he:"מועדף",pron:"פּרֶפֶרָאט"}]},
+  { he:"המשחק מהנה", ro:"Jocul este distractiv", pron:"ז'וקוּל יֶסטֶה דיסטרָקטיב", emoji:"🎉", theme:"משחקים", words:[{ro:"Jocul",he:"המשחק",pron:"ז'וקוּל"},{ro:"distractiv",he:"מהנה",pron:"דיסטרָקטיב"}]},
+  { he:"שחקי איתי משחק", ro:"Joacă cu mine un joc", pron:"ז'וֹאקה קוּ מינֶה אוּן ז'וֹק", emoji:"🎮", theme:"משחקים", words:[{ro:"Joacă",he:"שחקי",pron:"ז'וֹאקה"},{ro:"cu mine",he:"איתי",pron:"קוּ מינֶה"},{ro:"un joc",he:"משחק",pron:"אוּן ז'וֹק"}]},
+  { he:"משחקים משחק עם הילדים", ro:"Jucăm un joc cu copiii", pron:"ז'וקאם אוּן ז'וֹק קוּ קוֹפִּיי", emoji:"🎮", theme:"משחקים", words:[{ro:"Jucăm",he:"משחקים",pron:"ז'וקאם"},{ro:"un joc",he:"משחק",pron:"אוּן ז'וֹק"},{ro:"copiii",he:"הילדים",pron:"קוֹפִּיי"}]},
+  { he:"משחק עם כדור", ro:"Un joc cu mingea", pron:"אוּן ז'וֹק קוּ מינג'ָה", emoji:"⚽", theme:"משחקים", words:[{ro:"Un joc",he:"משחק",pron:"אוּן ז'וֹק"},{ro:"cu",he:"עם",pron:"קוּ"},{ro:"mingea",he:"כדור",pron:"מינג'ָה"}]},
+  // === Câini ===
+  { he:"אני אוהבת כלבים", ro:"Îmi plac câinii", pron:"אִימְי פלָאק קְאיני", emoji:"🐕", theme:"חיות", words:[{ro:"Îmi plac",he:"אני אוהבת",pron:"אִימְי פלָאק"},{ro:"câinii",he:"כלבים",pron:"קְאיני"}]},
+  { he:"יש לי שני כלבים", ro:"Am doi câini", pron:"אם דוֹי קְאיני", emoji:"🐕", theme:"חיות", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"doi",he:"שני",pron:"דוֹי"},{ro:"câini",he:"כלבים",pron:"קְאיני"}]},
+  { he:"כלבים הם חברים טובים", ro:"Câinii sunt prieteni buni", pron:"קְאיני סוּנְט פּרִיֶטֶני בּוּני", emoji:"🐶", theme:"חיות", words:[{ro:"Câinii",he:"כלבים",pron:"קְאיני"},{ro:"prieteni",he:"חברים",pron:"פּרִיֶטֶני"},{ro:"buni",he:"טובים",pron:"בּוּני"}]},
+  { he:"הכלב שלי לבן", ro:"Câinele meu e alb", pron:"קְאינֶלֶה מֶאוּ יֶה אָלב", emoji:"🐕‍🦺", theme:"חיות", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  { he:"הכלבים נובחים בלילה", ro:"Câinii latră noaptea", pron:"קְאיני לָאטרָה נוֹאַפּטֶיָה", emoji:"🐕", theme:"חיות", words:[{ro:"Câinii",he:"הכלבים",pron:"קְאיני"},{ro:"latră",he:"נובחים",pron:"לָאטרָה"},{ro:"noaptea",he:"בלילה",pron:"נוֹאַפּטֶיָה"}]},
+  { he:"הכלב שותה מים", ro:"Câinele bea apă", pron:"קְאינֶלֶה בֶּאָה אָפָּה", emoji:"💧", theme:"חיות", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"bea",he:"שותה",pron:"בֶּאָה"},{ro:"apă",he:"מים",pron:"אָפָּה"}]},
+  { he:"שמי דנה ויש לי כלב", ro:"Mă cheamă Dana și am un câine", pron:"מָה קְיָאמָה דָנָה שי אם אוּן קְאינֶה", emoji:"🐶", theme:"על עצמי", words:[{ro:"Mă cheamă",he:"שמי",pron:"מָה קְיָאמָה"},{ro:"am",he:"יש לי",pron:"אם"},{ro:"câine",he:"כלב",pron:"קְאינֶה"}]},
+  { he:"הכלבים בפארק משחקים", ro:"Câinii din parc se joacă", pron:"קְאיני דין פארק סֶה ז'וֹאקה", emoji:"🐕", theme:"חיות", words:[{ro:"Câinii",he:"הכלבים",pron:"קְאיני"},{ro:"din parc",he:"בפארק",pron:"דין פארק"},{ro:"se joacă",he:"משחקים",pron:"סֶה ז'וֹאקה"}]},
+  // === Fluturi ===
+  { he:"הפרפרים יפים", ro:"Fluturii sunt frumoși", pron:"פלוּטוּרי סוּנְט פרוּמוֹשי", emoji:"🦋", theme:"חיות", words:[{ro:"Fluturii",he:"הפרפרים",pron:"פלוּטוּרי"},{ro:"frumoși",he:"יפים",pron:"פרוּמוֹשי"}]},
+  { he:"אני רואה פרפר צהוב", ro:"Văd un fluture galben", pron:"וָאד אוּן פלוּטוּרֶה גָאלבֶּן", emoji:"🦋", theme:"חיות", words:[{ro:"Văd",he:"אני רואה",pron:"וָאד"},{ro:"fluture",he:"פרפר",pron:"פלוּטוּרֶה"},{ro:"galben",he:"צהוב",pron:"גָאלבֶּן"}]},
+  { he:"הפרפרים עפים", ro:"Fluturii zboară", pron:"פלוּטוּרי זבּוֹארָה", emoji:"🦋", theme:"חיות", words:[{ro:"Fluturii",he:"הפרפרים",pron:"פלוּטוּרי"},{ro:"zboară",he:"עפים",pron:"זבּוֹארָה"}]},
+  { he:"אני אוהבת פרפרים צבעוניים", ro:"Îmi plac fluturii colorați", pron:"אִימְי פלָאק פלוּטוּרי קוֹלוֹרָאצי", emoji:"🦋", theme:"חיות", words:[{ro:"Îmi plac",he:"אני אוהבת",pron:"אִימְי פלָאק"},{ro:"fluturii",he:"פרפרים",pron:"פלוּטוּרי"},{ro:"colorați",he:"צבעוניים",pron:"קוֹלוֹרָאצי"}]},
+  { he:"פרפר כחול", ro:"Un fluture albastru", pron:"אוּן פלוּטוּרֶה אָלבָּסטרוּ", emoji:"🦋", theme:"חיות", words:[{ro:"fluture",he:"פרפר",pron:"פלוּטוּרֶה"},{ro:"albastru",he:"כחול",pron:"אָלבָּסטרוּ"}]},
+  { he:"אני מציירת פרפרים", ro:"Desenez fluturi", pron:"דֶסֶנֶז פלוּטוּרי", emoji:"🎨", theme:"חיות", words:[{ro:"Desenez",he:"אני מציירת",pron:"דֶסֶנֶז"},{ro:"fluturi",he:"פרפרים",pron:"פלוּטוּרי"}]},
+  // === Regal ===
+  { he:"הטירה המלכותית", ro:"Castelul regal", pron:"קָסטֶלוּל רֶגָאל", emoji:"🏰", theme:"דמיון", words:[{ro:"Castelul",he:"הטירה",pron:"קָסטֶלוּל"},{ro:"regal",he:"המלכותי",pron:"רֶגָאל"}]},
+  { he:"הכתר המלכותי", ro:"Coroana regală", pron:"קוֹרוֹאנָה רֶגָאלָה", emoji:"👑", theme:"דמיון", words:[{ro:"Coroana",he:"הכתר",pron:"קוֹרוֹאנָה"},{ro:"regală",he:"מלכותית",pron:"רֶגָאלָה"}]},
+  { he:"המשפחה המלכותית", ro:"Familia regală", pron:"פָמיליָה רֶגָאלָה", emoji:"👨‍👩‍👧‍👦", theme:"דמיון", words:[{ro:"Familia",he:"המשפחה",pron:"פָמיליָה"},{ro:"regală",he:"המלכותית",pron:"רֶגָאלָה"}]},
+  { he:"ארוחת ערב מלכותית", ro:"Cina regală", pron:"צ'ינָה רֶגָאלָה", emoji:"🍽️", theme:"דמיון", words:[{ro:"Cina",he:"ארוחת ערב",pron:"צ'ינָה"},{ro:"regală",he:"מלכותית",pron:"רֶגָאלָה"}]},
+  { he:"הכלב המלכותי", ro:"Câinele regal", pron:"קְאינֶלֶה רֶגָאל", emoji:"👑", theme:"דמיון", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"regal",he:"המלכותי",pron:"רֶגָאל"}]},
+  // === Dă-mi ===
+  { he:"תני לי את היד", ro:"Dă-mi mâna", pron:"דָה-מי מְאינָה", emoji:"🤝", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"mâna",he:"היד",pron:"מְאינָה"}]},
+  { he:"תני לי את הספר בבקשה", ro:"Dă-mi cartea, te rog", pron:"דָה-מי קָרטֶיָה, טֶה רוֹג", emoji:"📖", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"cartea",he:"הספר",pron:"קָרטֶיָה"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"תני לי חיבוק", ro:"Dă-mi o îmbrățișare", pron:"דָה-מי אוֹ אִימְבְּרָציִשָארֶה", emoji:"🤗", theme:"רגשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"îmbrățișare",he:"חיבוק",pron:"אִימְבְּרָציִשָארֶה"}]},
+  { he:"תני לי כיף!", ro:"Dă-mi cinci!", pron:"דָה-מי צ'ינצ'!", emoji:"✋", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"cinci",he:"חמש",pron:"צ'ינצ'"}]},
+  { he:"תן לי בקבוק", ro:"Dă-mi sticla", pron:"דָה-מי סטיקלָה", emoji:"🍼", theme:"בקשות", words:[{ro:"Dă-mi",he:"תן/תני לי",pron:"דָה-מי"},{ro:"sticla",he:"הבקבוק",pron:"סטיקלָה"}]},
+  { he:"תני לי שניה", ro:"Dă-mi o secundă", pron:"דָה-מי אוֹ סֶקוּנדָה", emoji:"⏱️", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"secundă",he:"שניה",pron:"סֶקוּנדָה"}]},
+  { he:"תני לי טלפון", ro:"Dă-mi telefonul", pron:"דָה-מי טֶלֶפוֹנוּל", emoji:"📱", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"telefonul",he:"הטלפון",pron:"טֶלֶפוֹנוּל"}]},
+  // === Mixed repetition (22) ===
+  { he:"שלום! איך קוראים לך?", ro:"Bună! Cum te cheamă?", pron:"בּוּנָה! קוּם טֶה קְיָאמָה?", emoji:"🤝", theme:"פגישה", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"cum",he:"איך",pron:"קוּם"},{ro:"te cheamă",he:"קוראים לך",pron:"טֶה קְיָאמָה"}]},
+  { he:"אתמול אכלתי תפוחים ובננות", ro:"Ieri am mâncat mere și banane", pron:"יֶרי אם מנקאט מֶרֶה שי בָּנָנֶה", emoji:"🍎", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"},{ro:"banane",he:"בננות",pron:"בָּנָנֶה"}]},
+  { he:"העט הצהוב שלי על השולחן", ro:"Pixul meu galben e pe masă", pron:"פּיקסוּל מֶאוּ גָאלבֶּן יֶה פֶּה מָאסָה", emoji:"🖊️", theme:"בית", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"galben",he:"צהוב",pron:"גָאלבֶּן"},{ro:"pe masă",he:"על השולחן",pron:"פֶּה מָאסָה"}]},
+  { he:"הכלבים והילדים משחקים בפארק", ro:"Câinii și copiii se joacă în parc", pron:"קְאיני שי קוֹפִּיי סֶה ז'וֹאקה אִין פארק", emoji:"🐕", theme:"פעילויות", words:[{ro:"Câinii",he:"הכלבים",pron:"קְאיני"},{ro:"copiii",he:"הילדים",pron:"קוֹפִּיי"},{ro:"se joacă",he:"משחקים",pron:"סֶה ז'וֹאקה"}]},
+  { he:"אני רוצה תפוחים ירוקים בבקשה", ro:"Vreau mere verzi, te rog", pron:"וְרֶאוּ מֶרֶה וֶרזי, טֶה רוֹג", emoji:"🍏", theme:"בקשות", words:[{ro:"Vreau",he:"אני רוצה",pron:"וְרֶאוּ"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"},{ro:"verzi",he:"ירוקים",pron:"וֶרזי"}]},
+  { he:"פרפרים כחולים עפים ליד התפוחים", ro:"Fluturi albaștri zboară lângă mere", pron:"פלוּטוּרי אָלבָּשטרי זבּוֹארָה לְאנגָה מֶרֶה", emoji:"🦋", theme:"דמיון", words:[{ro:"Fluturi",he:"פרפרים",pron:"פלוּטוּרי"},{ro:"albaștri",he:"כחולים",pron:"אָלבָּשטרי"},{ro:"lângă",he:"ליד",pron:"לְאנגָה"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"}]},
+  { he:"תודה על העט!", ro:"Mulțumesc pentru pix!", pron:"מוּל-צוּ-מֶסְק פֶּנְטרוּ פּיקס!", emoji:"🙏", theme:"נימוסים", words:[{ro:"Mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"},{ro:"pentru",he:"על",pron:"פֶּנְטרוּ"},{ro:"pix",he:"עט",pron:"פּיקס"}]},
+  { he:"אני אוכלת בננה עם כפית", ro:"Mănânc o banană cu lingura", pron:"מָנְאנְק אוֹ בָּנָנָה קוּ לינגוּרָה", emoji:"🍌", theme:"אוכל", words:[{ro:"banană",he:"בננה",pron:"בָּנָנָה"},{ro:"cu",he:"עם",pron:"קוּ"},{ro:"lingura",he:"כפית",pron:"לינגוּרָה"}]},
+  { he:"לאחים שלי יש עטים כחולים", ro:"Frații mei au pixuri albastre", pron:"פְרָאצי מֶי אאוּ פּיקסוּרי אָלבָּסטרֶה", emoji:"🖊️", theme:"משפחה", words:[{ro:"Frații mei",he:"האחים שלי",pron:"פְרָאצי מֶי"},{ro:"pixuri",he:"עטים",pron:"פּיקסוּרי"},{ro:"albastre",he:"כחולים",pron:"אָלבָּסטרֶה"}]},
+  { he:"תני לי את המזלג ואת הסכין", ro:"Dă-mi furculița și cuțitul", pron:"דָה-מי פוּרקוּליצָה שי קוּציטוּל", emoji:"🍴", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"furculița",he:"המזלג",pron:"פוּרקוּליצָה"},{ro:"cuțitul",he:"הסכין",pron:"קוּציטוּל"}]},
+  { he:"אתמול ראיתי פרפרים ירוקים", ro:"Ieri am văzut fluturi verzi", pron:"יֶרי אם וָזוּט פלוּטוּרי וֶרזי", emoji:"🦋", theme:"זמן", words:[{ro:"Ieri",he:"אתמול",pron:"יֶרי"},{ro:"fluturi",he:"פרפרים",pron:"פלוּטוּרי"},{ro:"verzi",he:"ירוקים",pron:"וֶרזי"}]},
+  { he:"שלום ילדים! איך היה אתמול?", ro:"Bună, copii! Cum a fost ieri?", pron:"בּוּנָה, קוֹפִּיי! קוּם אה פוֹסט יֶרי?", emoji:"👋", theme:"שיחה", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"},{ro:"cum a fost",he:"איך היה",pron:"קוּם אה פוֹסט"},{ro:"ieri",he:"אתמול",pron:"יֶרי"}]},
+  { he:"טוב מאוד, תודה!", ro:"Foarte bine, mulțumesc!", pron:"פֿוֹאַרְטֶה בִּינֶה, מוּל-צוּ-מֶסְק!", emoji:"😊", theme:"שיחה", words:[{ro:"Foarte bine",he:"טוב מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"},{ro:"mulțumesc",he:"תודה",pron:"מוּל-צוּ-מֶסְק"}]},
+  { he:"יש לי משחק חדש עם תפוחים", ro:"Am un joc nou cu mere", pron:"אם אוּן ז'וֹק נוֹאוּ קוּ מֶרֶה", emoji:"🎮", theme:"משחקים", words:[{ro:"Am",he:"יש לי",pron:"אם"},{ro:"un joc",he:"משחק",pron:"אוּן ז'וֹק"},{ro:"nou",he:"חדש",pron:"נוֹאוּ"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"}]},
+  { he:"הכלב הלבן אוכל בננה", ro:"Câinele alb mănâncă o banană", pron:"קְאינֶלֶה אָלב מָנְאנְקָה אוֹ בָּנָנָה", emoji:"🐕", theme:"חיות", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"alb",he:"לבן",pron:"אָלב"},{ro:"banană",he:"בננה",pron:"בָּנָנָה"}]},
+  { he:"העט האפור כותב טוב מאוד", ro:"Pixul gri scrie foarte bine", pron:"פּיקסוּל גרי סקריֶה פֿוֹאַרְטֶה בִּינֶה", emoji:"🖊️", theme:"בית ספר", words:[{ro:"Pixul",he:"העט",pron:"פּיקסוּל"},{ro:"gri",he:"אפור",pron:"גרי"},{ro:"foarte bine",he:"טוב מאוד",pron:"פֿוֹאַרְטֶה בִּינֶה"}]},
+  { he:"ביי ילדים! עד מחר!", ro:"Pa pa, copii! Pe mâine!", pron:"פָּה פָּה, קוֹפִּיי! פֶּה מְאינֶה!", emoji:"👋", theme:"ברכות", words:[{ro:"Pa pa",he:"ביי",pron:"פָּה פָּה"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"},{ro:"pe mâine",he:"עד מחר",pron:"פֶּה מְאינֶה"}]},
+  { he:"תני לי כפיות בבקשה", ro:"Dă-mi linguri, te rog", pron:"דָה-מי לינגוּרי, טֶה רוֹג", emoji:"🥄", theme:"בקשות", words:[{ro:"Dă-mi",he:"תני לי",pron:"דָה-מי"},{ro:"linguri",he:"כפיות",pron:"לינגוּרי"},{ro:"te rog",he:"בבקשה",pron:"טֶה רוֹג"}]},
+  { he:"אני אוכלת תפוחים עם מזלג", ro:"Mănânc mere cu furculița", pron:"מָנְאנְק מֶרֶה קוּ פוּרקוּליצָה", emoji:"🍎", theme:"אוכל", words:[{ro:"Mănânc",he:"אני אוכלת",pron:"מָנְאנְק"},{ro:"mere",he:"תפוחים",pron:"מֶרֶה"},{ro:"furculița",he:"מזלג",pron:"פוּרקוּליצָה"}]},
+  { he:"הכלב המלכותי שלי לבן", ro:"Câinele meu regal e alb", pron:"קְאינֶלֶה מֶאוּ רֶגָאל יֶה אָלב", emoji:"👑", theme:"דמיון", words:[{ro:"Câinele",he:"הכלב",pron:"קְאינֶלֶה"},{ro:"meu",he:"שלי",pron:"מֶאוּ"},{ro:"regal",he:"המלכותי",pron:"רֶגָאל"},{ro:"alb",he:"לבן",pron:"אָלב"}]},
+  { he:"אני אוהבת אחים, ילדים וכלבים", ro:"Îmi plac frați, copii și câini", pron:"אִימְי פלָאק פְרָאץ', קוֹפִּיי שי קְאיני", emoji:"❤️", theme:"רגשות", words:[{ro:"Îmi plac",he:"אני אוהבת",pron:"אִימְי פלָאק"},{ro:"frați",he:"אחים",pron:"פְרָאץ'"},{ro:"copii",he:"ילדים",pron:"קוֹפִּיי"},{ro:"câini",he:"כלבים",pron:"קְאיני"}]},
+  { he:"שלום ותודה רבה!", ro:"Bună și mulțumesc mult!", pron:"בּוּנָה שי מוּל-צוּ-מֶסְק מוּלְט!", emoji:"🌈", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"și",he:"ו-",pron:"שי"},{ro:"mulțumesc mult",he:"תודה רבה",pron:"מוּל-צוּ-מֶסְק מוּלְט"}]},
+];
+
+const SENTENCES_KEY = "ro-kids-user-sentences-v1";
+let userSentences = [];
+try {
+  const raw = localStorage.getItem(SENTENCES_KEY);
+  if (raw) userSentences = JSON.parse(raw);
+} catch (e) { userSentences = []; }
+
+function saveUserSentences() {
+  try { localStorage.setItem(SENTENCES_KEY, JSON.stringify(userSentences)); } catch (e) {}
+}
+function getSentences() { return BUILTIN_SENTENCES.concat(userSentences); }
+
+const BUILTIN_VOCAB = VOCAB;  // alias — practice modes always use the merged list via getVocab()
+const BUILTIN_CAT_EMOJI = { "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨" };
+const USER_VOCAB_KEY = "ro-kids-user-vocab-v1";
+
+// User-added words, persisted to localStorage. Shape: { id, he, ro, pron, cat, emoji, note }
+let userVocab = [];
+try {
+  const raw = localStorage.getItem(USER_VOCAB_KEY);
+  if (raw) userVocab = JSON.parse(raw);
+} catch (e) { userVocab = []; }
+
+function saveUserVocab() {
+  try { localStorage.setItem(USER_VOCAB_KEY, JSON.stringify(userVocab)); } catch (e) {}
+}
+function getVocab() { return BUILTIN_VOCAB.concat(userVocab); }
+function getCategories() {
+  const cats = [];
+  const seen = new Set();
+  getVocab().forEach(w => { if (!seen.has(w.cat)) { seen.add(w.cat); cats.push(w.cat); } });
+  return ["הכול"].concat(cats);
+}
+function getCategoryEmoji(cat) {
+  if (cat === "הכול") return "🌈";
+  return BUILTIN_CAT_EMOJI[cat] || "🏷️";
+}
+
+// ====== State ======
+let state = {
+  mode: "flash",
+  category: "הכול",
+  score: 0,
+  streak: 0,
+  bestStreak: 0,
+  seen: 0,
+  // flashcard
+  flashIdx: 0,
+  flashFlipped: false,
+  flashOrder: [],
+  // quiz
+  quizCurrent: null,
+  quizOptions: [],
+  quizAnswered: false,
+  // listen
+  listenCurrent: null,
+  listenOptions: [],
+  listenAnswered: false,
+  // match
+  matchPairs: [],
+  matchSelected: null,
+  matchMatched: new Set(),
+  // sentences
+  sentenceIdx: 0,
+  sentenceRevealed: false,
+  sentenceOrder: [],
+  // manage
+  manageTab: "words",         // "words" | "sentences"
+  manageEditingId: null,
+  manageDraft: null,
+};
+
+// ====== Helpers ======
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function filtered() {
+  const v = getVocab();
+  return state.category === "הכול" ? v : v.filter(w => w.cat === state.category);
+}
+function pickRandom(arr, n, exclude) {
+  const pool = arr.filter(x => x !== exclude);
+  return shuffle(pool).slice(0, n);
+}
+function pickOne(arr, exclude) {
+  const pool = arr.filter(x => x !== exclude);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function speak(text) {
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ro-RO";
+  u.rate = 0.85;
+  // Try to find a Romanian voice
+  const voices = speechSynthesis.getVoices();
+  const ro = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ro"));
+  if (ro) u.voice = ro;
+  speechSynthesis.speak(u);
+}
+// Pre-load voices (some browsers populate async)
+if ("speechSynthesis" in window) {
+  speechSynthesis.onvoiceschanged = () => {};
+}
+
+function confetti() {
+  const emojis = ["🎉", "⭐", "✨", "🎊", "🌟", "💖", "🦋", "🌈"];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti";
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 100) + "vw";
+    el.style.top = "-40px";
+    el.style.animationDuration = (1 + Math.random() * 1.2) + "s";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2400);
+  }
+}
+
+function updateStats() {
+  document.getElementById("score").textContent = state.score;
+  document.getElementById("streak").textContent = state.streak;
+  document.getElementById("seen").textContent = state.seen;
+}
+
+function pickFeedback(good) {
+  const goods = ["מעולה! 🌟", "כל הכבוד! 💖", "כן! 🎉", "וואו! ✨", "מדהים! 🦋", "Foarte bine! 👏"];
+  const bads  = ["אופס, נסי שוב 🤗", "כמעט! 💪", "לא נורא, ננסה עוד! 🌱", "פעם הבאה תפצחי 🔑"];
+  return (good ? goods : bads)[Math.floor(Math.random() * (good ? goods.length : bads.length))];
+}
+
+// ====== Render: filters ======
+function renderFilters() {
+  const wrap = document.getElementById("filters");
+  if (["guide", "manage", "sentences", "user"].includes(state.mode)) { wrap.innerHTML = ""; return; }
+  const cats = getCategories();
+  wrap.innerHTML = cats.map(c =>
+    `<button class="chip ${state.category === c ? "active" : ""}" data-cat="${c}">${getCategoryEmoji(c)} ${c}</button>`
+  ).join("");
+  wrap.querySelectorAll(".chip").forEach(b => {
+    b.onclick = () => {
+      state.category = b.dataset.cat;
+      resetModeState();
+      render();
+    };
+  });
+}
+
+function resetModeState() {
+  state.flashIdx = 0;
+  state.flashFlipped = false;
+  state.flashOrder = shuffle(filtered().map((_, i) => i));
+  state.quizCurrent = null;
+  state.listenCurrent = null;
+  state.matchPairs = [];
+  state.matchSelected = null;
+  state.matchMatched = new Set();
+  state.sentenceIdx = 0;
+  state.sentenceRevealed = false;
+  state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+  state.manageEditingId = null;
+  state.manageDraft = null;
+}
+
+// ====== Render: flashcards ======
+function renderFlash() {
+  const list = filtered();
+  if (list.length === 0) return "<p style='text-align:center'>אין מילים בקטגוריה הזו</p>";
+  if (state.flashOrder.length === 0 || state.flashOrder.length !== list.length) {
+    state.flashOrder = shuffle(list.map((_, i) => i));
+  }
+  const word = list[state.flashOrder[state.flashIdx]];
+  const flipped = state.flashFlipped;
+
+  return `
+    <div class="flashcard-area">
+      <p style="color:#888; font-size:0.95rem;">כרטיסייה ${state.flashIdx + 1} מתוך ${list.length} ${state.category !== "הכול" ? "(" + state.category + ")" : ""}</p>
+      <div class="card" id="card">
+        <div class="emoji">${word.emoji}</div>
+        ${flipped ? `
+          <div class="ro" id="ro-word">${word.ro}</div>
+          <div class="pron">${word.pron}</div>
+          <div class="note">${word.note}</div>
+          <div class="hint">👆 לחיצה להפוך חזרה</div>
+        ` : `
+          <div class="he">${word.he}</div>
+          <div class="hint">👆 לחיצה כדי לגלות את המילה ברומנית</div>
+        `}
+      </div>
+      <div class="nav-row">
+        <button class="btn prev" id="prev">⬅️ הקודמת</button>
+        <button class="btn speak" id="speak">🔊 שמעי שוב</button>
+        <button class="btn" id="next">הבאה ➡️</button>
+        <button class="btn shuffle" id="shuffle">🔀 ערבבי</button>
+      </div>
+    </div>
+  `;
+}
+function attachFlashEvents() {
+  const list = filtered();
+  const word = list[state.flashOrder[state.flashIdx]];
+  document.getElementById("card").onclick = () => {
+    state.flashFlipped = !state.flashFlipped;
+    if (state.flashFlipped) {
+      speak(word.ro);
+      state.seen += 1;
+      updateStats();
+    }
+    render();
+  };
+  document.getElementById("speak").onclick = (e) => { e.stopPropagation(); speak(word.ro); };
+  document.getElementById("prev").onclick = () => {
+    state.flashIdx = (state.flashIdx - 1 + list.length) % list.length;
+    state.flashFlipped = false;
+    render();
+  };
+  document.getElementById("next").onclick = () => {
+    state.flashIdx = (state.flashIdx + 1) % list.length;
+    state.flashFlipped = false;
+    render();
+  };
+  document.getElementById("shuffle").onclick = () => {
+    state.flashOrder = shuffle(list.map((_, i) => i));
+    state.flashIdx = 0;
+    state.flashFlipped = false;
+    render();
+  };
+}
+
+// ====== Render: quiz (he -> ro multiple choice) ======
+function newQuiz() {
+  const list = filtered();
+  if (list.length < 4) return null;
+  const correct = list[Math.floor(Math.random() * list.length)];
+  const distractors = pickRandom(list, 3, correct);
+  state.quizCurrent = correct;
+  state.quizOptions = shuffle([correct, ...distractors]);
+  state.quizAnswered = false;
+}
+function renderQuiz() {
+  const list = filtered();
+  if (list.length < 4) return "<p style='text-align:center'>צריכים לפחות 4 מילים. בחרי קטגוריה אחרת או 'הכול' 🌈</p>";
+  if (!state.quizCurrent) newQuiz();
+  const w = state.quizCurrent;
+  return `
+    <div class="quiz-q">
+      <span class="emoji">${w.emoji}</span>
+      ${w.he}
+      <div class="prompt">איך אומרים את זה ברומנית? 🤔</div>
+    </div>
+    <div class="options" id="opts">
+      ${state.quizOptions.map((o, i) => `<button class="opt" data-i="${i}">${o.ro}</button>`).join("")}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <div class="nav-row" id="nextRow" style="display:none">
+      <button class="btn" id="nextQ">המשך ➡️</button>
+    </div>
+  `;
+}
+function attachQuizEvents() {
+  document.querySelectorAll("#opts .opt").forEach(b => {
+    b.onclick = () => {
+      if (state.quizAnswered) return;
+      const i = parseInt(b.dataset.i, 10);
+      const picked = state.quizOptions[i];
+      const correct = picked === state.quizCurrent;
+      state.quizAnswered = true;
+      state.seen += 1;
+      speak(state.quizCurrent.ro);
+      document.querySelectorAll("#opts .opt").forEach((bb, j) => {
+        bb.disabled = true;
+        const w = state.quizOptions[j];
+        if (w === state.quizCurrent) bb.classList.add("correct");
+        else if (j === i) bb.classList.add("wrong");
+      });
+      const fb = document.getElementById("fb");
+      if (correct) {
+        state.score += 10;
+        state.streak += 1;
+        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+        fb.textContent = pickFeedback(true) + " (+10 ⭐)";
+        fb.className = "feedback good";
+        confetti();
+      } else {
+        state.streak = 0;
+        fb.textContent = pickFeedback(false) + "  התשובה: " + state.quizCurrent.ro;
+        fb.className = "feedback bad";
+      }
+      updateStats();
+      document.getElementById("nextRow").style.display = "flex";
+    };
+  });
+  const nextBtn = document.getElementById("nextQ");
+  if (nextBtn) nextBtn.onclick = () => { newQuiz(); render(); };
+}
+
+// ====== Render: listen (hear ro -> pick he) ======
+function newListen() {
+  const list = filtered();
+  if (list.length < 4) return;
+  const correct = list[Math.floor(Math.random() * list.length)];
+  const distractors = pickRandom(list, 3, correct);
+  state.listenCurrent = correct;
+  state.listenOptions = shuffle([correct, ...distractors]);
+  state.listenAnswered = false;
+}
+function renderListen() {
+  const list = filtered();
+  if (list.length < 4) return "<p style='text-align:center'>צריכים לפחות 4 מילים. בחרי קטגוריה אחרת או 'הכול' 🌈</p>";
+  if (!state.listenCurrent) newListen();
+  return `
+    <div class="listen-area">
+      <p style="font-size:1.1rem; color:#555;">לחצי על הרמקול ונסי לזהות את המילה 👂</p>
+      <button class="listen-btn" id="playRo">🔊</button>
+      <p style="color:#999; font-size:0.95rem;">אפשר ללחוץ שוב כמה פעמים</p>
+      <div class="options" id="opts" style="max-width:520px; margin:16px auto 0;">
+        ${state.listenOptions.map((o, i) => `<button class="opt" data-i="${i}">${o.emoji} ${o.he}</button>`).join("")}
+      </div>
+      <div class="feedback" id="fb"></div>
+      <div class="nav-row" id="nextRow" style="display:none">
+        <button class="btn" id="nextQ">המשך ➡️</button>
+      </div>
+    </div>
+  `;
+}
+function attachListenEvents() {
+  const playBtn = document.getElementById("playRo");
+  if (playBtn) {
+    playBtn.onclick = () => speak(state.listenCurrent.ro);
+    setTimeout(() => speak(state.listenCurrent.ro), 250); // play once on load
+  }
+  document.querySelectorAll("#opts .opt").forEach(b => {
+    b.onclick = () => {
+      if (state.listenAnswered) return;
+      const i = parseInt(b.dataset.i, 10);
+      const picked = state.listenOptions[i];
+      const correct = picked === state.listenCurrent;
+      state.listenAnswered = true;
+      state.seen += 1;
+      document.querySelectorAll("#opts .opt").forEach((bb, j) => {
+        bb.disabled = true;
+        const w = state.listenOptions[j];
+        if (w === state.listenCurrent) bb.classList.add("correct");
+        else if (j === i) bb.classList.add("wrong");
+      });
+      const fb = document.getElementById("fb");
+      if (correct) {
+        state.score += 10;
+        state.streak += 1;
+        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+        fb.innerHTML = pickFeedback(true) + " (+10 ⭐) — <b>" + state.listenCurrent.ro + "</b> = " + state.listenCurrent.he;
+        fb.className = "feedback good";
+        confetti();
+      } else {
+        state.streak = 0;
+        fb.innerHTML = pickFeedback(false) + " — <b>" + state.listenCurrent.ro + "</b> = " + state.listenCurrent.he;
+        fb.className = "feedback bad";
+      }
+      updateStats();
+      document.getElementById("nextRow").style.display = "flex";
+    };
+  });
+  const nextBtn = document.getElementById("nextQ");
+  if (nextBtn) nextBtn.onclick = () => { newListen(); render(); };
+}
+
+// ====== Render: match game (6 pairs) ======
+function newMatch() {
+  const list = filtered();
+  const n = Math.min(6, list.length);
+  const picks = shuffle(list).slice(0, n);
+  // Build two columns: left = he, right = ro, shuffled independently
+  const left = shuffle(picks.map((w, i) => ({ side: "he", id: i, label: w.emoji + " " + w.he })));
+  const right = shuffle(picks.map((w, i) => ({ side: "ro", id: i, label: w.ro })));
+  state.matchPairs = { picks, left, right };
+  state.matchSelected = null;
+  state.matchMatched = new Set();
+}
+function renderMatch() {
+  const list = filtered();
+  if (list.length < 4) return "<p style='text-align:center'>צריכים לפחות 4 מילים. בחרי קטגוריה אחרת או 'הכול' 🌈</p>";
+  if (!state.matchPairs.picks) newMatch();
+  const { left, right, picks } = state.matchPairs;
+  const matched = state.matchMatched;
+  const allDone = matched.size === picks.length;
+  return `
+    <p style="text-align:center; color:#555;">לחצי על מילה בעברית ואז על המילה המתאימה ברומנית 🧩</p>
+    <div class="match-grid" id="matchGrid" style="margin-top:12px;">
+      ${left.map(item => `
+        <button class="opt ${state.matchSelected && state.matchSelected.side === "he" && state.matchSelected.id === item.id ? "selected" : ""} ${matched.has("he-" + item.id) ? "matched" : ""}" data-side="he" data-id="${item.id}">${item.label}</button>
+        ${(() => {
+          // pair each row: not strictly aligned because right is independent, but visually 2 cols works fine
+          return "";
+        })()}
+      `).join("")}
+    </div>
+    <div class="match-grid" id="matchGrid2" style="margin-top:10px;">
+      ${right.map(item => `
+        <button class="opt ${state.matchSelected && state.matchSelected.side === "ro" && state.matchSelected.id === item.id ? "selected" : ""} ${matched.has("ro-" + item.id) ? "matched" : ""}" data-side="ro" data-id="${item.id}">${item.label}</button>
+      `).join("")}
+    </div>
+    <div class="feedback" id="fb">${allDone ? "🎉 כל הכבוד! מצאת את כל הזוגות!" : ""}</div>
+    ${allDone ? `<div class="nav-row"><button class="btn" id="nextMatch">🔁 סבב חדש</button></div>` : ""}
+  `;
+}
+function attachMatchEvents() {
+  const { picks } = state.matchPairs;
+  const handler = (btn) => {
+    const side = btn.dataset.side;
+    const id = parseInt(btn.dataset.id, 10);
+    if (state.matchMatched.has(side + "-" + id)) return;
+    if (!state.matchSelected) {
+      state.matchSelected = { side, id };
+      render();
+      return;
+    }
+    if (state.matchSelected.side === side && state.matchSelected.id === id) {
+      state.matchSelected = null;
+      render();
+      return;
+    }
+    // We have a previous selection — check match
+    const a = state.matchSelected;
+    const b = { side, id };
+    if (a.side !== b.side && a.id === b.id) {
+      state.matchMatched.add("he-" + a.id);
+      state.matchMatched.add("ro-" + a.id);
+      state.matchMatched.add("he-" + b.id);
+      state.matchMatched.add("ro-" + b.id);
+      state.score += 10;
+      state.streak += 1;
+      state.seen += 1;
+      if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+      updateStats();
+      speak(picks[a.id].ro);
+      state.matchSelected = null;
+      const allDone = state.matchMatched.size / 2 === picks.length;
+      render();
+      if (allDone) confetti();
+    } else {
+      state.streak = 0;
+      updateStats();
+      state.matchSelected = null;
+      // brief shake feedback
+      btn.classList.add("wrong");
+      setTimeout(() => { render(); }, 350);
+    }
+  };
+  document.querySelectorAll("#matchGrid .opt, #matchGrid2 .opt").forEach(b => {
+    b.onclick = () => handler(b);
+  });
+  const nx = document.getElementById("nextMatch");
+  if (nx) nx.onclick = () => { newMatch(); render(); };
+}
+
+// ====== Render: sentences ======
+function knownWord(ro) {
+  // Match against vocab (case-insensitive, strip punctuation)
+  const norm = s => s.toLowerCase().replace(/[.,!?;:'"()\-]/g, "").trim();
+  const n = norm(ro);
+  return getVocab().some(w => norm(w.ro) === n);
+}
+function renderSentences() {
+  const list = getSentences();
+  if (list.length === 0) return "<p style='text-align:center'>אין משפטים. אפשר להוסיף ב-📝 הוסיפי</p>";
+  if (!state.sentenceOrder.length || state.sentenceOrder.length !== list.length) {
+    state.sentenceOrder = shuffle(list.map((_, i) => i));
+  }
+  const s = list[state.sentenceOrder[state.sentenceIdx]];
+  const revealed = state.sentenceRevealed;
+  const wordsHtml = (s.words || []).map((w, i) => {
+    const known = knownWord(w.ro);
+    return `<button class="word-chip ${known ? "known" : "new"}" data-ro="${encodeURIComponent(w.ro)}">
+      ${known ? "✅" : "🆕"} <b>${w.ro}</b> — ${w.he}
+      <span class="word-pron">${w.pron}</span>
+    </button>`;
+  }).join("");
+  return `
+    <div style="text-align:center;">
+      <p style="color:#888;">משפט ${state.sentenceIdx + 1} מתוך ${list.length} ${s.theme ? "· " + s.theme : ""}</p>
+      <div class="card sentence-card" id="sentenceCard">
+        <div class="emoji">${s.emoji || "💬"}</div>
+        <div class="he" style="font-size:2rem;">${s.he}</div>
+        ${revealed ? `
+          <div class="ro" style="margin-top:14px; font-size:1.8rem;">${s.ro}</div>
+          <div class="pron">${s.pron}</div>
+        ` : `<div class="hint" style="margin-top:18px;">👆 לחיצה לגלות את המשפט ברומנית</div>`}
+      </div>
+      <div class="nav-row">
+        <button class="btn prev" id="sPrev">⬅️ הקודם</button>
+        <button class="btn speak" id="sSpeak">🔊 השמיעי</button>
+        <button class="btn" id="sNext">הבא ➡️</button>
+        <button class="btn shuffle" id="sShuffle">🔀 ערבבי</button>
+      </div>
+      ${revealed && s.words && s.words.length ? `
+        <div class="words-breakdown">
+          <h3>🔍 מילים מהמשפט</h3>
+          <p class="hint" style="margin-bottom:10px;">לחיצה על כל מילה כדי לשמוע אותה</p>
+          <div class="word-list">${wordsHtml}</div>
+          <div class="legend">
+            <span><span class="dot known"></span> כבר למדת</span>
+            <span><span class="dot new"></span> מילה חדשה ללמוד</span>
+          </div>
+        </div>` : ""}
+    </div>
+  `;
+}
+function attachSentenceEvents() {
+  const list = getSentences();
+  const s = list[state.sentenceOrder[state.sentenceIdx]];
+  document.getElementById("sentenceCard").onclick = () => {
+    state.sentenceRevealed = !state.sentenceRevealed;
+    if (state.sentenceRevealed) { speak(s.ro); state.seen += 1; updateStats(); }
+    render();
+  };
+  document.getElementById("sSpeak").onclick = (e) => { e.stopPropagation(); speak(s.ro); };
+  document.getElementById("sPrev").onclick = () => {
+    state.sentenceIdx = (state.sentenceIdx - 1 + list.length) % list.length;
+    state.sentenceRevealed = false; render();
+  };
+  document.getElementById("sNext").onclick = () => {
+    state.sentenceIdx = (state.sentenceIdx + 1) % list.length;
+    state.sentenceRevealed = false; render();
+  };
+  document.getElementById("sShuffle").onclick = () => {
+    state.sentenceOrder = shuffle(list.map((_, i) => i));
+    state.sentenceIdx = 0; state.sentenceRevealed = false; render();
+  };
+  document.querySelectorAll(".word-chip").forEach(b => {
+    b.onclick = () => speak(decodeURIComponent(b.dataset.ro));
+  });
+}
+
+// ====== Render: manage (add/edit/delete words and sentences) ======
+function emptyWordDraft() { return { id: null, he: "", ro: "", pron: "", cat: "", emoji: "✨", note: "" }; }
+function emptySentenceDraft() { return { id: null, he: "", ro: "", pron: "", emoji: "💬", theme: "", words: [] }; }
+
+function renderManage() {
+  const tab = state.manageTab;
+  return `
+    <div class="manage-tabs">
+      <button class="m-tab ${tab === "words" ? "active" : ""}" data-mtab="words">📚 מילים (${userVocab.length})</button>
+      <button class="m-tab ${tab === "sentences" ? "active" : ""}" data-mtab="sentences">🗣️ משפטים (${userSentences.length})</button>
+    </div>
+    ${tab === "words" ? renderManageWords() : renderManageSentences()}
+    <div class="io-row">
+      <button class="btn" id="exportBtn">⬇️ ייצוא גיבוי</button>
+      <button class="btn shuffle" id="importBtn">⬆️ ייבוא גיבוי</button>
+      <button class="btn" style="background:linear-gradient(135deg,#bdbdbd,#757575)" id="resetBtn">🗑️ אפסי הכול</button>
+    </div>
+  `;
+}
+
+function renderManageWords() {
+  const draft = state.manageDraft || emptyWordDraft();
+  const cats = getCategories().filter(c => c !== "הכול");
+  return `
+    <h3 class="m-heading">${state.manageEditingId ? "✏️ עורכים מילה" : "➕ הוספת מילה חדשה"}</h3>
+    <div class="form-grid">
+      <label>עברית <span class="req">*</span><input type="text" id="f-he" value="${escapeAttr(draft.he)}" placeholder="לדוגמה: חתול"></label>
+      <label>רומנית <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="לדוגמה: Pisică" dir="ltr"></label>
+      <label>הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="לדוגמה: פִּי-סִי-קָה"></label>
+      <label>קטגוריה
+        <input type="text" id="f-cat" value="${escapeAttr(draft.cat)}" placeholder="חיות / מספרים / משפחה..." list="cat-options">
+        <datalist id="cat-options">${cats.map(c => `<option value="${escapeAttr(c)}">`).join("")}</datalist>
+      </label>
+      <label>אימוג'י<input type="text" id="f-emoji" value="${escapeAttr(draft.emoji)}" placeholder="🐱" maxlength="4"></label>
+      <label style="grid-column:1/-1;">הערה (אופציונלי)<input type="text" id="f-note" value="${escapeAttr(draft.note)}" placeholder="טיפ להגייה או זכירה"></label>
+    </div>
+    <div class="nav-row">
+      <button class="btn speak" id="saveBtn">${state.manageEditingId ? "💾 שמרי שינויים" : "➕ הוסיפי לרשימה"}</button>
+      ${state.manageEditingId ? `<button class="btn prev" id="cancelBtn">❌ ביטול</button>` : ""}
+      <button class="btn shuffle" id="testSpeak" type="button">🔊 בדיקת הקראה</button>
+    </div>
+
+    <h3 class="m-heading">המילים שהוספת (${userVocab.length})</h3>
+    ${userVocab.length === 0 ? `<p class="empty-note">עדיין לא הוספת מילים. ההוספות יישמרו בדפדפן ויופיעו בכל מצבי התרגול.</p>` : `
+      <table class="m-table">
+        <tr><th>אימוג'י</th><th>עברית</th><th>רומנית</th><th>הגייה</th><th>קטגוריה</th><th></th></tr>
+        ${userVocab.map(w => `
+          <tr>
+            <td>${w.emoji || "✨"}</td>
+            <td>${escapeHtml(w.he)}</td>
+            <td dir="ltr"><b>${escapeHtml(w.ro)}</b></td>
+            <td>${escapeHtml(w.pron || "")}</td>
+            <td>${escapeHtml(w.cat || "שונות")}</td>
+            <td class="row-actions">
+              <button class="mini" data-action="speak" data-id="${w.id}">🔊</button>
+              <button class="mini" data-action="edit"  data-id="${w.id}">✏️</button>
+              <button class="mini danger" data-action="delete" data-id="${w.id}">🗑️</button>
+            </td>
+          </tr>`).join("")}
+      </table>`}
+
+    <details class="builtin-list">
+      <summary>📦 25 המילים המובנות (לקריאה בלבד)</summary>
+      <table class="m-table">
+        ${BUILTIN_VOCAB.map(w => `
+          <tr>
+            <td>${w.emoji}</td><td>${w.he}</td>
+            <td dir="ltr"><b>${w.ro}</b></td>
+            <td>${w.pron}</td><td>${w.cat}</td>
+            <td><button class="mini" data-builtin-speak="${escapeAttr(w.ro)}">🔊</button></td>
+          </tr>`).join("")}
+      </table>
+    </details>
+  `;
+}
+
+function renderManageSentences() {
+  const draft = state.manageDraft || emptySentenceDraft();
+  return `
+    <h3 class="m-heading">${state.manageEditingId ? "✏️ עורכים משפט" : "➕ הוספת משפט חדש"}</h3>
+    <div class="form-grid">
+      <label style="grid-column:1/-1;">עברית <span class="req">*</span><input type="text" id="f-he" value="${escapeAttr(draft.he)}" placeholder="לדוגמה: אני אוהבת לרקוד"></label>
+      <label style="grid-column:1/-1;">רומנית <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="לדוגמה: Îmi place să dansez" dir="ltr"></label>
+      <label style="grid-column:1/-1;">הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="אִימְי פְּלָאצֶ'ה סָה דָאן-זֶז"></label>
+      <label>נושא<input type="text" id="f-theme" value="${escapeAttr(draft.theme)}" placeholder="תחביבים"></label>
+      <label>אימוג'י<input type="text" id="f-emoji" value="${escapeAttr(draft.emoji)}" placeholder="💃" maxlength="4"></label>
+    </div>
+    <p class="hint" style="margin-top:8px;">פירוק מילה-מילה (אופציונלי, אבל מומלץ): שורה אחת לכל מילה בפורמט <code>רומנית | עברית | הגייה</code></p>
+    <textarea id="f-words" class="words-textarea" placeholder="Îmi | לי | אִימְי&#10;place | מוצא חן | פְּלָאצֶ'ה&#10;să | ש- | סָה&#10;dansez | אני רוקדת | דָאן-זֶז">${draft.words && draft.words.length ? draft.words.map(w => `${w.ro} | ${w.he} | ${w.pron || ""}`).join("\n") : ""}</textarea>
+    <div class="nav-row">
+      <button class="btn speak" id="saveBtn">${state.manageEditingId ? "💾 שמרי שינויים" : "➕ הוסיפי לרשימה"}</button>
+      ${state.manageEditingId ? `<button class="btn prev" id="cancelBtn">❌ ביטול</button>` : ""}
+      <button class="btn shuffle" id="testSpeak">🔊 בדיקת הקראה</button>
+    </div>
+
+    <h3 class="m-heading">המשפטים שהוספת (${userSentences.length})</h3>
+    ${userSentences.length === 0 ? `<p class="empty-note">עדיין לא הוספת משפטים.</p>` : `
+      <table class="m-table">
+        <tr><th></th><th>עברית</th><th>רומנית</th><th>נושא</th><th></th></tr>
+        ${userSentences.map(s => `
+          <tr>
+            <td>${s.emoji || "💬"}</td>
+            <td>${escapeHtml(s.he)}</td>
+            <td dir="ltr"><b>${escapeHtml(s.ro)}</b></td>
+            <td>${escapeHtml(s.theme || "")}</td>
+            <td class="row-actions">
+              <button class="mini" data-action="speak" data-id="${s.id}">🔊</button>
+              <button class="mini" data-action="edit"  data-id="${s.id}">✏️</button>
+              <button class="mini danger" data-action="delete" data-id="${s.id}">🗑️</button>
+            </td>
+          </tr>`).join("")}
+      </table>`}
+  `;
+}
+
+function escapeAttr(s) { return String(s == null ? "" : s).replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+function escapeHtml(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+function attachManageEvents() {
+  document.querySelectorAll(".m-tab").forEach(b => {
+    b.onclick = () => {
+      state.manageTab = b.dataset.mtab;
+      state.manageEditingId = null;
+      state.manageDraft = null;
+      render();
+    };
+  });
+
+  // Collect inputs into a draft so render() doesn't lose typed-but-unsaved values when re-rendered
+  const collect = () => {
+    const get = id => (document.getElementById(id) || {}).value || "";
+    if (state.manageTab === "words") {
+      return { id: state.manageEditingId, he: get("f-he").trim(), ro: get("f-ro").trim(),
+               pron: get("f-pron").trim(), cat: get("f-cat").trim() || "שונות",
+               emoji: get("f-emoji").trim() || "✨", note: get("f-note").trim() };
+    }
+    const wordsRaw = get("f-words");
+    const words = wordsRaw.split("\n").map(line => {
+      const parts = line.split("|").map(s => s.trim());
+      if (parts.length < 2 || !parts[0] || !parts[1]) return null;
+      return { ro: parts[0], he: parts[1], pron: parts[2] || "" };
+    }).filter(Boolean);
+    return { id: state.manageEditingId, he: get("f-he").trim(), ro: get("f-ro").trim(),
+             pron: get("f-pron").trim(), theme: get("f-theme").trim(),
+             emoji: get("f-emoji").trim() || "💬", words };
+  };
+
+  const save = () => {
+    const d = collect();
+    if (!d.he || !d.ro) { alert("חובה למלא עברית ורומנית"); return; }
+    const list = state.manageTab === "words" ? userVocab : userSentences;
+    if (state.manageEditingId) {
+      const i = list.findIndex(x => x.id === state.manageEditingId);
+      if (i >= 0) list[i] = { ...list[i], ...d, id: state.manageEditingId };
+    } else {
+      d.id = "u" + Date.now() + Math.floor(Math.random() * 1000);
+      list.push(d);
+    }
+    if (state.manageTab === "words") saveUserVocab(); else saveUserSentences();
+    state.manageEditingId = null;
+    state.manageDraft = null;
+    // invalidate orders since vocab/sentence count changed
+    state.flashOrder = shuffle(filtered().map((_, i) => i));
+    state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+    render();
+  };
+
+  const saveBtn = document.getElementById("saveBtn");
+  if (saveBtn) saveBtn.onclick = save;
+  const cancelBtn = document.getElementById("cancelBtn");
+  if (cancelBtn) cancelBtn.onclick = () => {
+    state.manageEditingId = null; state.manageDraft = null; render();
+  };
+  const testBtn = document.getElementById("testSpeak");
+  if (testBtn) testBtn.onclick = () => {
+    const ro = (document.getElementById("f-ro") || {}).value || "";
+    if (ro) speak(ro);
+  };
+
+  // Row actions
+  document.querySelectorAll("[data-action]").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      const list = state.manageTab === "words" ? userVocab : userSentences;
+      const item = list.find(x => x.id === id);
+      if (!item) return;
+      if (action === "speak") speak(item.ro);
+      else if (action === "edit") {
+        state.manageEditingId = id;
+        state.manageDraft = { ...item };
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (action === "delete") {
+        if (!confirm("למחוק את \"" + item.he + "\"?")) return;
+        const i = list.findIndex(x => x.id === id);
+        if (i >= 0) list.splice(i, 1);
+        if (state.manageTab === "words") saveUserVocab(); else saveUserSentences();
+        state.flashOrder = shuffle(filtered().map((_, i) => i));
+        state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+        render();
+      }
+    };
+  });
+
+  // Built-in speak
+  document.querySelectorAll("[data-builtin-speak]").forEach(b => {
+    b.onclick = () => speak(b.dataset.builtinSpeak);
+  });
+
+  // Export / import / reset
+  const exportBtn = document.getElementById("exportBtn");
+  if (exportBtn) exportBtn.onclick = () => {
+    const data = { exportedAt: new Date().toISOString(), userVocab, userSentences, stats: { score: state.score, bestStreak: state.bestStreak, seen: state.seen } };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "romanian-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  const importBtn = document.getElementById("importBtn");
+  if (importBtn) importBtn.onclick = () => {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = "application/json,.json";
+    inp.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const data = JSON.parse(r.result);
+          if (Array.isArray(data.userVocab)) userVocab = data.userVocab;
+          if (Array.isArray(data.userSentences)) userSentences = data.userSentences;
+          saveUserVocab(); saveUserSentences();
+          alert("ייובא בהצלחה ✨");
+          render();
+        } catch (err) { alert("הקובץ לא תקין: " + err.message); }
+      };
+      r.readAsText(file);
+    };
+    inp.click();
+  };
+  const resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) resetBtn.onclick = () => {
+    if (!confirm("למחוק את כל המילים והמשפטים שהוספת? (המובנים יישארו)")) return;
+    userVocab = []; userSentences = [];
+    saveUserVocab(); saveUserSentences();
+    render();
+  };
+}
+
+// ====== Render: user / admin ======
+// Pending preview from the bulk upload form, kept on the state so render() can show it
+state.userPreview = null;
+
+function newId() { return "u" + Date.now() + Math.floor(Math.random() * 1000000); }
+
+// Parses a markdown table in the format the user paste:
+// | קטגוריה | עברית | רומנית | הגייה | הערות |
+// Category cells are sticky — empty category inherits previous.
+function parseMarkdownTable(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trim());
+  let currentCat = "";
+  const words = [];
+  for (const line of lines) {
+    if (!line.startsWith("|")) continue;
+    if (/^\|[\s:|\-]+$/.test(line)) continue; // separator like |---|---|
+    let cells = line.split("|").map(c => c.trim().replace(/\*\*/g, "").replace(/__/g, ""));
+    if (cells.length && cells[0] === "") cells.shift();
+    if (cells.length && cells[cells.length - 1] === "") cells.pop();
+    if (cells.length < 3) continue;
+    const [cat, he, ro, pron, note] = cells;
+    // Skip header rows
+    if (/^רומנית/.test(ro) || /^Romanian/i.test(ro) || he === "עברית" || he === "Hebrew") continue;
+    if (cat) currentCat = cat;
+    if (!he || !ro) continue;
+    words.push({
+      id: newId() + "-" + words.length,
+      he, ro,
+      pron: pron || "",
+      cat: currentCat || "מילון מורחב",
+      emoji: "✨",
+      note: note || "",
+    });
+  }
+  return { words, sentences: [] };
+}
+
+// Parses JSON in several shapes:
+//   - Existing export: { userVocab, userSentences }
+//   - { words, sentences }
+//   - Plain array → treated as words
+function parseJsonDictionary(text) {
+  const data = JSON.parse(text);
+  let words = [], sentences = [];
+  if (Array.isArray(data)) {
+    words = data;
+  } else if (data.userVocab !== undefined || data.userSentences !== undefined) {
+    words = data.userVocab || [];
+    sentences = data.userSentences || [];
+  } else if (data.words !== undefined || data.sentences !== undefined) {
+    words = data.words || [];
+    sentences = data.sentences || [];
+  } else {
+    throw new Error("פורמט לא מזוהה");
+  }
+  words = (words || []).filter(w => w && w.he && w.ro).map(w => ({
+    id: w.id || newId(),
+    he: w.he, ro: w.ro,
+    pron: w.pron || "",
+    cat: w.cat || "מילון מורחב",
+    emoji: w.emoji || "✨",
+    note: w.note || "",
+  }));
+  sentences = (sentences || []).filter(s => s && s.he && s.ro).map(s => ({
+    id: s.id || newId(),
+    he: s.he, ro: s.ro,
+    pron: s.pron || "",
+    emoji: s.emoji || "💬",
+    theme: s.theme || "",
+    words: Array.isArray(s.words) ? s.words : [],
+  }));
+  return { words, sentences };
+}
+
+function parseExtension(text) {
+  const trimmed = text.trim();
+  if (!trimmed) throw new Error("הטקסט ריק");
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    return { type: "json", ...parseJsonDictionary(trimmed) };
+  }
+  if (trimmed.includes("|")) {
+    return { type: "markdown", ...parseMarkdownTable(trimmed) };
+  }
+  throw new Error("לא זוהה פורמט. צריך JSON או טבלת Markdown");
+}
+
+function renderUser() {
+  const totalUserWords = userVocab.length;
+  const totalUserSent  = userSentences.length;
+  const preview = state.userPreview;
+
+  return `
+    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">👤 הפרופיל שלי</h2>
+
+    <div class="user-stats">
+      <div class="ustat"><div class="big">${state.score}</div><div>⭐ נקודות</div></div>
+      <div class="ustat"><div class="big">${state.bestStreak}</div><div>🔥 רצף שיא</div></div>
+      <div class="ustat"><div class="big">${state.seen}</div><div>📚 תרגולים</div></div>
+      <div class="ustat"><div class="big">${BUILTIN_VOCAB.length + totalUserWords}</div><div>📖 סך מילים</div></div>
+      <div class="ustat"><div class="big">${BUILTIN_SENTENCES.length + totalUserSent}</div><div>💬 סך משפטים</div></div>
+    </div>
+
+    <details class="admin-box" open>
+      <summary>🔐 אזור אדמין — להורה</summary>
+      <div class="admin-body">
+
+        <h3 class="m-heading">📥 העלאת מילון הרחבה</h3>
+        <p class="hint">
+          הדבק טבלת Markdown (אותו פורמט שאת/ה משתמש/ת בו), או קובץ JSON. תקבל/י תצוגה מקדימה לפני המיזוג.
+        </p>
+        <div class="ext-row">
+          <button class="btn shuffle" id="extFile">📂 בחר/י קובץ</button>
+          <button class="btn speak" id="extSample">📋 דוגמת Markdown</button>
+          <button class="btn" id="extParse">🔍 נתח טקסט</button>
+          <button class="btn prev" id="extClear">🧹 נקה</button>
+        </div>
+        <textarea id="extInput" class="ext-textarea" placeholder="הדבק כאן טבלת Markdown או JSON...
+
+דוגמה (Markdown):
+| קטגוריה | עברית | רומנית | הגייה | הערות |
+| :--- | :--- | :--- | :--- | :--- |
+| **חיות** | חתול | Pisică | פִּיסִיקָה | מילה בנקבה |
+|         | סוס  | Cal    | קָאל      | |"></textarea>
+
+        ${preview ? renderPreview(preview) : ""}
+
+        <h3 class="m-heading" style="margin-top:24px;">📤 ייצוא וגיבוי</h3>
+        <div class="ext-row">
+          <button class="btn" id="uExport">⬇️ הורד גיבוי מלא (JSON)</button>
+          <button class="btn shuffle" id="uImport">⬆️ ייבא קובץ גיבוי</button>
+        </div>
+
+        <h3 class="m-heading" style="margin-top:24px; color:#c62828;">⚠️ פעולות הרסניות</h3>
+        <div class="ext-row">
+          <button class="btn" style="background:linear-gradient(135deg,#ef9a9a,#e57373);" id="uResetVocab">🗑️ אפס מילון מורחב</button>
+          <button class="btn" style="background:linear-gradient(135deg,#ef9a9a,#e57373);" id="uResetProgress">📉 אפס התקדמות (נקודות/רצף)</button>
+        </div>
+      </div>
+    </details>
+  `;
+}
+
+function renderPreview(preview) {
+  const { type, words, sentences } = preview;
+  const wPreview = words.slice(0, 8);
+  const sPreview = sentences.slice(0, 5);
+  return `
+    <div class="preview-box">
+      <h4>תצוגה מקדימה (${type === "json" ? "JSON" : "Markdown"})</h4>
+      <p style="color:#555;">זוהו <b>${words.length}</b> מילים ו-<b>${sentences.length}</b> משפטים.</p>
+      ${words.length ? `
+        <table class="m-table">
+          <tr><th>אימוג'י</th><th>עברית</th><th>רומנית</th><th>הגייה</th><th>קטגוריה</th></tr>
+          ${wPreview.map(w => `<tr>
+            <td>${w.emoji}</td><td>${escapeHtml(w.he)}</td>
+            <td dir="ltr"><b>${escapeHtml(w.ro)}</b></td>
+            <td>${escapeHtml(w.pron)}</td><td>${escapeHtml(w.cat)}</td>
+          </tr>`).join("")}
+          ${words.length > wPreview.length ? `<tr><td colspan="5" style="text-align:center; color:#888;">...ועוד ${words.length - wPreview.length} מילים</td></tr>` : ""}
+        </table>
+      ` : ""}
+      ${sentences.length ? `
+        <table class="m-table" style="margin-top:8px;">
+          <tr><th></th><th>עברית</th><th>רומנית</th></tr>
+          ${sPreview.map(s => `<tr>
+            <td>${s.emoji}</td><td>${escapeHtml(s.he)}</td>
+            <td dir="ltr"><b>${escapeHtml(s.ro)}</b></td>
+          </tr>`).join("")}
+          ${sentences.length > sPreview.length ? `<tr><td colspan="3" style="text-align:center; color:#888;">...ועוד ${sentences.length - sPreview.length} משפטים</td></tr>` : ""}
+        </table>
+      ` : ""}
+      <div class="ext-row" style="margin-top:14px;">
+        <button class="btn speak" id="extCommit">✅ הוסף לאוצר המילים שלי (${words.length + sentences.length})</button>
+        <button class="btn prev" id="extCancel">❌ ביטול</button>
+      </div>
+    </div>
+  `;
+}
+
+const SAMPLE_MARKDOWN = `| קטגוריה | עברית | רומנית | הגייה | הערות |
+| :--- | :--- | :--- | :--- | :--- |
+| **חיות** | חתול | Pisică | פִּיסִיקָה | מילה בנקבה |
+|         | סוס  | Cal | קָאל | |
+|         | ציפור | Pasăre | פָּסָרֶה | |
+| **מספרים** | אחד | Unu | אוּנוּ | |
+|         | שתיים | Doi | דוֹי | זכר; נקבה: Două |
+|         | שלוש | Trei | טרֶיי | |`;
+
+function attachUserEvents() {
+  const ta = document.getElementById("extInput");
+
+  document.getElementById("extSample").onclick = () => { ta.value = SAMPLE_MARKDOWN; };
+  document.getElementById("extClear").onclick  = () => { ta.value = ""; state.userPreview = null; render(); };
+
+  document.getElementById("extFile").onclick = () => {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = ".json,.md,.txt,application/json,text/markdown,text/plain";
+    inp.onchange = (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        ta.value = r.result;
+        tryParse();
+      };
+      r.readAsText(file);
+    };
+    inp.click();
+  };
+
+  const tryParse = () => {
+    try {
+      const result = parseExtension(ta.value);
+      if (result.words.length === 0 && result.sentences.length === 0) {
+        alert("לא נמצאו מילים או משפטים בטקסט.");
+        return;
+      }
+      state.userPreview = result;
+      render();
+    } catch (e) {
+      alert("שגיאה בקריאת הטקסט: " + e.message);
+    }
+  };
+  document.getElementById("extParse").onclick = tryParse;
+
+  const commitBtn = document.getElementById("extCommit");
+  if (commitBtn) commitBtn.onclick = () => {
+    const { words, sentences } = state.userPreview;
+    userVocab = userVocab.concat(words);
+    userSentences = userSentences.concat(sentences);
+    saveUserVocab(); saveUserSentences();
+    state.userPreview = null;
+    state.flashOrder = shuffle(filtered().map((_, i) => i));
+    state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+    alert(`נוספו ${words.length} מילים ו-${sentences.length} משפטים 🎉`);
+    render();
+  };
+  const cancelBtn = document.getElementById("extCancel");
+  if (cancelBtn) cancelBtn.onclick = () => { state.userPreview = null; render(); };
+
+  document.getElementById("uExport").onclick = () => {
+    const data = {
+      exportedAt: new Date().toISOString(),
+      userVocab, userSentences,
+      stats: { score: state.score, bestStreak: state.bestStreak, seen: state.seen },
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "romanian-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  document.getElementById("uImport").onclick = () => {
+    const inp = document.createElement("input");
+    inp.type = "file"; inp.accept = "application/json,.json";
+    inp.onchange = (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const data = JSON.parse(r.result);
+          if (Array.isArray(data.userVocab)) userVocab = data.userVocab;
+          if (Array.isArray(data.userSentences)) userSentences = data.userSentences;
+          saveUserVocab(); saveUserSentences();
+          alert("ייובא בהצלחה ✨");
+          render();
+        } catch (err) { alert("הקובץ לא תקין: " + err.message); }
+      };
+      r.readAsText(file);
+    };
+    inp.click();
+  };
+
+  document.getElementById("uResetVocab").onclick = () => {
+    if (!confirm("למחוק את כל המילים והמשפטים שהוספת? (המובנים יישארו)")) return;
+    userVocab = []; userSentences = [];
+    saveUserVocab(); saveUserSentences();
+    render();
+  };
+
+  document.getElementById("uResetProgress").onclick = () => {
+    if (!confirm("לאפס נקודות, רצף שיא ומונה תרגולים?")) return;
+    state.score = 0; state.bestStreak = 0; state.streak = 0; state.seen = 0;
+    try { localStorage.setItem("ro-kids-stats", JSON.stringify({})); } catch (e) {}
+    render();
+  };
+}
+
+// ====== Render: pronunciation guide ======
+function renderGuide() {
+  return `
+    <h2 style="color:#d81b60; text-align:center; margin-bottom:12px;">📖 איך לקרוא ברומנית</h2>
+    <div class="guide">
+      <div class="letter">ă</div>     <div class="desc">צליל "א" קצר ועמום (כמו ה-"a" ב-about)</div>
+      <div class="letter">â / î</div>  <div class="desc">צליל גרוני עמוק — כמו "י" מהגרון</div>
+      <div class="letter">ț</div>     <div class="desc">צליל "צ" ברור</div>
+      <div class="letter">ș</div>     <div class="desc">צליל "ש" (Sh)</div>
+      <div class="letter">c + e/i</div><div class="desc">"צ'" (כמו cherry)</div>
+      <div class="letter">ch</div>    <div class="desc">"ק" (כמו cake) — Mă cheamă = "מה קְיָאמָה"</div>
+      <div class="letter">j</div>     <div class="desc">"ז'" תמיד (כמו ה-J הצרפתית)</div>
+      <div class="letter">i סופית</div><div class="desc">בדרך כלל מרככת את העיצור שלפניה ולא נשמעת כהברה מלאה</div>
+    </div>
+
+    <h3 style="margin-top:20px; color:#4527a0;">🌟 כל המילים שלך:</h3>
+    <div style="margin-top:8px;">
+      ${getCategories().filter(c => c !== "הכול").map(cat => {
+        const words = getVocab().filter(v => v.cat === cat);
+        return `
+          <details style="margin-bottom:10px; background:#fff; border-radius:14px; padding:8px 14px;">
+            <summary style="font-weight:bold; color:#c2185b; font-size:1.1rem; cursor:pointer;">${getCategoryEmoji(cat)} ${cat} (${words.length})</summary>
+            <table style="width:100%; border-collapse:collapse; margin-top:8px;">
+              ${words.map(w => `
+                <tr style="border-bottom:1px solid #f0f0f0;">
+                  <td style="padding:6px 4px;">${w.emoji}</td>
+                  <td style="padding:6px 4px; font-weight:bold;">${w.he}</td>
+                  <td style="padding:6px 4px; color:#c2185b; font-weight:bold;">${w.ro}</td>
+                  <td style="padding:6px 4px; color:#666;">${w.pron}</td>
+                  <td style="padding:6px 4px;"><button class="btn speak" style="padding:4px 10px; font-size:0.9rem;" data-ro="${w.ro}">🔊</button></td>
+                </tr>
+              `).join("")}
+            </table>
+          </details>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+function attachGuideEvents() {
+  document.querySelectorAll("[data-ro]").forEach(b => {
+    b.onclick = () => speak(b.dataset.ro);
+  });
+}
+
+// ====== Master render ======
+function render() {
+  renderFilters();
+  const content = document.getElementById("content");
+  let html = "";
+  if      (state.mode === "flash")     html = renderFlash();
+  else if (state.mode === "quiz")      html = renderQuiz();
+  else if (state.mode === "listen")    html = renderListen();
+  else if (state.mode === "match")     html = renderMatch();
+  else if (state.mode === "sentences") html = renderSentences();
+  else if (state.mode === "guide")     html = renderGuide();
+  else if (state.mode === "manage")    html = renderManage();
+  else if (state.mode === "user")      html = renderUser();
+  content.innerHTML = html;
+  if      (state.mode === "flash")     attachFlashEvents();
+  else if (state.mode === "quiz")      attachQuizEvents();
+  else if (state.mode === "listen")    attachListenEvents();
+  else if (state.mode === "match")     attachMatchEvents();
+  else if (state.mode === "sentences") attachSentenceEvents();
+  else if (state.mode === "guide")     attachGuideEvents();
+  else if (state.mode === "manage")    attachManageEvents();
+  else if (state.mode === "user")      attachUserEvents();
+  updateStats();
+}
+
+// ====== Init ======
+document.querySelectorAll(".modes button").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".modes button").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    state.mode = b.dataset.mode;
+    resetModeState();
+    render();
+  };
+});
+
+// Load saved stats
+try {
+  const saved = JSON.parse(localStorage.getItem("ro-kids-stats") || "{}");
+  if (saved.score) state.score = saved.score;
+  if (saved.bestStreak) state.bestStreak = saved.bestStreak;
+  if (saved.seen) state.seen = saved.seen;
+} catch (e) {}
+
+// Persist on unload
+window.addEventListener("beforeunload", () => {
+  try {
+    localStorage.setItem("ro-kids-stats", JSON.stringify({
+      score: state.score, bestStreak: state.bestStreak, seen: state.seen,
+    }));
+  } catch (e) {}
+});
+
+resetModeState();
+render();
+</script>
+</body>
+</html>

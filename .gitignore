@@ -1,0 +1,4 @@
+.DS_Store
+*.local.json
+*.bak
+romanian-backup-*.json
