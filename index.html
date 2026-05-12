@@ -434,6 +434,87 @@
   .pin-row input:focus { border-color:#ba68c8; }
   .pin-error { color:#c62828; font-weight:bold; margin-top:8px; min-height:1.2em; }
 
+  /* auth bar + overlays */
+  .auth-bar {
+    display:flex; justify-content:flex-end; align-items:center; gap:8px;
+    max-width:720px; margin:0 auto 12px; flex-wrap:wrap;
+  }
+  .auth-bar .ab-greet { color:#555; font-weight:bold; }
+  .auth-bar .ab-btn {
+    background:white; border:2px solid #e0e0e0; border-radius:14px;
+    padding:6px 14px; cursor:pointer; font-family:inherit; font-weight:bold;
+    color:#4a148c; font-size:0.95rem;
+  }
+  .auth-bar .ab-btn:hover { border-color:#ba68c8; }
+  .auth-bar .ab-primary {
+    background:linear-gradient(135deg,#66bb6a,#43a047); color:white; border-color:transparent;
+  }
+
+  .auth-overlay {
+    position:fixed; inset:0; z-index:1000;
+    background:linear-gradient(135deg, rgba(252,228,236,0.97), rgba(227,242,253,0.97));
+    display:flex; align-items:center; justify-content:center; padding:16px; overflow-y:auto;
+  }
+  .auth-card {
+    background:white; border-radius:24px; padding:24px 28px;
+    max-width:560px; width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+    text-align:center;
+  }
+  .auth-card h2 { color:#d81b60; margin-bottom:8px; }
+  .auth-card p.muted { color:#666; margin-bottom:14px; }
+  .auth-card input[type=email], .auth-card input[type=text] {
+    width:100%; padding:12px 14px; border:2px solid #e0e0e0; border-radius:14px;
+    font-size:1.05rem; font-family:inherit; outline:none;
+  }
+  .auth-card input:focus { border-color:#ba68c8; }
+  .auth-card .row { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+
+  .picker-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap:14px; margin-top:18px;
+  }
+  .picker-tile {
+    background:linear-gradient(135deg, #fff, #f3e5f5);
+    border:3px solid #ce93d8; border-radius:20px;
+    padding:18px 12px; text-align:center; cursor:pointer; font-family:inherit;
+    transition:transform 0.15s;
+  }
+  .picker-tile:hover { transform:translateY(-2px); }
+  .picker-tile .pt-emoji { font-size:3rem; display:block; }
+  .picker-tile .pt-name  { font-weight:bold; color:#4527a0; margin-top:4px; }
+  .picker-tile .pt-lock  { font-size:0.85rem; color:#888; margin-top:2px; }
+  .picker-tile.add { border-style:dashed; }
+
+  .contact-modal {
+    position:fixed; inset:0; z-index:1001;
+    background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;
+    padding:16px;
+  }
+  .contact-modal .auth-card { text-align:right; }
+  .contact-modal textarea {
+    width:100%; min-height:80px; padding:10px 12px; border:2px solid #e0e0e0;
+    border-radius:12px; font-family:inherit; font-size:1rem; outline:none; resize:vertical;
+  }
+  .contact-modal textarea:focus { border-color:#ba68c8; }
+  .honeypot {
+    position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0;
+  }
+
+  .request-row {
+    background:white; border:1px solid #eee; border-radius:14px;
+    padding:10px 14px; margin-bottom:8px;
+  }
+  .request-row.pending { border-right:6px solid #ffb74d; }
+  .request-row.approved { border-right:6px solid #aed581; opacity:0.7; }
+  .request-row.rejected { border-right:6px solid #ef9a9a; opacity:0.5; }
+  .request-meta { color:#888; font-size:0.85rem; }
+  .req-dot {
+    display:inline-block; width:10px; height:10px; border-radius:50%;
+    background:#e53935; vertical-align:middle; margin-right:6px;
+    box-shadow:0 0 0 3px rgba(229,57,53,0.25);
+  }
+
   footer {
     text-align: center;
     color: #888;
@@ -441,6 +522,27 @@
     margin-top: 24px;
   }
 </style>
+<!-- Optional Supabase backend. App works in guest-only mode if config.js is absent. -->
+<script src="config.js" onerror="window.APP_CONFIG = null;"></script>
+<script type="module">
+  try {
+    if (window.APP_CONFIG && window.APP_CONFIG.SUPABASE_URL &&
+        !/YOUR-PROJECT/i.test(window.APP_CONFIG.SUPABASE_URL)) {
+      const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+      window._supabase = createClient(
+        window.APP_CONFIG.SUPABASE_URL,
+        window.APP_CONFIG.SUPABASE_ANON_KEY,
+        { auth: { persistSession: true, detectSessionInUrl: true, autoRefreshToken: true } }
+      );
+    } else {
+      window._supabase = null;
+    }
+  } catch (e) {
+    console.warn("Supabase init failed:", e);
+    window._supabase = null;
+  }
+  window.dispatchEvent(new Event("supabase-ready"));
+</script>
 </head>
 <body>
 
@@ -448,6 +550,8 @@
   <h1>רומנית עם חיוך <span class="flag">🇷🇴</span> 🌈</h1>
   <p class="subtitle">תרגול בין שיעורים — בהצלחה! ✨</p>
 </header>
+
+<div class="auth-bar" id="auth-bar" hidden></div>
 
 <div class="panel">
   <div class="stats">
@@ -474,7 +578,13 @@
   <div id="content"></div>
 </div>
 
-<footer>נבנה באהבה ❤️ • לחיצה על המילה ברומנית = שמיעת ההגייה</footer>
+<footer>
+  נבנה באהבה ❤️ • לחיצה על המילה ברומנית = שמיעת ההגייה<br>
+  <a href="#" id="contact-link" style="color:#7e57c2;">רוצה את זה למשפחה שלך? בקשי גישה</a>
+</footer>
+
+<div id="auth-overlay" class="auth-overlay" hidden></div>
+<div id="contact-modal" class="contact-modal" hidden></div>
 
 <script>
 // ====== Vocabulary ======
@@ -754,6 +864,7 @@ try {
 } catch (e) { userSentences = []; }
 
 function saveUserSentences() {
+  if (typeof isAuthed === 'function' && isAuthed()) { syncSentencesFull(); return; }
   try { localStorage.setItem(SENTENCES_KEY, JSON.stringify(userSentences)); } catch (e) {}
 }
 function getSentences() { return BUILTIN_SENTENCES.concat(userSentences); }
@@ -770,6 +881,7 @@ try {
 } catch (e) { userVocab = []; }
 
 function saveUserVocab() {
+  if (typeof isAuthed === 'function' && isAuthed()) { syncVocabFull(); return; }
   try { localStorage.setItem(USER_VOCAB_KEY, JSON.stringify(userVocab)); } catch (e) {}
 }
 function getVocab() { return BUILTIN_VOCAB.concat(userVocab); }
@@ -876,6 +988,7 @@ function updateStats() {
   document.getElementById("score").textContent = state.score;
   document.getElementById("streak").textContent = state.streak;
   document.getElementById("seen").textContent = state.seen;
+  if (typeof saveProgressDebounced === 'function') saveProgressDebounced();
 }
 
 function pickFeedback(good) {
@@ -1989,6 +2102,7 @@ function render() {
   else if (state.mode === "guide")     html = renderGuide();
   else if (state.mode === "manage")    html = renderManage();
   else if (state.mode === "user")      html = renderUser();
+  else if (state.mode === "requests")  html = renderRequests();
   content.innerHTML = html;
   if      (state.mode === "flash")     attachFlashEvents();
   else if (state.mode === "quiz")      attachQuizEvents();
@@ -1998,30 +2112,573 @@ function render() {
   else if (state.mode === "guide")     attachGuideEvents();
   else if (state.mode === "manage")    attachManageEvents();
   else if (state.mode === "user")      attachUserEvents();
+  else if (state.mode === "requests")  attachRequestsEvents();
   updateStats();
+}
+
+// ====== Auth controller ======
+// All Supabase-backed state lives here. When `auth.session` is set AND a profile
+// is selected, the app is in "authed mode" — reads/writes target Supabase.
+// Otherwise it's "guest mode" — localStorage as before.
+const auth = {
+  client: null, session: null, family: null,
+  profiles: [], currentProfile: null,
+  isAdmin: false,
+  view: 'guest',                  // 'guest' | 'signing_in' | 'check_email' | 'picker' | 'pin' | 'app'
+  pendingPinProfile: null,
+  realtimeChannel: null,
+  unreadRequests: 0,
+};
+function isAuthed() { return !!(auth.session && auth.family && auth.currentProfile); }
+function looksLikeUuid(s) {
+  return typeof s === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+}
+
+async function initAuth() {
+  if (window._supabase) {
+    auth.client = window._supabase;
+    const { data } = await auth.client.auth.getSession();
+    if (data && data.session) await handleSignedIn(data.session);
+    auth.client.auth.onAuthStateChange(async (event, sess) => {
+      if (event === 'SIGNED_OUT') await clearLocalSession();
+      else if (event === 'SIGNED_IN' && sess && !auth.session) await handleSignedIn(sess);
+    });
+  }
+  renderAuthBar();
+  renderAuthOverlay();
+  applyModeVisibility();
+  attachContactLink();
+}
+
+async function clearLocalSession() {
+  auth.session = null; auth.family = null; auth.profiles = [];
+  auth.currentProfile = null; auth.isAdmin = false; auth.view = 'guest';
+  if (auth.realtimeChannel) {
+    try { await auth.client.removeChannel(auth.realtimeChannel); } catch (e) {}
+    auth.realtimeChannel = null;
+  }
+  auth.unreadRequests = 0;
+  loadGuestVocab(); loadGuestSentences(); loadGuestStats();
+  state.streak = 0;
+  state.flashOrder = shuffle(filtered().map((_, i) => i));
+  state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+  renderAuthBar(); renderAuthOverlay(); applyModeVisibility(); render();
+}
+
+function loadGuestVocab() {
+  try { userVocab = JSON.parse(localStorage.getItem(USER_VOCAB_KEY) || "[]"); } catch (e) { userVocab = []; }
+}
+function loadGuestSentences() {
+  try { userSentences = JSON.parse(localStorage.getItem(SENTENCES_KEY) || "[]"); } catch (e) { userSentences = []; }
+}
+function loadGuestStats() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("ro-kids-stats") || "{}");
+    state.score = saved.score || 0;
+    state.bestStreak = saved.bestStreak || 0;
+    state.seen = saved.seen || 0;
+  } catch (e) {}
+}
+
+async function handleSignedIn(session) {
+  auth.session = session;
+  auth.isAdmin = (session.user && session.user.user_metadata && session.user.user_metadata.role === 'admin');
+  await ensureFamily();
+  await loadProfiles();
+  applyModeVisibility();
+  // Auto-resume last profile if no PIN
+  let lastId = null;
+  try { lastId = localStorage.getItem('ro-kids-last-profile'); } catch (e) {}
+  const last = auth.profiles.find(p => p.id === lastId);
+  if (last && !last.pin) {
+    await selectProfile(last);
+  } else {
+    auth.view = 'picker';
+  }
+  if (auth.isAdmin) subscribeAdminRealtime();
+  renderAuthBar(); renderAuthOverlay();
+}
+
+async function ensureFamily() {
+  const { data: fams } = await auth.client.from('families')
+    .select('*').eq('owner_user_id', auth.session.user.id).limit(1);
+  if (fams && fams.length) { auth.family = fams[0]; return; }
+  const defaultName = (auth.session.user.email || 'family').split('@')[0];
+  const { data: created, error } = await auth.client.from('families')
+    .insert({ owner_user_id: auth.session.user.id, name: defaultName })
+    .select().single();
+  if (error) { console.error('create family', error); return; }
+  auth.family = created;
+}
+
+async function loadProfiles() {
+  if (!auth.family) return;
+  const { data } = await auth.client.from('profiles')
+    .select('*').eq('family_id', auth.family.id).order('created_at');
+  auth.profiles = data || [];
+}
+
+async function selectProfile(profile) {
+  auth.currentProfile = profile;
+  auth.view = 'app';
+  try { localStorage.setItem('ro-kids-last-profile', profile.id); } catch (e) {}
+  await loadFamilyData();
+  renderAuthBar(); renderAuthOverlay(); render();
+}
+
+async function loadFamilyData() {
+  if (!auth.family || !auth.currentProfile) return;
+  const { data: vocab } = await auth.client.from('vocab')
+    .select('*').eq('family_id', auth.family.id).order('created_at');
+  userVocab = (vocab || []).map(v => ({ ...v, note: v.note || '' }));
+  const { data: sentences } = await auth.client.from('sentences')
+    .select('*').eq('family_id', auth.family.id).order('created_at');
+  userSentences = (sentences || []).map(s => ({ ...s, words: Array.isArray(s.words) ? s.words : [] }));
+  const { data: prog } = await auth.client.from('progress')
+    .select('*').eq('profile_id', auth.currentProfile.id).maybeSingle();
+  if (prog) {
+    state.score = prog.score || 0;
+    state.bestStreak = prog.best_streak || 0;
+    state.seen = prog.seen || 0;
+  } else {
+    state.score = 0; state.bestStreak = 0; state.seen = 0;
+    try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id }); } catch (e) {}
+  }
+  state.streak = 0;
+  state.flashOrder = shuffle(filtered().map((_, i) => i));
+  state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+}
+
+async function signIn(email) {
+  if (!auth.client) { alert('Supabase לא מוגדר — ראה SETUP.md'); return; }
+  auth.view = 'signing_in'; renderAuthOverlay();
+  const { error } = await auth.client.auth.signInWithOtp({
+    email, options: { emailRedirectTo: window.location.href },
+  });
+  if (error) {
+    alert('שגיאה בשליחה: ' + error.message);
+    auth.view = auth.session ? 'app' : 'guest';
+    renderAuthOverlay();
+    return;
+  }
+  auth.view = 'check_email'; renderAuthOverlay();
+}
+
+async function signOut() {
+  if (auth.client) await auth.client.auth.signOut();
+}
+
+// --- Data sync to Supabase (called after every local mutation when authed) ---
+async function syncVocabFull() {
+  if (!isAuthed()) return;
+  // Delete server rows whose ids are not in our local set (uuid-only)
+  const keepIds = userVocab.filter(w => looksLikeUuid(w.id)).map(w => w.id);
+  let delQ = auth.client.from('vocab').delete().eq('family_id', auth.family.id);
+  if (keepIds.length) delQ = delQ.not('id', 'in', '(' + keepIds.map(id => '"' + id + '"').join(',') + ')');
+  try { await delQ; } catch (e) {}
+  // Upsert each local row; assign UUID for new ones
+  for (let i = 0; i < userVocab.length; i++) {
+    const w = userVocab[i];
+    const payload = {
+      family_id: auth.family.id,
+      he: w.he, ro: w.ro,
+      pron: w.pron || null, cat: w.cat || null,
+      emoji: w.emoji || '✨', note: w.note || null,
+      added_by_profile_id: auth.currentProfile?.id || null,
+    };
+    if (looksLikeUuid(w.id)) payload.id = w.id;
+    const { data } = await auth.client.from('vocab').upsert(payload).select().single();
+    if (data) userVocab[i] = { ...userVocab[i], ...data };
+  }
+}
+
+async function syncSentencesFull() {
+  if (!isAuthed()) return;
+  const keepIds = userSentences.filter(s => looksLikeUuid(s.id)).map(s => s.id);
+  let delQ = auth.client.from('sentences').delete().eq('family_id', auth.family.id);
+  if (keepIds.length) delQ = delQ.not('id', 'in', '(' + keepIds.map(id => '"' + id + '"').join(',') + ')');
+  try { await delQ; } catch (e) {}
+  for (let i = 0; i < userSentences.length; i++) {
+    const s = userSentences[i];
+    const payload = {
+      family_id: auth.family.id,
+      he: s.he, ro: s.ro,
+      pron: s.pron || null, emoji: s.emoji || '💬',
+      theme: s.theme || null,
+      words: s.words || [],
+      added_by_profile_id: auth.currentProfile?.id || null,
+    };
+    if (looksLikeUuid(s.id)) payload.id = s.id;
+    const { data } = await auth.client.from('sentences').upsert(payload).select().single();
+    if (data) userSentences[i] = { ...userSentences[i], ...data };
+  }
+}
+
+let _progressTimer = null;
+function saveProgressDebounced() {
+  if (!isAuthed()) return;
+  clearTimeout(_progressTimer);
+  _progressTimer = setTimeout(async () => {
+    try {
+      await auth.client.from('progress').upsert({
+        profile_id: auth.currentProfile.id,
+        score: state.score,
+        best_streak: state.bestStreak,
+        seen: state.seen,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (e) { console.warn('progress sync', e); }
+  }, 1500);
+}
+
+// --- Renders for auth overlays ---
+function renderAuthBar() {
+  const bar = document.getElementById('auth-bar');
+  if (!bar) return;
+  if (!auth.client) { bar.hidden = true; return; }
+  bar.hidden = false;
+  if (!auth.session) {
+    bar.innerHTML = `<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
+    document.getElementById('ab-signin').onclick = () => { auth.view = 'signing_in'; renderAuthOverlay(); };
+  } else {
+    const prof = auth.currentProfile;
+    bar.innerHTML = `
+      ${prof ? `<span class="ab-greet">${prof.emoji || '🌟'} ${escapeHtml(prof.name)}</span>` : ''}
+      ${prof ? `<button class="ab-btn" id="ab-switch">🔄 החלפת פרופיל</button>` : ''}
+      <button class="ab-btn" id="ab-signout">🚪 יציאה</button>
+    `;
+    const sw = document.getElementById('ab-switch');
+    if (sw) sw.onclick = () => { auth.view = 'picker'; renderAuthOverlay(); };
+    document.getElementById('ab-signout').onclick = signOut;
+  }
+}
+
+function renderAuthOverlay() {
+  const ov = document.getElementById('auth-overlay');
+  if (!ov) return;
+  if (auth.view === 'guest' || auth.view === 'app') {
+    ov.hidden = true; ov.innerHTML = ''; return;
+  }
+  ov.hidden = false;
+  if      (auth.view === 'signing_in')   ov.innerHTML = renderSignInCard();
+  else if (auth.view === 'check_email')  ov.innerHTML = renderCheckEmailCard();
+  else if (auth.view === 'picker')       ov.innerHTML = renderPickerCard();
+  else if (auth.view === 'pin')          ov.innerHTML = renderPinCard();
+  attachOverlayEvents();
+}
+
+function renderSignInCard() {
+  return `
+    <div class="auth-card">
+      <h2>🔓 כניסה למשפחה</h2>
+      <p class="muted">נשלח לך קישור־קסם למייל. בלי סיסמאות.</p>
+      <input type="email" id="signin-email" placeholder="אימייל של ההורה" autocomplete="email">
+      <div class="row">
+        <button class="btn speak" id="signin-submit">שלחי לי קישור</button>
+        <button class="btn prev" id="signin-cancel">חזרה</button>
+      </div>
+      <p class="muted" style="margin-top:14px; font-size:0.85rem;">
+        אין הזמנה? <a href="#" id="open-contact" style="color:#7e57c2;">בקשי גישה</a>.
+      </p>
+    </div>`;
+}
+function renderCheckEmailCard() {
+  return `
+    <div class="auth-card">
+      <h2>📬 בדקי את האימייל</h2>
+      <p class="muted">שלחנו קישור — הלחיצה עליו תכניס אותך.</p>
+      <p class="muted">אפשר לסגור את החלון הזה.</p>
+      <div class="row"><button class="btn prev" id="signin-cancel">סגור</button></div>
+    </div>`;
+}
+function renderPickerCard() {
+  const tiles = auth.profiles.map(p => `
+    <button class="picker-tile" data-id="${p.id}">
+      <span class="pt-emoji">${p.emoji || '🌟'}</span>
+      <span class="pt-name">${escapeHtml(p.name)}</span>
+      ${p.pin ? `<span class="pt-lock">🔒 PIN</span>` : ''}
+    </button>`).join('');
+  return `
+    <div class="auth-card">
+      <h2>👨‍👧 מי משחקת היום?</h2>
+      <p class="muted">${auth.profiles.length === 0 ? 'בואי נוסיף פרופיל ראשון.' : 'בחרי פרופיל'}</p>
+      <div class="picker-grid">
+        ${tiles}
+        <button class="picker-tile add" id="add-profile">
+          <span class="pt-emoji">➕</span>
+          <span class="pt-name">פרופיל חדש</span>
+        </button>
+      </div>
+      <div class="row" style="margin-top:14px;">
+        ${auth.profiles.length ? `<button class="btn prev" id="manage-profiles">✏️ ניהול פרופילים</button>` : ''}
+      </div>
+    </div>`;
+}
+function renderPinCard() {
+  const p = auth.pendingPinProfile;
+  return `
+    <div class="auth-card">
+      <h2>${p?.emoji || '🔒'} PIN של ${escapeHtml(p?.name || '')}</h2>
+      <input type="password" id="pin-entry" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="• • • •" autocomplete="off" style="letter-spacing:0.4em; text-align:center; direction:ltr; font-size:1.5rem;">
+      <div class="row">
+        <button class="btn speak" id="pin-submit">פתחי</button>
+        <button class="btn prev" id="pin-back">חזרה</button>
+      </div>
+      <div id="pin-err" style="color:#c62828; font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
+    </div>`;
+}
+
+function attachOverlayEvents() {
+  const cancel = document.getElementById('signin-cancel');
+  if (cancel) cancel.onclick = () => { auth.view = auth.session ? 'app' : 'guest'; renderAuthOverlay(); };
+
+  const submitBtn = document.getElementById('signin-submit');
+  if (submitBtn) {
+    const email = document.getElementById('signin-email');
+    const submit = () => {
+      const v = (email.value || '').trim();
+      if (!/^[^@]+@[^@]+\.[^@]+$/.test(v)) { alert('כתובת לא תקינה'); return; }
+      signIn(v);
+    };
+    submitBtn.onclick = submit;
+    email.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    setTimeout(() => email.focus(), 50);
+  }
+
+  const oc = document.getElementById('open-contact');
+  if (oc) oc.onclick = (e) => { e.preventDefault(); openContactModal(); };
+
+  document.querySelectorAll('.picker-tile[data-id]').forEach(tile => {
+    tile.onclick = () => {
+      const p = auth.profiles.find(x => x.id === tile.dataset.id);
+      if (!p) return;
+      if (p.pin) { auth.pendingPinProfile = p; auth.view = 'pin'; renderAuthOverlay(); }
+      else selectProfile(p);
+    };
+  });
+  const addP = document.getElementById('add-profile');
+  if (addP) addP.onclick = createProfileFlow;
+  const mp = document.getElementById('manage-profiles');
+  if (mp) mp.onclick = manageProfilesFlow;
+
+  const pinSubmit = document.getElementById('pin-submit');
+  if (pinSubmit) {
+    const inp = document.getElementById('pin-entry');
+    const err = document.getElementById('pin-err');
+    const submit = () => {
+      const v = (inp.value || '').trim();
+      if (v === auth.pendingPinProfile.pin) {
+        const p = auth.pendingPinProfile;
+        auth.pendingPinProfile = null;
+        selectProfile(p);
+      } else {
+        err.textContent = '❌ קוד שגוי';
+        inp.value = ''; inp.focus();
+      }
+    };
+    pinSubmit.onclick = submit;
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    setTimeout(() => inp.focus(), 50);
+    document.getElementById('pin-back').onclick = () => { auth.pendingPinProfile = null; auth.view = 'picker'; renderAuthOverlay(); };
+  }
+}
+
+async function createProfileFlow() {
+  const name = prompt('שם הפרופיל:');
+  if (!name) return;
+  const emoji = prompt("אימוג'י (אופציונלי):", '🌟') || '🌟';
+  if (auth.profiles.length >= 10) { alert('עד 10 פרופילים למשפחה'); return; }
+  const { data, error } = await auth.client.from('profiles').insert({
+    family_id: auth.family.id, name: name.trim(), emoji,
+  }).select().single();
+  if (error) { alert('שגיאה: ' + error.message); return; }
+  auth.profiles.push(data);
+  renderAuthOverlay();
+}
+
+async function manageProfilesFlow() {
+  const list = auth.profiles.map((p, i) => `${i + 1}. ${p.emoji || '🌟'} ${p.name}${p.pin ? ' 🔒' : ''}`).join('\n');
+  const idx = prompt('בחרי פרופיל לעריכה (מספר):\n\n' + list);
+  if (!idx) return;
+  const i = parseInt(idx, 10) - 1;
+  const p = auth.profiles[i];
+  if (!p) return;
+  const action = prompt(`פרופיל: ${p.emoji || '🌟'} ${p.name}\n\n1 = שנה שם\n2 = שנה אימוג'י\n3 = ${p.pin ? 'הסר' : 'הגדר'} PIN\n4 = מחק`);
+  if (action === '1') {
+    const nn = prompt('שם חדש:', p.name);
+    if (nn) { await auth.client.from('profiles').update({ name: nn.trim() }).eq('id', p.id); await loadProfiles(); renderAuthOverlay(); renderAuthBar(); }
+  } else if (action === '2') {
+    const ne = prompt("אימוג'י חדש:", p.emoji || '🌟');
+    if (ne) { await auth.client.from('profiles').update({ emoji: ne }).eq('id', p.id); await loadProfiles(); renderAuthOverlay(); renderAuthBar(); }
+  } else if (action === '3') {
+    if (p.pin) {
+      if (confirm('להסיר PIN?')) { await auth.client.from('profiles').update({ pin: null }).eq('id', p.id); await loadProfiles(); renderAuthOverlay(); }
+    } else {
+      const np = prompt('PIN חדש (4 ספרות):');
+      if (np && /^\d{4}$/.test(np)) { await auth.client.from('profiles').update({ pin: np }).eq('id', p.id); await loadProfiles(); renderAuthOverlay(); }
+      else if (np) alert('PIN חייב להיות 4 ספרות');
+    }
+  } else if (action === '4') {
+    if (confirm(`למחוק את ${p.name}? פעולה בלתי הפיכה.`)) {
+      await auth.client.from('profiles').delete().eq('id', p.id);
+      await loadProfiles();
+      if (auth.currentProfile && auth.currentProfile.id === p.id) {
+        auth.currentProfile = null; auth.view = 'picker';
+      }
+      renderAuthOverlay(); renderAuthBar();
+    }
+  }
+}
+
+// --- Contact modal ---
+let _contactRenderedAt = 0;
+function openContactModal() {
+  const m = document.getElementById('contact-modal');
+  if (!m) return;
+  m.hidden = false; _contactRenderedAt = Date.now();
+  m.innerHTML = `
+    <div class="auth-card">
+      <h2>📩 בקשת גישה</h2>
+      <p class="muted">תני לי לדעת מי את ולמה — אאשר ידנית.</p>
+      <input type="text"  id="cr-name"  placeholder="שם" autocomplete="name"><br><br>
+      <input type="email" id="cr-email" placeholder="אימייל" autocomplete="email"><br><br>
+      <textarea id="cr-msg" placeholder="קצת רקע (אופציונלי)"></textarea>
+      <input type="text" class="honeypot" id="cr-honeypot" tabindex="-1" autocomplete="off">
+      <div class="row">
+        <button class="btn speak" id="cr-send">שלחי בקשה</button>
+        <button class="btn prev" id="cr-cancel">ביטול</button>
+      </div>
+      <div id="cr-feedback" style="margin-top:10px; font-weight:bold; min-height:1.4em;"></div>
+    </div>`;
+  document.getElementById('cr-cancel').onclick = () => { m.hidden = true; m.innerHTML = ''; };
+  document.getElementById('cr-send').onclick = async () => {
+    const email = (document.getElementById('cr-email').value || '').trim();
+    const name  = (document.getElementById('cr-name').value  || '').trim();
+    const msg   = (document.getElementById('cr-msg').value   || '').trim();
+    const hp    = (document.getElementById('cr-honeypot').value || '').trim();
+    const fb    = document.getElementById('cr-feedback');
+    if (hp || (Date.now() - _contactRenderedAt) < 3000) {
+      fb.style.color = '#43a047'; fb.textContent = '✨ נשלח! נחזור אליך.';
+      setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 1200);
+      return;
+    }
+    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { fb.style.color = '#c62828'; fb.textContent = 'אימייל לא תקין'; return; }
+    if (!auth.client) { fb.style.color = '#c62828'; fb.textContent = 'Supabase לא מוגדר — ראה SETUP.md'; return; }
+    const { error } = await auth.client.from('access_requests').insert({ email, name: name || null, message: msg || null });
+    if (error) { fb.style.color = '#c62828'; fb.textContent = 'שגיאה: ' + error.message; return; }
+    fb.style.color = '#43a047'; fb.textContent = '✨ נשלח! נחזור אליך.';
+    setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 1500);
+  };
+}
+
+function attachContactLink() {
+  const link = document.getElementById('contact-link');
+  if (link) link.onclick = (e) => { e.preventDefault(); openContactModal(); };
+}
+
+// --- Admin Requests tab ---
+function applyModeVisibility() {
+  // Add/remove the "requests" tab based on admin status
+  const modes = document.querySelector('.modes');
+  if (!modes) return;
+  let req = modes.querySelector('[data-mode="requests"]');
+  if (auth.isAdmin) {
+    if (!req) {
+      req = document.createElement('button');
+      req.setAttribute('data-mode', 'requests');
+      req.textContent = '📥 בקשות';
+      req.onclick = () => activateMode(req);
+      modes.appendChild(req);
+    }
+  } else if (req) {
+    req.remove();
+  }
+  updateRequestsBadge();
+}
+
+function activateMode(btn) {
+  document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
+  btn.classList.add('active');
+  state.mode = btn.dataset.mode;
+  resetModeState();
+  render();
+}
+
+function renderRequests() {
+  return `
+    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">📥 בקשות גישה</h2>
+    <div id="req-list" style="margin-top:10px;">טוען...</div>
+  `;
+}
+
+async function attachRequestsEvents() {
+  const list = document.getElementById('req-list');
+  if (!list) return;
+  const { data, error } = await auth.client.from('access_requests')
+    .select('*').order('created_at', { ascending: false });
+  if (error) { list.innerHTML = 'שגיאה: ' + escapeHtml(error.message); return; }
+  if (!data || !data.length) { list.innerHTML = '<p>אין בקשות.</p>'; return; }
+  list.innerHTML = data.map(r => `
+    <div class="request-row ${r.status}">
+      <div><b>${escapeHtml(r.email)}</b>${r.name ? ' · ' + escapeHtml(r.name) : ''}</div>
+      ${r.message ? `<div style="margin-top:4px;">${escapeHtml(r.message)}</div>` : ''}
+      <div class="request-meta">${new Date(r.created_at).toLocaleString('he-IL')} · ${r.status}</div>
+      ${r.status === 'pending' ? `<div style="margin-top:8px; display:flex; gap:8px;">
+        <button class="btn speak" data-action="approve" data-id="${r.id}" data-email="${escapeAttr(r.email)}">✅ אשרי</button>
+        <button class="btn prev"  data-action="reject"  data-id="${r.id}">❌ דחי</button>
+      </div>` : ''}
+    </div>
+  `).join('');
+  list.querySelectorAll('[data-action]').forEach(b => {
+    b.onclick = async () => {
+      const id = b.dataset.id;
+      const action = b.dataset.action;
+      if (action === 'approve') {
+        const email = (b.dataset.email || '').toLowerCase();
+        try { await auth.client.from('allowed_emails').upsert({ email, added_by: auth.session.user.id }); } catch (e) {}
+        await auth.client.from('access_requests').update({ status: 'approved', reviewed_at: new Date().toISOString() }).eq('id', id);
+      } else {
+        await auth.client.from('access_requests').update({ status: 'rejected', reviewed_at: new Date().toISOString() }).eq('id', id);
+      }
+      auth.unreadRequests = Math.max(0, auth.unreadRequests - 1);
+      updateRequestsBadge();
+      attachRequestsEvents();
+    };
+  });
+  auth.unreadRequests = 0;
+  updateRequestsBadge();
+}
+
+function subscribeAdminRealtime() {
+  if (!auth.client || !auth.isAdmin || auth.realtimeChannel) return;
+  auth.realtimeChannel = auth.client.channel('access_requests_new')
+    .on('postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'access_requests' },
+      () => { auth.unreadRequests += 1; updateRequestsBadge(); })
+    .subscribe();
+  auth.client.from('access_requests').select('id', { count: 'exact', head: true }).eq('status', 'pending')
+    .then(({ count }) => { auth.unreadRequests = count || 0; updateRequestsBadge(); });
+}
+
+function updateRequestsBadge() {
+  const btn = document.querySelector('.modes button[data-mode="requests"]');
+  if (!btn) return;
+  btn.innerHTML = auth.unreadRequests > 0
+    ? `📥 בקשות <span class="req-dot"></span>${auth.unreadRequests}`
+    : '📥 בקשות';
 }
 
 // ====== Init ======
 document.querySelectorAll(".modes button").forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll(".modes button").forEach(x => x.classList.remove("active"));
-    b.classList.add("active");
-    state.mode = b.dataset.mode;
-    resetModeState();
-    render();
-  };
+  b.onclick = () => activateMode(b);
 });
 
-// Load saved stats
-try {
-  const saved = JSON.parse(localStorage.getItem("ro-kids-stats") || "{}");
-  if (saved.score) state.score = saved.score;
-  if (saved.bestStreak) state.bestStreak = saved.bestStreak;
-  if (saved.seen) state.seen = saved.seen;
-} catch (e) {}
+// Load saved guest stats (will be overridden by Supabase if authed)
+loadGuestStats();
 
-// Persist on unload
+// Persist guest stats on unload (no-op for authed since progress is on server)
 window.addEventListener("beforeunload", () => {
+  if (isAuthed()) return;
   try {
     localStorage.setItem("ro-kids-stats", JSON.stringify({
       score: state.score, bestStreak: state.bestStreak, seen: state.seen,
@@ -2031,6 +2688,10 @@ window.addEventListener("beforeunload", () => {
 
 resetModeState();
 render();
+
+// Boot auth: wait for SDK if pending
+if (window._supabase !== undefined) initAuth();
+else window.addEventListener("supabase-ready", initAuth, { once: true });
 </script>
 </body>
 </html>

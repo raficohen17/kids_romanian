@@ -2,3 +2,4 @@
 *.local.json
 *.bak
 romanian-backup-*.json
+config.js
