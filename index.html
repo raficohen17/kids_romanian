@@ -418,6 +418,22 @@
   }
   .preview-box h4 { color:#e65100; margin-bottom:6px; }
 
+  .pin-card {
+    background:#fff; border:2px solid #e1bee7; border-radius:18px;
+    padding:18px 20px; margin-top:8px;
+  }
+  .pin-card h3 { color:#6a1b9a; margin-bottom:8px; }
+  .pin-row {
+    display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;
+  }
+  .pin-row input {
+    border:2px solid #e0e0e0; border-radius:12px; padding:10px 14px;
+    font-size:1.4rem; font-family:inherit; outline:none;
+    width:140px; text-align:center; letter-spacing:0.4em; direction:ltr;
+  }
+  .pin-row input:focus { border-color:#ba68c8; }
+  .pin-error { color:#c62828; font-weight:bold; margin-top:8px; min-height:1.2em; }
+
   footer {
     text-align: center;
     color: #888;
@@ -800,6 +816,8 @@ let state = {
   manageTab: "words",         // "words" | "sentences"
   manageEditingId: null,
   manageDraft: null,
+  // user / admin
+  adminUnlocked: false,
 };
 
 // ====== Helpers ======
@@ -1607,14 +1625,20 @@ function parseExtension(text) {
   throw new Error("לא זוהה פורמט. צריך JSON או טבלת Markdown");
 }
 
+// PIN gate — soft lock to keep the kid out of admin. localStorage stores plain text;
+// this isn't real security, just a friction barrier.
+const ADMIN_PIN_KEY = "ro-kids-admin-pin";
+function getAdminPin() { try { return localStorage.getItem(ADMIN_PIN_KEY) || ""; } catch (e) { return ""; } }
+function setAdminPin(pin) { try { localStorage.setItem(ADMIN_PIN_KEY, pin); } catch (e) {} }
+function clearAdminPin() { try { localStorage.removeItem(ADMIN_PIN_KEY); } catch (e) {} }
+function hasAdminPin() { return !!getAdminPin(); }
+
 function renderUser() {
   const totalUserWords = userVocab.length;
   const totalUserSent  = userSentences.length;
   const preview = state.userPreview;
 
-  return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">👤 הפרופיל שלי</h2>
-
+  const statsHtml = `
     <div class="user-stats">
       <div class="ustat"><div class="big">${state.score}</div><div>⭐ נקודות</div></div>
       <div class="ustat"><div class="big">${state.bestStreak}</div><div>🔥 רצף שיא</div></div>
@@ -1622,10 +1646,42 @@ function renderUser() {
       <div class="ustat"><div class="big">${BUILTIN_VOCAB.length + totalUserWords}</div><div>📖 סך מילים</div></div>
       <div class="ustat"><div class="big">${BUILTIN_SENTENCES.length + totalUserSent}</div><div>💬 סך משפטים</div></div>
     </div>
+  `;
 
-    <details class="admin-box" open>
-      <summary>🔐 אזור אדמין — להורה</summary>
+  // PIN gate: first-time setup, locked, or unlocked
+  let adminContent;
+  if (!hasAdminPin()) {
+    adminContent = `
+      <div class="pin-card">
+        <h3>🔐 הגדרת קוד הורה</h3>
+        <p class="hint">בחר/י קוד בן 4 ספרות. הוא ימנע מהילדה לפתוח בטעות את האזור הזה ולמחוק את ההתקדמות.</p>
+        <div class="pin-row">
+          <input type="password" id="pin-new" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" placeholder="קוד חדש (4 ספרות)" autocomplete="off">
+          <input type="password" id="pin-confirm" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" placeholder="אישור קוד" autocomplete="off">
+          <button class="btn speak" id="pinSetBtn">🔓 הגדר וכנס</button>
+        </div>
+        <p class="hint" style="margin-top:8px;">⚠️ הקוד נשמר בדפדפן הזה בלבד. אין שחזור — אם שכחת, תצטרך/י לאפס את ה-localStorage.</p>
+      </div>
+    `;
+  } else if (!state.adminUnlocked) {
+    adminContent = `
+      <div class="pin-card">
+        <h3>🔒 אזור אדמין נעול</h3>
+        <p class="hint">הזן/י את קוד ההורה כדי לפתוח.</p>
+        <div class="pin-row">
+          <input type="password" id="pin-in" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" placeholder="קוד הורה" autocomplete="off" autofocus>
+          <button class="btn speak" id="pinUnlockBtn">🔓 פתח</button>
+        </div>
+        <div id="pin-error" class="pin-error"></div>
+      </div>
+    `;
+  } else {
+    adminContent = `
       <div class="admin-body">
+        <div class="ext-row" style="justify-content:flex-end;">
+          <button class="btn prev" id="pinLockBtn">🔒 נעל</button>
+          <button class="btn" style="background:linear-gradient(135deg,#bdbdbd,#757575)" id="pinChangeBtn">🔑 שינוי קוד</button>
+        </div>
 
         <h3 class="m-heading">📥 העלאת מילון הרחבה</h3>
         <p class="hint">
@@ -1659,6 +1715,15 @@ function renderUser() {
           <button class="btn" style="background:linear-gradient(135deg,#ef9a9a,#e57373);" id="uResetProgress">📉 אפס התקדמות (נקודות/רצף)</button>
         </div>
       </div>
+    `;
+  }
+
+  return `
+    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">👤 הפרופיל שלי</h2>
+    ${statsHtml}
+    <details class="admin-box" open>
+      <summary>🔐 אזור אדמין — להורה</summary>
+      ${adminContent}
     </details>
   `;
 }
@@ -1710,6 +1775,61 @@ const SAMPLE_MARKDOWN = `| קטגוריה | עברית | רומנית | הגיי
 |         | שלוש | Trei | טרֶיי | |`;
 
 function attachUserEvents() {
+  // PIN gate handlers
+  const setBtn = document.getElementById("pinSetBtn");
+  if (setBtn) {
+    const newInp = document.getElementById("pin-new");
+    const confInp = document.getElementById("pin-confirm");
+    const submit = () => {
+      const a = (newInp.value || "").trim();
+      const b = (confInp.value || "").trim();
+      if (!/^\d{4}$/.test(a)) { alert("הקוד חייב להיות 4 ספרות"); return; }
+      if (a !== b) { alert("הקוד והאישור לא תואמים"); return; }
+      setAdminPin(a);
+      state.adminUnlocked = true;
+      render();
+    };
+    setBtn.onclick = submit;
+    confInp.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+  }
+
+  const unlockBtn = document.getElementById("pinUnlockBtn");
+  if (unlockBtn) {
+    const inp = document.getElementById("pin-in");
+    const err = document.getElementById("pin-error");
+    const submit = () => {
+      if ((inp.value || "").trim() === getAdminPin()) {
+        state.adminUnlocked = true;
+        render();
+      } else {
+        err.textContent = "❌ קוד שגוי";
+        inp.value = "";
+        inp.focus();
+      }
+    };
+    unlockBtn.onclick = submit;
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+    setTimeout(() => inp.focus(), 50);
+  }
+
+  const lockBtn = document.getElementById("pinLockBtn");
+  if (lockBtn) lockBtn.onclick = () => { state.adminUnlocked = false; render(); };
+
+  const changeBtn = document.getElementById("pinChangeBtn");
+  if (changeBtn) changeBtn.onclick = () => {
+    const cur = prompt("קוד נוכחי:");
+    if (cur === null) return;
+    if (cur !== getAdminPin()) { alert("קוד שגוי"); return; }
+    const nw = prompt("קוד חדש (4 ספרות):");
+    if (nw === null) return;
+    if (!/^\d{4}$/.test(nw)) { alert("הקוד חייב להיות 4 ספרות"); return; }
+    setAdminPin(nw);
+    alert("הקוד עודכן ✨");
+  };
+
+  // If admin is locked, no further handlers to attach
+  if (!state.adminUnlocked) return;
+
   const ta = document.getElementById("extInput");
 
   document.getElementById("extSample").onclick = () => { ta.value = SAMPLE_MARKDOWN; };

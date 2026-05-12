@@ -40,12 +40,24 @@ Or with HTTPS:
 git clone https://github.com/raficohen17/kids_romanian.git
 ```
 
+## Deploy to Vercel
+
+The repo includes a `vercel.json` so import is one-click:
+
+1. Go to [vercel.com/new](https://vercel.com/new)
+2. Import `raficohen17/kids_romanian`
+3. Accept the defaults — Vercel detects a static site and serves `index.html`
+
+Every push to `main` redeploys automatically.
+
 ## Adding more vocabulary
 
 Two paths:
 
 1. **One word at a time** — open the `📝 הוסיפי` tab and fill the form.
 2. **Bulk upload** — open the `👤 שלי` tab → Admin section → paste a Markdown table or JSON, preview, and merge.
+
+The admin section is gated by a 4-digit parent PIN (set on first visit, stored in `localStorage`). This is a soft lock to keep kids from accidentally wiping data — not real security.
 
 Markdown table format (categories are sticky — empty cell inherits the previous category):
 
