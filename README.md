@@ -50,6 +50,12 @@ The repo includes a `vercel.json` so import is one-click:
 
 Every push to `main` redeploys automatically.
 
+## Auth + multi-family backend (optional)
+
+The app runs in **guest mode** by default — anyone can practice with the built-in 25 words and 200 sentences; progress is stored in `localStorage`.
+
+To enable sign-in, kid profiles, server-side persistence, and the contact-form invite flow, follow [`SETUP.md`](./SETUP.md). It's a ~10-minute Supabase setup: create a project, paste `supabase/schema.sql`, configure an auth hook, drop your keys into `config.js`. The free tier covers many families' worth of data.
+
 ## Adding more vocabulary
 
 Two paths:
