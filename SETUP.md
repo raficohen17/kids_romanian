@@ -68,17 +68,30 @@ Sign out and sign back in once so the new JWT carries `role: admin`. Now the **R
 
 ## 8. Plug the keys into the app
 
+### Locally
+
 1. Copy `config.example.js` → `config.js` (which is gitignored)
 2. Paste your **Project URL** and **anon key** into the values
 3. Reload the app
 
 ```js
-// config.js  — committed example shows the shape; this file holds your real values
+// config.js  — local file; committed example shows the shape
 window.APP_CONFIG = {
   SUPABASE_URL:      "https://YOUR-PROJECT.supabase.co",
   SUPABASE_ANON_KEY: "eyJ...your-anon-key...",
 };
 ```
+
+### On Vercel
+
+`config.js` is gitignored so the keys never enter git. The Vercel build runs `node build-config.js` which writes `config.js` from env vars on every deploy.
+
+1. Vercel dashboard → **Project Settings → Environment Variables**
+2. Add these two (apply to Production + Preview + Development):
+   - `SUPABASE_URL`      = `https://YOUR-PROJECT.supabase.co`
+   - `SUPABASE_ANON_KEY` = `eyJ...your-anon-key...`
+3. **Deployments → Redeploy** the latest (so the new env vars take effect)
+4. In **Supabase → Authentication → URL Configuration**, set **Site URL** to your Vercel domain and add it to **Redirect URLs**. The magic link needs to know where to send the user.
 
 ## 9. Approve another family
 
