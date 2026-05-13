@@ -341,6 +341,64 @@
   .legend .dot.known { background:#aed581; }
   .legend .dot.new   { background:#ffb74d; }
 
+  /* stories */
+  .story-card {
+    background: white; border: 4px solid #ce93d8; border-radius: 24px;
+    padding: 22px 18px; margin-top: 12px; text-align: center;
+  }
+  .story-title { color:#6a1b9a; font-size: 1.4rem; font-weight: bold; margin-bottom: 12px; }
+  .story-text {
+    direction: ltr; font-size: 1.7rem; line-height: 2.2; color:#333;
+    text-align: center; padding: 8px 0;
+  }
+  .story-sentence { display:block; margin: 4px 0; }
+  .story-word {
+    position: relative; display: inline-block; padding: 2px 4px;
+    border-radius: 8px; cursor: pointer; transition: background 0.1s;
+    border: 2px solid transparent;
+  }
+  .story-word.active {
+    background: linear-gradient(135deg, #fff59d, #ffeb3b);
+    border-color: #fbc02d; box-shadow: 0 2px 6px rgba(251,192,45,0.4);
+  }
+  .story-word.tap-open { background:#fff3e0; border-color:#ffb74d; }
+  @media (hover:hover) {
+    .story-word:hover { background:#f3e5f5; border-color:#ba68c8; }
+  }
+  .story-tooltip {
+    position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%);
+    background: #4a148c; color: white;
+    padding: 8px 14px; border-radius: 12px;
+    font-size: 1rem; line-height: 1.3; white-space: nowrap;
+    direction: rtl; text-align: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    pointer-events: none; opacity: 0; transition: opacity 0.12s;
+    z-index: 50;
+  }
+  .story-tooltip .tt-pron {
+    display:block; font-size: 0.9rem; color:#e1bee7; margin-top:2px;
+  }
+  .story-tooltip::after {
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: #4a148c;
+  }
+  @media (hover:hover) {
+    .story-word:hover .story-tooltip { opacity: 1; }
+  }
+  .story-word.tap-open .story-tooltip { opacity: 1; }
+  .story-pron {
+    direction: rtl; font-size: 1.1rem; color:#666;
+    margin-top: 12px; line-height: 1.6;
+  }
+  .story-pron-line { display:block; }
+  .story-he {
+    color:#c2185b; font-size: 1.15rem; margin-top: 14px;
+    line-height: 1.6; direction: rtl;
+  }
+  .story-he-line { display:block; }
+
   /* manage */
   .manage-tabs {
     display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap;
@@ -638,6 +696,7 @@
     <button data-mode="listen">🔊 הקשבה</button>
     <button data-mode="match">🧩 התאמה</button>
     <button data-mode="sentences">🗣️ משפטים</button>
+    <button data-mode="stories">📕 סיפורים</button>
     <button data-mode="units">📚 יחידות</button>
     <button data-mode="guide">📖 הגייה</button>
     <button data-mode="manage">📝 הוסיפי</button>
@@ -2901,6 +2960,568 @@ const BUILTIN_SENTENCES_EN = [
   { he:"לקום בבוקר", ro:"Wake up in the morning", pron:"ווֵייק אָפּ אין דה מוֹרְנִינְג", emoji:"🌅", unit:10, theme:"verbs", words:[{ro:"Wake up",he:"לקום",pron:"ווֵייק אָפּ"}]},
 ];
 
+// =====================================================================
+// STORIES — 2-3 sentences each, with per-word translations + niqqud pron.
+// Used by the Stories mode. `unit` is undefined for Starter Pack stories.
+// =====================================================================
+const STORIES_RO = [
+  { id:"ro-s1", titleHe:"בוקר טוב!", emoji:"🌅", theme:"ברכות",
+    sentences:[
+      {ro:"Bună dimineața, mama!", he:"בוקר טוב, אמא!", pron:"בּוּנָה דִימִינֶאצָה, מאמא!"},
+      {ro:"Te iubesc!", he:"אני אוהבת אותך!", pron:"טֶה יוּבֶּסק!"}
+    ],
+    words:[
+      {ro:"Bună", he:"שלום", pron:"בּוּנָה"},
+      {ro:"dimineața", he:"בוקר", pron:"דִימִינֶאצָה"},
+      {ro:"mama", he:"אמא", pron:"מאמא"},
+      {ro:"Te", he:"אותך", pron:"טֶה"},
+      {ro:"iubesc", he:"אוהבת", pron:"יוּבֶּסק"}
+    ]
+  },
+  { id:"ro-s2", titleHe:"שמי מאיה", emoji:"👧", theme:"אנשים",
+    sentences:[
+      {ro:"Bună! Eu sunt Maya.", he:"שלום! אני מאיה.", pron:"בּוּנָה! אֶאוּ סוּנט מאיה."},
+      {ro:"Sunt o fată drăguță.", he:"אני ילדה חמודה.", pron:"סוּנט אוֹ פָאטָה דרָגוּצָה."}
+    ],
+    words:[
+      {ro:"Eu", he:"אני", pron:"אֶאוּ"},
+      {ro:"sunt", he:"להיות", pron:"סוּנט"},
+      {ro:"fată", he:"ילדה", pron:"פָאטָה"},
+      {ro:"drăguță", he:"חמודה", pron:"דרָגוּצָה"}
+    ]
+  },
+  { id:"ro-u1-1", titleHe:"אני בת תשע", emoji:"9️⃣", unit:1, theme:"מספרים",
+    sentences:[
+      {ro:"Eu am nouă ani.", he:"אני בת תשע.", pron:"אֶאוּ אַם נוֹאוּאָה אַני."},
+      {ro:"Mă numesc Maya.", he:"קוראים לי מאיה.", pron:"מָה נוּמֶסק מאיה."}
+    ],
+    words:[
+      {ro:"am", he:"יש לי", pron:"אַם"},
+      {ro:"nouă", he:"תשע", pron:"נוֹאוּאָה"},
+      {ro:"ani", he:"שנים", pron:"אַני"},
+      {ro:"numesc", he:"קוראים", pron:"נוּמֶסק"}
+    ]
+  },
+  { id:"ro-u1-2", titleHe:"לספור עד עשר", emoji:"🔢", unit:1, theme:"מספרים",
+    sentences:[
+      {ro:"Unu, doi, trei!", he:"אחת, שתיים, שלוש!", pron:"אוּנוּ, דוֹי, טרֵיי!"},
+      {ro:"Patru, cinci, șase!", he:"ארבע, חמש, שש!", pron:"פָּאטרוּ, צִ'ינצ', שָאסֶה!"},
+      {ro:"Pot să număr până la zece!", he:"אני יודעת לספור עד עשר!", pron:"פּוֹט סָה נוּמָר פּאנָה לָה זֶצֶ'ה!"}
+    ],
+    words:[
+      {ro:"unu", he:"אחת", pron:"אוּנוּ"},
+      {ro:"doi", he:"שתיים", pron:"דוֹי"},
+      {ro:"trei", he:"שלוש", pron:"טרֵיי"},
+      {ro:"patru", he:"ארבע", pron:"פָּאטרוּ"},
+      {ro:"cinci", he:"חמש", pron:"צִ'ינצ'"},
+      {ro:"șase", he:"שש", pron:"שָאסֶה"},
+      {ro:"zece", he:"עשר", pron:"זֶצֶ'ה"}
+    ]
+  },
+  { id:"ro-u2-1", titleHe:"בבית", emoji:"🏠", unit:2, theme:"משפחה",
+    sentences:[
+      {ro:"Mama este în casă.", he:"אמא בבית.", pron:"מאמא יֶסטֶה אִין קָאסָה."},
+      {ro:"Tata citește o carte.", he:"אבא קורא ספר.", pron:"טאטא צִ'יטֶשטֶה אוֹ קָארטֶה."}
+    ],
+    words:[
+      {ro:"este", he:"הוא/היא", pron:"יֶסטֶה"},
+      {ro:"casă", he:"בית", pron:"קָאסָה"},
+      {ro:"tata", he:"אבא", pron:"טאטא"},
+      {ro:"citește", he:"קורא", pron:"צִ'יטֶשטֶה"},
+      {ro:"carte", he:"ספר", pron:"קָארטֶה"}
+    ]
+  },
+  { id:"ro-u2-2", titleHe:"אחותי הקטנה", emoji:"👭", unit:2, theme:"משפחה",
+    sentences:[
+      {ro:"Am o soră mică.", he:"יש לי אחות קטנה.", pron:"אַם אוֹ סוֹרָה מִיקָה."},
+      {ro:"Ne jucăm împreună.", he:"אנחנו משחקות יחד.", pron:"נֶה ז'וּקָם אִימפְּרֶאוּנָה."}
+    ],
+    words:[
+      {ro:"soră", he:"אחות", pron:"סוֹרָה"},
+      {ro:"mică", he:"קטנה", pron:"מִיקָה"},
+      {ro:"jucăm", he:"משחקות", pron:"ז'וּקָם"},
+      {ro:"împreună", he:"יחד", pron:"אִימפְּרֶאוּנָה"}
+    ]
+  },
+  { id:"ro-u3-1", titleHe:"הצבעים שלי", emoji:"🎨", unit:3, theme:"צבעים",
+    sentences:[
+      {ro:"Iubesc culoarea roșie.", he:"אני אוהבת את הצבע אדום.", pron:"יוּבֶּסק קוּלוֹארֶאה רוֹשיֶה."},
+      {ro:"Cerul este albastru.", he:"השמיים כחולים.", pron:"צֶ'רוּל יֶסטֶה אַלבָּסטרוּ."}
+    ],
+    words:[
+      {ro:"culoarea", he:"הצבע", pron:"קוּלוֹארֶאה"},
+      {ro:"roșie", he:"אדום", pron:"רוֹשיֶה"},
+      {ro:"cerul", he:"השמיים", pron:"צֶ'רוּל"},
+      {ro:"albastru", he:"כחול", pron:"אַלבָּסטרוּ"}
+    ]
+  },
+  { id:"ro-u3-2", titleHe:"פירות טעימים", emoji:"🍎", unit:3, theme:"אוכל",
+    sentences:[
+      {ro:"Mănânc un măr roșu.", he:"אני אוכלת תפוח אדום.", pron:"מָנָנק אוּן מָר רוֹשוּ."},
+      {ro:"Beau apă rece.", he:"אני שותה מים קרים.", pron:"בֶּאאוּ אַפָּה רֶצֶ'ה."}
+    ],
+    words:[
+      {ro:"mănânc", he:"אוכלת", pron:"מָנָנק"},
+      {ro:"măr", he:"תפוח", pron:"מָר"},
+      {ro:"roșu", he:"אדום", pron:"רוֹשוּ"},
+      {ro:"beau", he:"שותה", pron:"בֶּאאוּ"},
+      {ro:"apă", he:"מים", pron:"אַפָּה"},
+      {ro:"rece", he:"קרים", pron:"רֶצֶ'ה"}
+    ]
+  },
+  { id:"ro-u4-1", titleHe:"הכלב שלי", emoji:"🐕", unit:4, theme:"חיות",
+    sentences:[
+      {ro:"Am un câine mic.", he:"יש לי כלב קטן.", pron:"אַם אוּן קאינֶה מִיק."},
+      {ro:"Câinele meu este maro.", he:"הכלב שלי חום.", pron:"קאינֶלֶה מֵאוּ יֶסטֶה מָארוֹ."}
+    ],
+    words:[
+      {ro:"câine", he:"כלב", pron:"קאינֶה"},
+      {ro:"mic", he:"קטן", pron:"מִיק"},
+      {ro:"meu", he:"שלי", pron:"מֵאוּ"},
+      {ro:"maro", he:"חום", pron:"מָארוֹ"}
+    ]
+  },
+  { id:"ro-u4-2", titleHe:"החתולה שלי", emoji:"🐈", unit:4, theme:"חיות",
+    sentences:[
+      {ro:"Pisica mea este albă.", he:"החתולה שלי לבנה.", pron:"פִּיסִיקָה מֵאָה יֶסטֶה אַלבָּה."},
+      {ro:"Ea bea lapte în fiecare zi.", he:"היא שותה חלב כל יום.", pron:"יָה בֶּאָה לָאפְּטֶה אִין פִיֶקארֶה זי."}
+    ],
+    words:[
+      {ro:"pisica", he:"חתולה", pron:"פִּיסִיקָה"},
+      {ro:"albă", he:"לבנה", pron:"אַלבָּה"},
+      {ro:"bea", he:"שותה", pron:"בֶּאָה"},
+      {ro:"lapte", he:"חלב", pron:"לָאפְּטֶה"},
+      {ro:"zi", he:"יום", pron:"זי"}
+    ]
+  },
+  { id:"ro-u5-1", titleHe:"השמש זורחת", emoji:"☀️", unit:5, theme:"מזג אוויר",
+    sentences:[
+      {ro:"Soarele este sus.", he:"השמש בשמיים.", pron:"סוֹארֶלֶה יֶסטֶה סוּס."},
+      {ro:"Mă spăl pe mâini.", he:"אני שוטפת ידיים.", pron:"מָה סְפָּל פֶּה מאיני."}
+    ],
+    words:[
+      {ro:"soarele", he:"השמש", pron:"סוֹארֶלֶה"},
+      {ro:"sus", he:"למעלה", pron:"סוּס"},
+      {ro:"spăl", he:"שוטפת", pron:"סְפָּל"},
+      {ro:"mâini", he:"ידיים", pron:"מאיני"}
+    ]
+  },
+  { id:"ro-u5-2", titleHe:"יום גשום", emoji:"🌧️", unit:5, theme:"מזג אוויר",
+    sentences:[
+      {ro:"Plouă afară.", he:"יורד גשם בחוץ.", pron:"פְּלוֹאוּאָה אַפָארָה."},
+      {ro:"Iau o umbrelă mare.", he:"אני לוקחת מטרייה גדולה.", pron:"יָאוּ אוֹ אוּמברֶלָה מָארֶה."}
+    ],
+    words:[
+      {ro:"plouă", he:"יורד גשם", pron:"פְּלוֹאוּאָה"},
+      {ro:"afară", he:"בחוץ", pron:"אַפָארָה"},
+      {ro:"umbrelă", he:"מטרייה", pron:"אוּמברֶלָה"},
+      {ro:"mare", he:"גדולה", pron:"מָארֶה"}
+    ]
+  },
+  { id:"ro-u6-1", titleHe:"הבוקר שלי", emoji:"🍞", unit:6, theme:"שגרה",
+    sentences:[
+      {ro:"Mă trezesc dimineața.", he:"אני קמה בבוקר.", pron:"מָה טרֶזֶסק דִימִינֶאצָה."},
+      {ro:"Mănânc pâine cu unt.", he:"אני אוכלת לחם עם חמאה.", pron:"מָנָנק פאינֶה קוּ אוּנט."}
+    ],
+    words:[
+      {ro:"trezesc", he:"קמה", pron:"טרֶזֶסק"},
+      {ro:"pâine", he:"לחם", pron:"פאינֶה"},
+      {ro:"cu", he:"עם", pron:"קוּ"},
+      {ro:"unt", he:"חמאה", pron:"אוּנט"}
+    ]
+  },
+  { id:"ro-u6-2", titleHe:"בדרך לבית הספר", emoji:"🚶", unit:6, theme:"שגרה",
+    sentences:[
+      {ro:"Merg la școală pe jos.", he:"אני הולכת לבית הספר ברגל.", pron:"מֶרג לָה שקוֹאלָה פֶּה ז'וֹס."},
+      {ro:"Învăț multe lucruri.", he:"אני לומדת הרבה דברים.", pron:"אִינוָאצ' מוּלטֶה לוּקרוּרי."}
+    ],
+    words:[
+      {ro:"merg", he:"הולכת", pron:"מֶרג"},
+      {ro:"școală", he:"בית ספר", pron:"שקוֹאלָה"},
+      {ro:"învăț", he:"לומדת", pron:"אִינוָאצ'"},
+      {ro:"multe", he:"הרבה", pron:"מוּלטֶה"},
+      {ro:"lucruri", he:"דברים", pron:"לוּקרוּרי"}
+    ]
+  },
+  { id:"ro-u7-1", titleHe:"המורה שלי", emoji:"👩‍🏫", unit:7, theme:"בית ספר",
+    sentences:[
+      {ro:"Doamna este foarte bună.", he:"המורה טובה מאוד.", pron:"דוֹאמְנָה יֶסטֶה פוֹארטֶה בּוּנָה."},
+      {ro:"Învăț să citesc cărți noi.", he:"אני לומדת לקרוא ספרים חדשים.", pron:"אִינוָאצ' סָה צִ'יטֶסק קָרצי נוֹי."}
+    ],
+    words:[
+      {ro:"doamna", he:"המורה", pron:"דוֹאמְנָה"},
+      {ro:"foarte", he:"מאוד", pron:"פוֹארטֶה"},
+      {ro:"bună", he:"טובה", pron:"בּוּנָה"},
+      {ro:"citesc", he:"לקרוא", pron:"צִ'יטֶסק"},
+      {ro:"cărți", he:"ספרים", pron:"קָרצי"},
+      {ro:"noi", he:"חדשים", pron:"נוֹי"}
+    ]
+  },
+  { id:"ro-u7-2", titleHe:"החברה הכי טובה", emoji:"👯", unit:7, theme:"חברים",
+    sentences:[
+      {ro:"Prietena mea se numește Sara.", he:"החברה שלי נקראת שרה.", pron:"פְּרִיֶטֶנָה מֵאָה סֶה נוּמֶשטֶה שָארָה."},
+      {ro:"Ne jucăm în pauză.", he:"אנחנו משחקות בהפסקה.", pron:"נֶה ז'וּקָם אִין פָּאוּזָה."}
+    ],
+    words:[
+      {ro:"prietena", he:"חברה", pron:"פְּרִיֶטֶנָה"},
+      {ro:"mea", he:"שלי", pron:"מֵאָה"},
+      {ro:"numește", he:"נקראת", pron:"נוּמֶשטֶה"},
+      {ro:"pauză", he:"הפסקה", pron:"פָּאוּזָה"}
+    ]
+  },
+  { id:"ro-u8-1", titleHe:"אני שמחה", emoji:"😊", unit:8, theme:"רגשות",
+    sentences:[
+      {ro:"Astăzi sunt fericită.", he:"היום אני שמחה.", pron:"אַסטָזי סוּנט פֶרִיצִ'יטָה."},
+      {ro:"Merg la parc cu mama.", he:"אני הולכת לפארק עם אמא.", pron:"מֶרג לָה פָּארק קוּ מאמא."}
+    ],
+    words:[
+      {ro:"astăzi", he:"היום", pron:"אַסטָזי"},
+      {ro:"fericită", he:"שמחה", pron:"פֶרִיצִ'יטָה"},
+      {ro:"parc", he:"פארק", pron:"פָּארק"}
+    ]
+  },
+  { id:"ro-u8-2", titleHe:"כשאני עצובה", emoji:"😢", unit:8, theme:"רגשות",
+    sentences:[
+      {ro:"Uneori sunt tristă.", he:"לפעמים אני עצובה.", pron:"אוּנֶאוֹרי סוּנט טריסטָה."},
+      {ro:"Tata vine la mine.", he:"אבא בא אליי.", pron:"טאטא וִינֶה לָה מִינֶה."},
+      {ro:"Și mă simt mai bine.", he:"ואני מרגישה יותר טוב.", pron:"שי מָה סִימט מאי בִּינֶה."}
+    ],
+    words:[
+      {ro:"uneori", he:"לפעמים", pron:"אוּנֶאוֹרי"},
+      {ro:"tristă", he:"עצובה", pron:"טריסטָה"},
+      {ro:"vine", he:"בא", pron:"וִינֶה"},
+      {ro:"simt", he:"מרגישה", pron:"סִימט"},
+      {ro:"bine", he:"טוב", pron:"בִּינֶה"}
+    ]
+  },
+  { id:"ro-u9-1", titleHe:"חורף קר", emoji:"❄️", unit:9, theme:"עונות",
+    sentences:[
+      {ro:"Este iarnă acum.", he:"עכשיו חורף.", pron:"יֶסטֶה יָארנָה אַקוּם."},
+      {ro:"Afară este frig și ninge.", he:"בחוץ קר ויורד שלג.", pron:"אַפָארָה יֶסטֶה פריג שי נִינג'ֶה."}
+    ],
+    words:[
+      {ro:"iarnă", he:"חורף", pron:"יָארנָה"},
+      {ro:"acum", he:"עכשיו", pron:"אַקוּם"},
+      {ro:"frig", he:"קר", pron:"פריג"},
+      {ro:"ninge", he:"יורד שלג", pron:"נִינג'ֶה"}
+    ]
+  },
+  { id:"ro-u9-2", titleHe:"החופש הגדול", emoji:"🌊", unit:9, theme:"עונות",
+    sentences:[
+      {ro:"Vara este foarte caldă.", he:"הקיץ חם מאוד.", pron:"וָארָה יֶסטֶה פוֹארטֶה קָאלדָה."},
+      {ro:"Mergem la mare cu familia.", he:"אנחנו הולכים לים עם המשפחה.", pron:"מֶרגֶ'ם לָה מָארֶה קוּ פָמִילִיָה."}
+    ],
+    words:[
+      {ro:"vara", he:"הקיץ", pron:"וָארָה"},
+      {ro:"caldă", he:"חם", pron:"קָאלדָה"},
+      {ro:"mergem", he:"הולכים", pron:"מֶרגֶ'ם"},
+      {ro:"mare", he:"ים", pron:"מָארֶה"},
+      {ro:"familia", he:"המשפחה", pron:"פָמִילִיָה"}
+    ]
+  },
+  { id:"ro-u10-1", titleHe:"החלום שלי", emoji:"💭", unit:10, theme:"חלומות",
+    sentences:[
+      {ro:"Vreau să fiu doctoriță.", he:"אני רוצה להיות רופאה.", pron:"וְרֶאאוּ סָה פִיוּ דוֹקטוֹריצָה."},
+      {ro:"Vreau să ajut oamenii.", he:"אני רוצה לעזור לאנשים.", pron:"וְרֶאאוּ סָה אַז'וּט אוֹאמֶני."}
+    ],
+    words:[
+      {ro:"vreau", he:"רוצה", pron:"וְרֶאאוּ"},
+      {ro:"fiu", he:"להיות", pron:"פִיוּ"},
+      {ro:"doctoriță", he:"רופאה", pron:"דוֹקטוֹריצָה"},
+      {ro:"ajut", he:"לעזור", pron:"אַז'וּט"},
+      {ro:"oamenii", he:"לאנשים", pron:"אוֹאמֶני"}
+    ]
+  },
+  { id:"ro-u10-2", titleHe:"החיים יפים", emoji:"💖", unit:10, theme:"חיים",
+    sentences:[
+      {ro:"Iubesc viața mea.", he:"אני אוהבת את החיים שלי.", pron:"יוּבֶּסק וִיאצָה מֵאָה."},
+      {ro:"Cânt, dansez și învăț în fiecare zi.", he:"אני שרה, רוקדת ולומדת כל יום.", pron:"קאנט, דָנסֶז שי אִינוָאצ' אִין פִיֶקארֶה זי."}
+    ],
+    words:[
+      {ro:"viața", he:"החיים", pron:"וִיאצָה"},
+      {ro:"cânt", he:"שרה", pron:"קאנט"},
+      {ro:"dansez", he:"רוקדת", pron:"דָנסֶז"},
+      {ro:"zi", he:"יום", pron:"זי"}
+    ]
+  }
+];
+const STORIES_EN = [
+  { id:"en-s1", titleHe:"בוקר טוב!", emoji:"🌅", theme:"ברכות",
+    sentences:[
+      {ro:"Good morning, mom!", he:"בוקר טוב, אמא!", pron:"גוּד מוֹרְנִינְג, מוֹם!"},
+      {ro:"I love you!", he:"אני אוהבת אותך!", pron:"אַי לָאוו יוּ!"}
+    ],
+    words:[
+      {ro:"good", he:"טוב", pron:"גוּד"},
+      {ro:"morning", he:"בוקר", pron:"מוֹרְנִינְג"},
+      {ro:"mom", he:"אמא", pron:"מוֹם"},
+      {ro:"love", he:"אוהבת", pron:"לָאוו"},
+      {ro:"you", he:"אותך", pron:"יוּ"}
+    ]
+  },
+  { id:"en-s2", titleHe:"שמי מאיה", emoji:"👧", theme:"אנשים",
+    sentences:[
+      {ro:"Hi! I am Maya.", he:"שלום! אני מאיה.", pron:"הַיי! אַי אֶם מאיה."},
+      {ro:"I am a nice girl.", he:"אני ילדה נחמדה.", pron:"אַי אֶם אֶ נַאיס גֶרְל."}
+    ],
+    words:[
+      {ro:"hi", he:"שלום", pron:"הַיי"},
+      {ro:"I", he:"אני", pron:"אַי"},
+      {ro:"am", he:"להיות", pron:"אֶם"},
+      {ro:"nice", he:"נחמדה", pron:"נַאיס"},
+      {ro:"girl", he:"ילדה", pron:"גֶרְל"}
+    ]
+  },
+  { id:"en-u1-1", titleHe:"אני בת תשע", emoji:"9️⃣", unit:1, theme:"מספרים",
+    sentences:[
+      {ro:"I am nine years old.", he:"אני בת תשע.", pron:"אַי אֶם נַאיין יִיֶרְז אוֹלְד."},
+      {ro:"My name is Maya.", he:"קוראים לי מאיה.", pron:"מַאי נֵיים אִיז מאיה."}
+    ],
+    words:[
+      {ro:"nine", he:"תשע", pron:"נַאיין"},
+      {ro:"years", he:"שנים", pron:"יִיֶרְז"},
+      {ro:"old", he:"גיל", pron:"אוֹלְד"},
+      {ro:"name", he:"שם", pron:"נֵיים"}
+    ]
+  },
+  { id:"en-u1-2", titleHe:"לספור עד עשר", emoji:"🔢", unit:1, theme:"מספרים",
+    sentences:[
+      {ro:"One, two, three!", he:"אחת, שתיים, שלוש!", pron:"וָואן, טוּ, ת'רִי!"},
+      {ro:"Four, five, six!", he:"ארבע, חמש, שש!", pron:"פוֹר, פַאיב, סִיקְס!"},
+      {ro:"I can count to ten!", he:"אני יודעת לספור עד עשר!", pron:"אַי קֵן קַאוּנְט טוּ טֶן!"}
+    ],
+    words:[
+      {ro:"one", he:"אחת", pron:"וָואן"},
+      {ro:"two", he:"שתיים", pron:"טוּ"},
+      {ro:"three", he:"שלוש", pron:"ת'רִי"},
+      {ro:"count", he:"לספור", pron:"קַאוּנְט"},
+      {ro:"ten", he:"עשר", pron:"טֶן"}
+    ]
+  },
+  { id:"en-u2-1", titleHe:"בבית", emoji:"🏠", unit:2, theme:"משפחה",
+    sentences:[
+      {ro:"Mom is at home.", he:"אמא בבית.", pron:"מוֹם אִיז אֶט הוֹם."},
+      {ro:"Dad reads a book.", he:"אבא קורא ספר.", pron:"דֵד רִידְז אֶ בּוּק."}
+    ],
+    words:[
+      {ro:"home", he:"בית", pron:"הוֹם"},
+      {ro:"dad", he:"אבא", pron:"דֵד"},
+      {ro:"reads", he:"קורא", pron:"רִידְז"},
+      {ro:"book", he:"ספר", pron:"בּוּק"}
+    ]
+  },
+  { id:"en-u2-2", titleHe:"אחותי הקטנה", emoji:"👭", unit:2, theme:"משפחה",
+    sentences:[
+      {ro:"I have a little sister.", he:"יש לי אחות קטנה.", pron:"אַי הֵב אֶ לִיטְל סִיסְטֶר."},
+      {ro:"We play together.", he:"אנחנו משחקות יחד.", pron:"ווִי פְּלֵיי טוּגֶ'דֶ'ר."}
+    ],
+    words:[
+      {ro:"have", he:"יש לי", pron:"הֵב"},
+      {ro:"little", he:"קטנה", pron:"לִיטְל"},
+      {ro:"sister", he:"אחות", pron:"סִיסְטֶר"},
+      {ro:"play", he:"משחקות", pron:"פְּלֵיי"},
+      {ro:"together", he:"יחד", pron:"טוּגֶ'דֶ'ר"}
+    ]
+  },
+  { id:"en-u3-1", titleHe:"הצבעים שלי", emoji:"🎨", unit:3, theme:"צבעים",
+    sentences:[
+      {ro:"I love the color red.", he:"אני אוהבת את הצבע אדום.", pron:"אַי לָאוו דֶ' קָאלֶר רֶד."},
+      {ro:"The sky is blue.", he:"השמיים כחולים.", pron:"דֶ' סְקַאי אִיז בְּלוּ."}
+    ],
+    words:[
+      {ro:"color", he:"צבע", pron:"קָאלֶר"},
+      {ro:"red", he:"אדום", pron:"רֶד"},
+      {ro:"sky", he:"שמיים", pron:"סְקַאי"},
+      {ro:"blue", he:"כחול", pron:"בְּלוּ"}
+    ]
+  },
+  { id:"en-u3-2", titleHe:"פירות טעימים", emoji:"🍎", unit:3, theme:"אוכל",
+    sentences:[
+      {ro:"I eat a red apple.", he:"אני אוכלת תפוח אדום.", pron:"אַי אִיט אֶ רֶד אֶפְּל."},
+      {ro:"I drink cold water.", he:"אני שותה מים קרים.", pron:"אַי דְרִינְק קוֹלְד ווֹטֶר."}
+    ],
+    words:[
+      {ro:"eat", he:"אוכלת", pron:"אִיט"},
+      {ro:"apple", he:"תפוח", pron:"אֶפְּל"},
+      {ro:"drink", he:"שותה", pron:"דְרִינְק"},
+      {ro:"cold", he:"קרים", pron:"קוֹלְד"},
+      {ro:"water", he:"מים", pron:"ווֹטֶר"}
+    ]
+  },
+  { id:"en-u4-1", titleHe:"הכלב שלי", emoji:"🐕", unit:4, theme:"חיות",
+    sentences:[
+      {ro:"I have a small dog.", he:"יש לי כלב קטן.", pron:"אַי הֵב אֶ סְמוֹל דוֹג."},
+      {ro:"My dog is brown.", he:"הכלב שלי חום.", pron:"מַאי דוֹג אִיז בְּרַאוּן."}
+    ],
+    words:[
+      {ro:"small", he:"קטן", pron:"סְמוֹל"},
+      {ro:"dog", he:"כלב", pron:"דוֹג"},
+      {ro:"my", he:"שלי", pron:"מַאי"},
+      {ro:"brown", he:"חום", pron:"בְּרַאוּן"}
+    ]
+  },
+  { id:"en-u4-2", titleHe:"החתולה שלי", emoji:"🐈", unit:4, theme:"חיות",
+    sentences:[
+      {ro:"My cat is white.", he:"החתולה שלי לבנה.", pron:"מַאי קֶט אִיז ווָאיט."},
+      {ro:"She drinks milk every day.", he:"היא שותה חלב כל יום.", pron:"שִי דְרִינְקְס מִילְק אֶבְרִי דֵיי."}
+    ],
+    words:[
+      {ro:"cat", he:"חתולה", pron:"קֶט"},
+      {ro:"white", he:"לבנה", pron:"ווָאיט"},
+      {ro:"milk", he:"חלב", pron:"מִילְק"},
+      {ro:"day", he:"יום", pron:"דֵיי"}
+    ]
+  },
+  { id:"en-u5-1", titleHe:"השמש זורחת", emoji:"☀️", unit:5, theme:"מזג אוויר",
+    sentences:[
+      {ro:"The sun is up.", he:"השמש בשמיים.", pron:"דֶ' סָאן אִיז אָפּ."},
+      {ro:"I wash my hands.", he:"אני שוטפת ידיים.", pron:"אַי ווָאש מַאי הֶנְדְז."}
+    ],
+    words:[
+      {ro:"sun", he:"שמש", pron:"סָאן"},
+      {ro:"up", he:"למעלה", pron:"אָפּ"},
+      {ro:"wash", he:"שוטפת", pron:"ווָאש"},
+      {ro:"hands", he:"ידיים", pron:"הֶנְדְז"}
+    ]
+  },
+  { id:"en-u5-2", titleHe:"יום גשום", emoji:"🌧️", unit:5, theme:"מזג אוויר",
+    sentences:[
+      {ro:"It is raining outside.", he:"יורד גשם בחוץ.", pron:"אִיט אִיז רֵיינִינְג אַאוּטסַאיד."},
+      {ro:"I take a big umbrella.", he:"אני לוקחת מטרייה גדולה.", pron:"אַי טֵיק אֶ בִּיג אַמְבְּרֶלָה."}
+    ],
+    words:[
+      {ro:"raining", he:"יורד גשם", pron:"רֵיינִינְג"},
+      {ro:"outside", he:"בחוץ", pron:"אַאוּטסַאיד"},
+      {ro:"take", he:"לוקחת", pron:"טֵיק"},
+      {ro:"big", he:"גדולה", pron:"בִּיג"},
+      {ro:"umbrella", he:"מטרייה", pron:"אַמְבְּרֶלָה"}
+    ]
+  },
+  { id:"en-u6-1", titleHe:"שגרת בוקר", emoji:"🍞", unit:6, theme:"שגרה",
+    sentences:[
+      {ro:"I wake up in the morning.", he:"אני קמה בבוקר.", pron:"אַי ווֵייק אָפּ אִין דֶ' מוֹרְנִינְג."},
+      {ro:"I eat bread and butter.", he:"אני אוכלת לחם וחמאה.", pron:"אַי אִיט בְּרֶד אֶנְד בָּאטֶר."}
+    ],
+    words:[
+      {ro:"wake", he:"קמה", pron:"ווֵייק"},
+      {ro:"bread", he:"לחם", pron:"בְּרֶד"},
+      {ro:"and", he:"ו", pron:"אֶנְד"},
+      {ro:"butter", he:"חמאה", pron:"בָּאטֶר"}
+    ]
+  },
+  { id:"en-u6-2", titleHe:"בדרך לבית הספר", emoji:"🚶", unit:6, theme:"שגרה",
+    sentences:[
+      {ro:"I walk to school.", he:"אני הולכת לבית הספר.", pron:"אַי ווֹק טוּ סְקוּל."},
+      {ro:"I learn many things.", he:"אני לומדת הרבה דברים.", pron:"אַי לֶרְן מֶנִי ת'ִינְגְז."}
+    ],
+    words:[
+      {ro:"walk", he:"הולכת", pron:"ווֹק"},
+      {ro:"school", he:"בית ספר", pron:"סְקוּל"},
+      {ro:"learn", he:"לומדת", pron:"לֶרְן"},
+      {ro:"many", he:"הרבה", pron:"מֶנִי"},
+      {ro:"things", he:"דברים", pron:"ת'ִינְגְז"}
+    ]
+  },
+  { id:"en-u7-1", titleHe:"המורה שלי", emoji:"👩‍🏫", unit:7, theme:"בית ספר",
+    sentences:[
+      {ro:"My teacher is very nice.", he:"המורה שלי נחמדה מאוד.", pron:"מַאי טִיצֶ'ר אִיז וֶרי נַאיס."},
+      {ro:"I learn to read new books.", he:"אני לומדת לקרוא ספרים חדשים.", pron:"אַי לֶרְן טוּ רִיד נוּ בּוּקְס."}
+    ],
+    words:[
+      {ro:"teacher", he:"המורה", pron:"טִיצֶ'ר"},
+      {ro:"very", he:"מאוד", pron:"וֶרי"},
+      {ro:"read", he:"לקרוא", pron:"רִיד"},
+      {ro:"new", he:"חדשים", pron:"נוּ"},
+      {ro:"books", he:"ספרים", pron:"בּוּקְס"}
+    ]
+  },
+  { id:"en-u7-2", titleHe:"החברה הכי טובה", emoji:"👯", unit:7, theme:"חברים",
+    sentences:[
+      {ro:"My best friend is Sara.", he:"החברה הכי טובה שלי היא שרה.", pron:"מַאי בֶּסְט פְרֶנְד אִיז שָארָה."},
+      {ro:"We play at recess.", he:"אנחנו משחקות בהפסקה.", pron:"ווִי פְּלֵיי אֶט רִיסֶס."}
+    ],
+    words:[
+      {ro:"best", he:"הכי טובה", pron:"בֶּסְט"},
+      {ro:"friend", he:"חברה", pron:"פְרֶנְד"},
+      {ro:"recess", he:"הפסקה", pron:"רִיסֶס"}
+    ]
+  },
+  { id:"en-u8-1", titleHe:"אני שמחה", emoji:"😊", unit:8, theme:"רגשות",
+    sentences:[
+      {ro:"Today I am happy.", he:"היום אני שמחה.", pron:"טוּדֵיי אַי אֶם הֵפִּי."},
+      {ro:"Mom takes me to the park.", he:"אמא לוקחת אותי לפארק.", pron:"מוֹם טֵייקְס מִי טוּ דֶ' פָּארְק."}
+    ],
+    words:[
+      {ro:"today", he:"היום", pron:"טוּדֵיי"},
+      {ro:"happy", he:"שמחה", pron:"הֵפִּי"},
+      {ro:"park", he:"פארק", pron:"פָּארְק"}
+    ]
+  },
+  { id:"en-u8-2", titleHe:"כשאני עצובה", emoji:"😢", unit:8, theme:"רגשות",
+    sentences:[
+      {ro:"Sometimes I am sad.", he:"לפעמים אני עצובה.", pron:"סָאמְטַאימְז אַי אֶם סָאד."},
+      {ro:"Dad gives me a hug.", he:"אבא מחבק אותי.", pron:"דֵד גִיבְז מִי אֶ הָאג."},
+      {ro:"Then I feel better.", he:"ואז אני מרגישה יותר טוב.", pron:"דֶ'ן אַי פִיל בֶּטֶר."}
+    ],
+    words:[
+      {ro:"sometimes", he:"לפעמים", pron:"סָאמְטַאימְז"},
+      {ro:"sad", he:"עצובה", pron:"סָאד"},
+      {ro:"gives", he:"נותן", pron:"גִיבְז"},
+      {ro:"hug", he:"חיבוק", pron:"הָאג"},
+      {ro:"feel", he:"מרגישה", pron:"פִיל"},
+      {ro:"better", he:"יותר טוב", pron:"בֶּטֶר"}
+    ]
+  },
+  { id:"en-u9-1", titleHe:"החורף כאן", emoji:"❄️", unit:9, theme:"עונות",
+    sentences:[
+      {ro:"It is winter now.", he:"עכשיו חורף.", pron:"אִיט אִיז ווִינְטֶר נַאוּ."},
+      {ro:"Outside it is cold and snowing.", he:"בחוץ קר ויורד שלג.", pron:"אַאוּטסַאיד אִיט אִיז קוֹלְד אֶנְד סְנוֹאִינְג."}
+    ],
+    words:[
+      {ro:"winter", he:"חורף", pron:"ווִינְטֶר"},
+      {ro:"now", he:"עכשיו", pron:"נַאוּ"},
+      {ro:"snowing", he:"יורד שלג", pron:"סְנוֹאִינְג"}
+    ]
+  },
+  { id:"en-u9-2", titleHe:"חופש הקיץ", emoji:"🌊", unit:9, theme:"עונות",
+    sentences:[
+      {ro:"Summer is very hot.", he:"הקיץ חם מאוד.", pron:"סָאמֶר אִיז וֶרי הוֹט."},
+      {ro:"We go to the beach with family.", he:"אנחנו הולכים לים עם המשפחה.", pron:"ווִי גוֹאוּ טוּ דֶ' בִּיץ' ווִיד' פֵמִילִי."}
+    ],
+    words:[
+      {ro:"summer", he:"הקיץ", pron:"סָאמֶר"},
+      {ro:"hot", he:"חם", pron:"הוֹט"},
+      {ro:"beach", he:"חוף ים", pron:"בִּיץ'"},
+      {ro:"family", he:"משפחה", pron:"פֵמִילִי"}
+    ]
+  },
+  { id:"en-u10-1", titleHe:"החלום שלי", emoji:"💭", unit:10, theme:"חלומות",
+    sentences:[
+      {ro:"I want to be a doctor.", he:"אני רוצה להיות רופאה.", pron:"אַי ווָאנְט טוּ בִּי אֶ דוֹקְטֶר."},
+      {ro:"I want to help people.", he:"אני רוצה לעזור לאנשים.", pron:"אַי ווָאנְט טוּ הֶלפּ פִּיפְּל."}
+    ],
+    words:[
+      {ro:"want", he:"רוצה", pron:"ווָאנְט"},
+      {ro:"be", he:"להיות", pron:"בִּי"},
+      {ro:"doctor", he:"רופאה", pron:"דוֹקְטֶר"},
+      {ro:"help", he:"לעזור", pron:"הֶלפּ"},
+      {ro:"people", he:"אנשים", pron:"פִּיפְּל"}
+    ]
+  },
+  { id:"en-u10-2", titleHe:"החיים יפים", emoji:"💖", unit:10, theme:"חיים",
+    sentences:[
+      {ro:"I love my life.", he:"אני אוהבת את החיים שלי.", pron:"אַי לָאוו מַאי לַאיף."},
+      {ro:"I sing, dance, and learn every day.", he:"אני שרה, רוקדת ולומדת כל יום.", pron:"אַי סִינְג, דֵנס אֶנְד לֶרְן אֶבְרִי דֵיי."}
+    ],
+    words:[
+      {ro:"life", he:"החיים", pron:"לַאיף"},
+      {ro:"sing", he:"שרה", pron:"סִינְג"},
+      {ro:"dance", he:"רוקדת", pron:"דֵנס"},
+      {ro:"every", he:"כל", pron:"אֶבְרִי"}
+    ]
+  }
+];
+
 const SENTENCES_KEY = "ro-kids-user-sentences-v1";
 let userSentences = [];
 try {
@@ -2917,6 +3538,12 @@ function getSentences() {
   return builtin.concat(userSentences.filter(s => (s.language || 'ro') === state.language));
 }
 function getSentencesInScope() { return getSentences().filter(inUnitScope); }
+
+function getStories() {
+  const builtin = state.language === 'en' ? STORIES_EN : STORIES_RO;
+  return builtin;
+}
+function getStoriesInScope() { return getStories().filter(inUnitScope); }
 
 const BUILTIN_VOCAB = VOCAB;  // alias — practice modes always use the merged list via getVocab()
 const BUILTIN_CAT_EMOJI = { "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨" };
@@ -3017,6 +3644,10 @@ let state = {
   sentenceIdx: 0,
   sentenceRevealed: false,
   sentenceOrder: [],
+  // stories
+  storyIdx: 0,
+  storyOrder: [],
+  storyPlaying: false,
   // manage
   manageTab: "words",         // "words" | "sentences"
   manageEditingId: null,
@@ -3513,6 +4144,247 @@ function attachSentenceEvents() {
   document.querySelectorAll(".word-chip").forEach(b => {
     b.onclick = () => speak(decodeURIComponent(b.dataset.ro));
   });
+}
+
+// ====== Render: stories ======
+// A story has 2-3 sentences. Each word becomes a hover/tap target that
+// reveals its Hebrew meaning + niqqud transliteration. The 🔊 button plays
+// the whole story; while playing, the current word highlights yellow via
+// SpeechSynthesis `boundary` events.
+
+// Tokenize an LTR target-language string into a sequence of tokens with
+// absolute char-index offsets. Tokens are either {kind:'word', text, idx}
+// or {kind:'sep', text, idx}. Used both for rendering each word as a
+// span AND for mapping boundary-event charIndex back to a word index.
+function tokenizeStoryLine(text) {
+  const re = /(\p{L}+(?:['’]\p{L}+)?)/gu;
+  const tokens = [];
+  let cursor = 0;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > cursor) {
+      tokens.push({ kind: 'sep', text: text.slice(cursor, m.index), idx: cursor });
+    }
+    tokens.push({ kind: 'word', text: m[1], idx: m.index });
+    cursor = m.index + m[1].length;
+  }
+  if (cursor < text.length) {
+    tokens.push({ kind: 'sep', text: text.slice(cursor), idx: cursor });
+  }
+  return tokens;
+}
+
+function normalizeWord(w) {
+  return (w || '').toLowerCase().replace(/[.,!?;:'"()’\-]/g, '').trim();
+}
+
+// Combine the story's per-sentence words[] arrays (when given) plus
+// any sentence-level fallback. Returns a Map from normalized word → entry.
+function buildStoryWordIndex(story) {
+  const map = new Map();
+  for (const s of story.sentences) {
+    for (const w of (s.words || [])) {
+      const key = normalizeWord(w.ro);
+      if (key && !map.has(key)) map.set(key, w);
+    }
+  }
+  for (const w of (story.words || [])) {
+    const key = normalizeWord(w.ro);
+    if (key && !map.has(key)) map.set(key, w);
+  }
+  return map;
+}
+
+// Concatenate all sentences with a single space between, recording the
+// global char offset of each sentence's first char so we can map a
+// boundary event's charIndex back to (sentenceIdx, intra-sentence idx).
+function buildFullStoryText(story) {
+  const parts = [];
+  const sentenceOffsets = [];
+  let pos = 0;
+  story.sentences.forEach((s, i) => {
+    if (i > 0) { parts.push(' '); pos += 1; }
+    sentenceOffsets.push(pos);
+    parts.push(s.ro);
+    pos += s.ro.length;
+  });
+  return { text: parts.join(''), sentenceOffsets };
+}
+
+function renderStoryWord(token, wordIdx, wordEntry) {
+  const safe = escapeHtml(token.text);
+  if (!wordEntry) {
+    return `<span class="story-word" data-w="${wordIdx}">${safe}</span>`;
+  }
+  const tipHe = escapeHtml(wordEntry.he || '');
+  const tipPron = wordEntry.pron ? `<span class="tt-pron">${escapeHtml(wordEntry.pron)}</span>` : '';
+  return `<span class="story-word" data-w="${wordIdx}" data-ro="${escapeAttr(wordEntry.ro)}">${safe}<span class="story-tooltip">${tipHe}${tipPron}</span></span>`;
+}
+
+function renderStories() {
+  const list = getStoriesInScope();
+  if (list.length === 0) {
+    return `<p style="text-align:center; padding:24px 0;">📕 עדיין אין סיפורים ביחידה הזו. גלי יחידות חדשות או החליפי שפה!</p>`;
+  }
+  if (!state.storyOrder.length || state.storyOrder.length !== list.length) {
+    state.storyOrder = list.map((_, i) => i);
+    state.storyIdx = 0;
+  }
+  const story = list[state.storyOrder[state.storyIdx]];
+  const wordIndex = buildStoryWordIndex(story);
+
+  // Build the rendered sentences (each as its own block, but words
+  // share a global `data-w` index that matches the concatenated text's
+  // tokenization — used by the boundary highlighter).
+  let globalWordIdx = 0;
+  const sentencesHtml = story.sentences.map(s => {
+    const tokens = tokenizeStoryLine(s.ro);
+    const inner = tokens.map(t => {
+      if (t.kind === 'sep') return escapeHtml(t.text);
+      const entry = wordIndex.get(normalizeWord(t.text));
+      const html = renderStoryWord(t, globalWordIdx, entry);
+      globalWordIdx += 1;
+      return html;
+    }).join('');
+    return `<span class="story-sentence">${inner}</span>`;
+  }).join('');
+
+  const pronHtml = story.sentences
+    .filter(s => s.pron)
+    .map(s => `<span class="story-pron-line">${escapeHtml(s.pron)}</span>`)
+    .join('');
+  const heHtml = story.sentences
+    .map(s => `<span class="story-he-line">${escapeHtml(s.he)}</span>`)
+    .join('');
+
+  return `
+    <div style="text-align:center;">
+      <p style="color:#888;">סיפור ${state.storyIdx + 1} מתוך ${list.length} ${story.theme ? '· ' + story.theme : ''}</p>
+      <div class="card story-card">
+        <div class="emoji">${story.emoji || '📕'}</div>
+        <div class="story-title">${escapeHtml(story.titleHe || '')}</div>
+        <div class="story-text" id="storyText" dir="ltr">${sentencesHtml}</div>
+        ${pronHtml ? `<div class="story-pron">${pronHtml}</div>` : ''}
+        <div class="story-he">${heHtml}</div>
+      </div>
+      <div class="nav-row">
+        <button class="btn prev" id="storyPrev">⬅️ הקודם</button>
+        <button class="btn speak" id="storyPlay">🔊 השמיעי</button>
+        <button class="btn" id="storyNext">הבא ➡️</button>
+        <button class="btn shuffle" id="storyShuffle">🔀 ערבבי</button>
+      </div>
+      <p class="hint" style="margin-top:10px; color:#888; font-size:0.92rem;">
+        💡 ${matchMedia('(hover:hover)').matches ? 'ריחפי עם העכבר על מילה כדי לראות את המשמעות' : 'הקישי על מילה כדי לראות את המשמעות'}
+      </p>
+    </div>
+  `;
+}
+
+// Map a charIndex in the concatenated story text to a global word index.
+// We rebuild the word-position table on demand from the rendered tokens
+// rather than reconstructing it twice.
+function buildWordPositions(story) {
+  const { text, sentenceOffsets } = buildFullStoryText(story);
+  const positions = [];
+  let globalWordIdx = 0;
+  story.sentences.forEach((s, i) => {
+    const base = sentenceOffsets[i];
+    for (const t of tokenizeStoryLine(s.ro)) {
+      if (t.kind === 'word') {
+        positions.push({ start: base + t.idx, end: base + t.idx + t.text.length, wordIdx: globalWordIdx });
+        globalWordIdx += 1;
+      }
+    }
+  });
+  return { fullText: text, positions };
+}
+
+function findWordAt(positions, charIndex) {
+  for (let i = positions.length - 1; i >= 0; i--) {
+    if (positions[i].start <= charIndex) return positions[i];
+  }
+  return null;
+}
+
+function setActiveStoryWord(idx) {
+  document.querySelectorAll('.story-word.active').forEach(el => el.classList.remove('active'));
+  if (idx == null) return;
+  const el = document.querySelector(`.story-word[data-w="${idx}"]`);
+  if (el) el.classList.add('active');
+}
+
+let storyUtterance = null;
+
+function playStory(story) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const { fullText, positions } = buildWordPositions(story);
+  const u = new SpeechSynthesisUtterance(fullText);
+  u.lang = ttsLang();
+  u.rate = state.speechRate;
+  const voices = speechSynthesis.getVoices();
+  const prefix = state.language === 'en' ? 'en' : 'ro';
+  const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(prefix));
+  if (match) u.voice = match;
+  u.onboundary = (e) => {
+    if (e.name && e.name !== 'word') return;
+    const hit = findWordAt(positions, e.charIndex);
+    if (hit) setActiveStoryWord(hit.wordIdx);
+  };
+  u.onend = () => { setActiveStoryWord(null); state.storyPlaying = false; storyUtterance = null; };
+  u.onerror = () => { setActiveStoryWord(null); state.storyPlaying = false; storyUtterance = null; };
+  storyUtterance = u;
+  state.storyPlaying = true;
+  speechSynthesis.speak(u);
+}
+
+function attachStoryEvents() {
+  const list = getStoriesInScope();
+  if (!list.length) return;
+  const story = list[state.storyOrder[state.storyIdx]];
+
+  document.getElementById('storyPrev').onclick = () => {
+    speechSynthesis.cancel();
+    state.storyIdx = (state.storyIdx - 1 + list.length) % list.length;
+    setActiveStoryWord(null);
+    render();
+  };
+  document.getElementById('storyNext').onclick = () => {
+    speechSynthesis.cancel();
+    state.storyIdx = (state.storyIdx + 1) % list.length;
+    setActiveStoryWord(null);
+    render();
+  };
+  document.getElementById('storyShuffle').onclick = () => {
+    speechSynthesis.cancel();
+    state.storyOrder = shuffle(list.map((_, i) => i));
+    state.storyIdx = 0;
+    setActiveStoryWord(null);
+    render();
+  };
+  document.getElementById('storyPlay').onclick = (e) => { e.stopPropagation(); playStory(story); };
+
+  // Per-word interactions: hover handled by CSS; on touch devices we
+  // toggle a `tap-open` class on click. Clicking also speaks the word.
+  const isHoverDevice = matchMedia('(hover:hover)').matches;
+  document.querySelectorAll('.story-word').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      if (!isHoverDevice) {
+        document.querySelectorAll('.story-word.tap-open').forEach(x => { if (x !== el) x.classList.remove('tap-open'); });
+        el.classList.toggle('tap-open');
+      }
+      const ro = el.dataset.ro;
+      if (ro) speak(ro);
+      else speak(el.textContent.trim());
+    };
+  });
+  if (!isHoverDevice) {
+    // Tap outside a word closes the open tooltip.
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.story-word.tap-open').forEach(x => x.classList.remove('tap-open'));
+    }, { once: true });
+  }
 }
 
 // ====== Render: manage (add/edit/delete words and sentences) ======
@@ -4206,7 +5078,8 @@ function attachUnitsEvents() {
       // reset shuffle orders so the new pool reflects
       state.flashOrder = shuffle(filtered().map((_, i) => i));
       state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
-      state.flashIdx = 0; state.sentenceIdx = 0; state.flashFlipped = false; state.sentenceRevealed = false;
+      state.storyOrder = [];
+      state.flashIdx = 0; state.sentenceIdx = 0; state.storyIdx = 0; state.flashFlipped = false; state.sentenceRevealed = false;
       // jump back to last-used practice mode (flash by default)
       state.mode = 'flash';
       document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
@@ -4303,6 +5176,7 @@ function render() {
   else if (state.mode === "listen")    html = renderListen();
   else if (state.mode === "match")     html = renderMatch();
   else if (state.mode === "sentences") html = renderSentences();
+  else if (state.mode === "stories")   html = renderStories();
   else if (state.mode === "units")     html = renderUnits();
   else if (state.mode === "guide")     html = renderGuide();
   else if (state.mode === "manage")    html = renderManage();
@@ -4314,6 +5188,7 @@ function render() {
   else if (state.mode === "listen")    attachListenEvents();
   else if (state.mode === "match")     attachMatchEvents();
   else if (state.mode === "sentences") attachSentenceEvents();
+  else if (state.mode === "stories")   attachStoryEvents();
   else if (state.mode === "units")     attachUnitsEvents();
   else if (state.mode === "guide")     attachGuideEvents();
   else if (state.mode === "manage")    attachManageEvents();
@@ -4633,7 +5508,9 @@ async function switchLanguage(newLang) {
   state.currentUnit = state.maxUnlockedUnit;
   state.flashOrder = shuffle(filtered().map((_, i) => i));
   state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
-  state.flashIdx = 0; state.sentenceIdx = 0;
+  state.storyOrder = [];
+  state.flashIdx = 0; state.sentenceIdx = 0; state.storyIdx = 0;
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
   renderAuthBar();
   render();
 }
