@@ -4610,7 +4610,62 @@ async function fetchChatHistory() {
     state.chatError = 'לא הצלחתי לטעון היסטוריה: ' + (e.message || e);
     state.chatMessages = [];
   }
-  if (state.mode === 'chat') render();
+  if (state.mode === 'chat') {
+    render();
+    // First-time-empty: kick off an opener so the LLM speaks first.
+    if (state.chatMessages.length === 0 && !state.chatPending && !state.chatError) {
+      requestOpener();
+    }
+  }
+}
+
+async function requestOpener() {
+  if (!auth.session || !auth.currentProfile) return;
+  if (state.chatPending) return;
+  state.chatError = null;
+  state.chatPending = true;
+  render();
+  try {
+    const token = auth.session.access_token;
+    const vocabSnapshot = getVocab().filter(inUnitScope)
+      .slice(0, 200)
+      .map(v => ({ ro: v.ro, he: v.he }));
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({
+        profile_id: auth.currentProfile.id,
+        language: state.language,
+        opener: true,
+        vocab_snapshot: vocabSnapshot,
+        recent_messages: [],
+      }),
+    });
+    if (r.status >= 400) {
+      const err = await r.json().catch(() => ({}));
+      const detail = err.detail ? ' — ' + (typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail)) : '';
+      state.chatError = 'תקלה בפתיחה: ' + (err.error || ('שגיאה ' + r.status)) + detail;
+      console.warn('opener error', r.status, err);
+    } else {
+      const data = await r.json();
+      state.chatMessages.push({
+        role: 'assistant',
+        body: data.reply_text || '',
+        reply_words: data.reply_words || [],
+        reply_he: data.reply_he || '',
+        _heVisible: false,
+        created_at: new Date().toISOString(),
+      });
+    }
+  } catch (e) {
+    state.chatError = 'בעיית רשת בפתיחה: ' + (e.message || e);
+  } finally {
+    state.chatPending = false;
+    if (state.mode === 'chat') {
+      render();
+      scrollChatToBottom();
+    }
+  }
 }
 
 function scrollChatToBottom() {
@@ -4657,7 +4712,9 @@ async function sendChatMessage(text) {
       state.chatError = 'אנא התחברי מחדש.';
     } else if (r.status >= 400) {
       const err = await r.json().catch(() => ({}));
-      state.chatError = 'תקלה: ' + (err.error || ('שגיאה ' + r.status));
+      const detail = err.detail ? ' — ' + (typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail)) : '';
+      state.chatError = 'תקלה: ' + (err.error || ('שגיאה ' + r.status)) + detail;
+      console.warn('chat error', r.status, err);
     } else {
       const data = await r.json();
       state.chatMessages.push({
