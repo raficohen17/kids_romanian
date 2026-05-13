@@ -3,3 +3,6 @@
 *.bak
 romanian-backup-*.json
 config.js
+.env
+.env.*
+!.env.example
