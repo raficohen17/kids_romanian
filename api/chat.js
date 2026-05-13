@@ -97,6 +97,26 @@ function buildMessages(systemPrompt, recentMessages, userMessage) {
   return msgs;
 }
 
+// Extract the first JSON object from a string that may have surrounding
+// prose or markdown fences (```json ... ```). Returns null if no parseable
+// object is found.
+function extractJsonObject(text) {
+  if (!text) return null;
+  let s = String(text).trim();
+  // Strip leading/trailing markdown fences (```json, ```, ~~~).
+  s = s.replace(/^```(?:json|JSON)?\s*/, '').replace(/```\s*$/, '').trim();
+  // First attempt: parse as-is.
+  try { return JSON.parse(s); } catch (e) {}
+  // Second attempt: find the first { ... } block (greedy to last }).
+  const first = s.indexOf('{');
+  const last = s.lastIndexOf('}');
+  if (first >= 0 && last > first) {
+    const slice = s.slice(first, last + 1);
+    try { return JSON.parse(slice); } catch (e) {}
+  }
+  return null;
+}
+
 async function callOpenRouter(apiKey, model, messages) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -109,6 +129,9 @@ async function callOpenRouter(apiKey, model, messages) {
     body: JSON.stringify({
       model,
       messages,
+      // Note: response_format json_object is not honored by all Anthropic
+      // models on OpenRouter — we ask for JSON in the prompt and then
+      // tolerate markdown-fenced output via extractJsonObject().
       response_format: { type: 'json_object' },
       max_tokens: MAX_TOKENS,
       temperature: 0.7,
@@ -123,11 +146,12 @@ async function callOpenRouter(apiKey, model, messages) {
   catch (e) { return { ok: false, status: 502, detail: 'invalid openrouter json' }; }
   const content = data.choices?.[0]?.message?.content;
   if (!content) return { ok: false, status: 502, detail: 'no content in openrouter reply' };
-  let parsed;
-  try { parsed = JSON.parse(content); }
-  catch (e) { return { ok: false, status: 502, detail: 'model did not return json', raw: content.slice(0, 300) }; }
+  const parsed = extractJsonObject(content);
+  if (!parsed) {
+    return { ok: false, status: 502, detail: 'model did not return json', raw: String(content).slice(0, 400) };
+  }
   if (!parsed.reply || typeof parsed.reply !== 'string') {
-    return { ok: false, status: 502, detail: 'model reply missing "reply" field' };
+    return { ok: false, status: 502, detail: 'model reply missing "reply" field', raw: String(content).slice(0, 400) };
   }
   return {
     ok: true,
@@ -232,7 +256,7 @@ export default async function handler(req, res) {
   const messages = buildMessages(systemPrompt, recent_messages, effectiveUserText);
 
   const llm = await callOpenRouter(OPENROUTER_API_KEY, OPENROUTER_MODEL, messages);
-  if (!llm.ok) return jsonError(res, llm.status || 502, 'llm call failed', { detail: llm.detail, model: OPENROUTER_MODEL });
+  if (!llm.ok) return jsonError(res, llm.status || 502, 'llm call failed', { detail: llm.detail, raw: llm.raw, model: OPENROUTER_MODEL });
 
   const now = Date.now();
   const rows = [];
