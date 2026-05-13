@@ -434,6 +434,19 @@
   .pin-row input:focus { border-color:#ba68c8; }
   .pin-error { color:#c62828; font-weight:bold; margin-top:8px; min-height:1.2em; }
 
+  /* emoji picker */
+  .emoji-grid {
+    display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; margin-top:10px;
+  }
+  .emoji-tile {
+    background:white; border:2px solid #e0e0e0; border-radius:14px;
+    font-size:2rem; padding:8px; cursor:pointer; transition:transform 0.1s;
+    aspect-ratio: 1;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .emoji-tile:hover { transform:scale(1.1); border-color:#ba68c8; }
+  .emoji-tile.selected { background:linear-gradient(135deg,#fce4ec,#e1bee7); border-color:#ba68c8; box-shadow:0 0 0 3px rgba(186,104,200,0.3); }
+
   /* auth bar + overlays */
   /* `display: flex` etc. on these elements overrides the [hidden] UA rule,
      so we need an explicit reset to keep `hidden` working. */
@@ -2555,11 +2568,49 @@ function attachOverlayEvents() {
   }
 }
 
+// 20 curated emojis suitable for kid profile avatars — gender/culture neutral.
+const PROFILE_EMOJIS = [
+  '🌟','⭐','🌈','✨','🌸','🌻','🍀','🦋',
+  '🐱','🐶','🦊','🐰','🐻','🐼','🦁','🐯',
+  '🐸','🦄','🐙','🦉',
+];
+
+// Renders an emoji-picker modal on the contact-modal div (reusing the same overlay slot).
+// Resolves to the selected emoji string, or null if cancelled.
+function openEmojiPicker({ current } = {}) {
+  return new Promise(resolve => {
+    const m = document.getElementById('contact-modal');
+    if (!m) return resolve(null);
+    m.hidden = false;
+    m.innerHTML = `
+      <div class="auth-card" style="max-width:380px;">
+        <h2>בחרי אימוג'י</h2>
+        <div class="emoji-grid">
+          ${PROFILE_EMOJIS.map(e => `
+            <button class="emoji-tile ${e === current ? 'selected' : ''}" data-e="${e}">${e}</button>
+          `).join('')}
+        </div>
+        <div class="row" style="margin-top:14px;">
+          <button class="btn prev" id="emoji-cancel">ביטול</button>
+        </div>
+      </div>
+    `;
+    const close = (val) => { m.hidden = true; m.innerHTML = ''; resolve(val); };
+    m.querySelectorAll('.emoji-tile').forEach(b => {
+      b.onclick = () => close(b.dataset.e);
+    });
+    document.getElementById('emoji-cancel').onclick = () => close(null);
+    // outside-tap dismiss
+    m.onclick = (e) => { if (e.target === m) close(null); };
+  });
+}
+
 async function createProfileFlow() {
+  if (auth.profiles.length >= 10) { alert('עד 10 פרופילים למשפחה'); return; }
   const name = prompt('שם הפרופיל:');
   if (!name) return;
-  const emoji = prompt("אימוג'י (אופציונלי):", '🌟') || '🌟';
-  if (auth.profiles.length >= 10) { alert('עד 10 פרופילים למשפחה'); return; }
+  const picked = await openEmojiPicker({ current: '🌟' });
+  const emoji = picked || '🌟';
   const { data, error } = await auth.client.from('profiles').insert({
     family_id: auth.family.id, name: name.trim(), emoji,
   }).select().single();
@@ -2580,7 +2631,7 @@ async function manageProfilesFlow() {
     const nn = prompt('שם חדש:', p.name);
     if (nn) { await auth.client.from('profiles').update({ name: nn.trim() }).eq('id', p.id); await loadProfiles(); renderAuthOverlay(); renderAuthBar(); }
   } else if (action === '2') {
-    const ne = prompt("אימוג'י חדש:", p.emoji || '🌟');
+    const ne = await openEmojiPicker({ current: p.emoji || '🌟' });
     if (ne) { await auth.client.from('profiles').update({ emoji: ne }).eq('id', p.id); await loadProfiles(); renderAuthOverlay(); renderAuthBar(); }
   } else if (action === '3') {
     if (p.pin) {
