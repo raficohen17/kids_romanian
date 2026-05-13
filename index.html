@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>רומנית עם חיוך 🇷🇴</title>
+<title>לתרגל שפות עם חיוך 🌈</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -610,7 +610,7 @@
 <body>
 
 <header>
-  <h1>רומנית עם חיוך <span class="flag">🇷🇴</span> 🌈</h1>
+  <h1>לתרגל שפות עם חיוך 🌈</h1>
   <p class="subtitle">תרגול בין שיעורים — בהצלחה! ✨</p>
 </header>
 
@@ -643,7 +643,7 @@
 </div>
 
 <footer>
-  נבנה באהבה ❤️ • לחיצה על המילה ברומנית = שמיעת ההגייה<br>
+  נבנה באהבה ❤️ • לחיצה על המילה הזרה = שמיעת ההגייה<br>
   <a href="#" id="contact-link" style="color:#7e57c2;">רוצה את זה למשפחה שלך? בקשי גישה</a>
 </footer>
 
@@ -3046,6 +3046,8 @@ function pickOne(arr, exclude) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 function ttsLang() { return state.language === 'en' ? 'en-US' : 'ro-RO'; }
+// Hebrew name for the current target language (for hint text inside the kid's UI)
+function targetLangNameHe() { return state.language === 'en' ? 'אנגלית' : 'רומנית'; }
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
@@ -3143,12 +3145,12 @@ function renderFlash() {
         <div class="emoji">${word.emoji}</div>
         ${flipped ? `
           <div class="ro" id="ro-word">${word.ro}</div>
-          <div class="pron">${word.pron}</div>
-          <div class="note">${word.note}</div>
+          ${word.pron ? `<div class="pron">${word.pron}</div>` : ''}
+          ${word.note ? `<div class="note">${word.note}</div>` : ''}
           <div class="hint">👆 לחיצה להפוך חזרה</div>
         ` : `
           <div class="he">${word.he}</div>
-          <div class="hint">👆 לחיצה כדי לגלות את המילה ברומנית</div>
+          <div class="hint">👆 לחיצה כדי לגלות את המילה ב${targetLangNameHe()}</div>
         `}
       </div>
       <div class="nav-row">
@@ -3210,7 +3212,7 @@ function renderQuiz() {
     <div class="quiz-q">
       <span class="emoji">${w.emoji}</span>
       ${w.he}
-      <div class="prompt">איך אומרים את זה ברומנית? 🤔</div>
+      <div class="prompt">איך אומרים את זה ב${targetLangNameHe()}? 🤔</div>
     </div>
     <div class="options" id="opts">
       ${state.quizOptions.map((o, i) => `<button class="opt" data-i="${i}">${o.ro}</button>`).join("")}
@@ -3348,7 +3350,7 @@ function renderMatch() {
   const matched = state.matchMatched;
   const allDone = matched.size === picks.length;
   return `
-    <p style="text-align:center; color:#555;">לחצי על מילה בעברית ואז על המילה המתאימה ברומנית 🧩</p>
+    <p style="text-align:center; color:#555;">לחצי על מילה בעברית ואז על המילה המתאימה ב${targetLangNameHe()} 🧩</p>
     <div class="match-grid" id="matchGrid" style="margin-top:12px;">
       ${left.map(item => `
         <button class="opt ${state.matchSelected && state.matchSelected.side === "he" && state.matchSelected.id === item.id ? "selected" : ""} ${matched.has("he-" + item.id) ? "matched" : ""}" data-side="he" data-id="${item.id}">${item.label}</button>
@@ -3436,7 +3438,7 @@ function renderSentences() {
     const known = knownWord(w.ro);
     return `<button class="word-chip ${known ? "known" : "new"}" data-ro="${encodeURIComponent(w.ro)}">
       ${known ? "✅" : "🆕"} <b>${w.ro}</b> — ${w.he}
-      <span class="word-pron">${w.pron}</span>
+      ${w.pron ? `<span class="word-pron">${w.pron}</span>` : ''}
     </button>`;
   }).join("");
   return `
@@ -3447,8 +3449,8 @@ function renderSentences() {
         <div class="he" style="font-size:2rem;">${s.he}</div>
         ${revealed ? `
           <div class="ro" style="margin-top:14px; font-size:1.8rem;">${s.ro}</div>
-          <div class="pron">${s.pron}</div>
-        ` : `<div class="hint" style="margin-top:18px;">👆 לחיצה לגלות את המשפט ברומנית</div>`}
+          ${s.pron ? `<div class="pron">${s.pron}</div>` : ''}
+        ` : `<div class="hint" style="margin-top:18px;">👆 לחיצה לגלות את המשפט ב${targetLangNameHe()}</div>`}
       </div>
       <div class="nav-row">
         <button class="btn prev" id="sPrev">⬅️ הקודם</button>
@@ -3522,7 +3524,7 @@ function renderManageWords() {
     <h3 class="m-heading">${state.manageEditingId ? "✏️ עורכים מילה" : "➕ הוספת מילה חדשה"}</h3>
     <div class="form-grid">
       <label>עברית <span class="req">*</span><input type="text" id="f-he" value="${escapeAttr(draft.he)}" placeholder="לדוגמה: חתול"></label>
-      <label>רומנית <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="לדוגמה: Pisică" dir="ltr"></label>
+      <label>${targetLangNameHe()} <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="${state.language === 'en' ? 'e.g., Cat' : 'לדוגמה: Pisică'}" dir="ltr"></label>
       <label>הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="לדוגמה: פִּי-סִי-קָה"></label>
       <label>קטגוריה
         <input type="text" id="f-cat" value="${escapeAttr(draft.cat)}" placeholder="חיות / מספרים / משפחה..." list="cat-options">
@@ -3540,7 +3542,7 @@ function renderManageWords() {
     <h3 class="m-heading">המילים שהוספת (${userVocab.length})</h3>
     ${userVocab.length === 0 ? `<p class="empty-note">עדיין לא הוספת מילים. ההוספות יישמרו בדפדפן ויופיעו בכל מצבי התרגול.</p>` : `
       <table class="m-table">
-        <tr><th>אימוג'י</th><th>עברית</th><th>רומנית</th><th>הגייה</th><th>קטגוריה</th><th></th></tr>
+        <tr><th>אימוג'י</th><th>עברית</th><th>${targetLangNameHe()}</th><th>הגייה</th><th>קטגוריה</th><th></th></tr>
         ${userVocab.map(w => `
           <tr>
             <td>${w.emoji || "✨"}</td>
@@ -3557,13 +3559,13 @@ function renderManageWords() {
       </table>`}
 
     <details class="builtin-list">
-      <summary>📦 25 המילים המובנות (לקריאה בלבד)</summary>
+      <summary>📦 ${(state.language === 'en' ? VOCAB_EN : BUILTIN_VOCAB).filter(w => w.unit == null).length} מילים בסיסיות (לקריאה בלבד)</summary>
       <table class="m-table">
-        ${BUILTIN_VOCAB.map(w => `
+        ${(state.language === 'en' ? VOCAB_EN : BUILTIN_VOCAB).filter(w => w.unit == null).map(w => `
           <tr>
             <td>${w.emoji}</td><td>${w.he}</td>
             <td dir="ltr"><b>${w.ro}</b></td>
-            <td>${w.pron}</td><td>${w.cat}</td>
+            <td>${w.pron || ''}</td><td>${w.cat || ''}</td>
             <td><button class="mini" data-builtin-speak="${escapeAttr(w.ro)}">🔊</button></td>
           </tr>`).join("")}
       </table>
@@ -3577,12 +3579,12 @@ function renderManageSentences() {
     <h3 class="m-heading">${state.manageEditingId ? "✏️ עורכים משפט" : "➕ הוספת משפט חדש"}</h3>
     <div class="form-grid">
       <label style="grid-column:1/-1;">עברית <span class="req">*</span><input type="text" id="f-he" value="${escapeAttr(draft.he)}" placeholder="לדוגמה: אני אוהבת לרקוד"></label>
-      <label style="grid-column:1/-1;">רומנית <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="לדוגמה: Îmi place să dansez" dir="ltr"></label>
+      <label style="grid-column:1/-1;">${targetLangNameHe()} <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="${state.language === 'en' ? 'e.g., I like to dance' : 'לדוגמה: Îmi place să dansez'}" dir="ltr"></label>
       <label style="grid-column:1/-1;">הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="אִימְי פְּלָאצֶ'ה סָה דָאן-זֶז"></label>
       <label>נושא<input type="text" id="f-theme" value="${escapeAttr(draft.theme)}" placeholder="תחביבים"></label>
       <label>אימוג'י<input type="text" id="f-emoji" value="${escapeAttr(draft.emoji)}" placeholder="💃" maxlength="4"></label>
     </div>
-    <p class="hint" style="margin-top:8px;">פירוק מילה-מילה (אופציונלי, אבל מומלץ): שורה אחת לכל מילה בפורמט <code>רומנית | עברית | הגייה</code></p>
+    <p class="hint" style="margin-top:8px;">פירוק מילה-מילה (אופציונלי, אבל מומלץ): שורה אחת לכל מילה בפורמט <code>${targetLangNameHe()} | עברית | הגייה</code></p>
     <textarea id="f-words" class="words-textarea" placeholder="Îmi | לי | אִימְי&#10;place | מוצא חן | פְּלָאצֶ'ה&#10;să | ש- | סָה&#10;dansez | אני רוקדת | דָאן-זֶז">${draft.words && draft.words.length ? draft.words.map(w => `${w.ro} | ${w.he} | ${w.pron || ""}`).join("\n") : ""}</textarea>
     <div class="nav-row">
       <button class="btn speak" id="saveBtn">${state.manageEditingId ? "💾 שמרי שינויים" : "➕ הוסיפי לרשימה"}</button>
@@ -3593,7 +3595,7 @@ function renderManageSentences() {
     <h3 class="m-heading">המשפטים שהוספת (${userSentences.length})</h3>
     ${userSentences.length === 0 ? `<p class="empty-note">עדיין לא הוספת משפטים.</p>` : `
       <table class="m-table">
-        <tr><th></th><th>עברית</th><th>רומנית</th><th>נושא</th><th></th></tr>
+        <tr><th></th><th>עברית</th><th>${targetLangNameHe()}</th><th>נושא</th><th></th></tr>
         ${userSentences.map(s => `
           <tr>
             <td>${s.emoji || "💬"}</td>
@@ -3644,7 +3646,7 @@ function attachManageEvents() {
 
   const save = () => {
     const d = collect();
-    if (!d.he || !d.ro) { alert("חובה למלא עברית ורומנית"); return; }
+    if (!d.he || !d.ro) { alert("חובה למלא עברית ו" + targetLangNameHe()); return; }
     const list = state.manageTab === "words" ? userVocab : userSentences;
     if (state.manageEditingId) {
       const i = list.findIndex(x => x.id === state.manageEditingId);
@@ -3770,7 +3772,7 @@ function parseMarkdownTable(text) {
     if (cells.length < 3) continue;
     const [cat, he, ro, pron, note] = cells;
     // Skip header rows
-    if (/^רומנית/.test(ro) || /^Romanian/i.test(ro) || he === "עברית" || he === "Hebrew") continue;
+    if (/^רומנית|^אנגלית|^Romanian|^English/i.test(ro) || he === "עברית" || he === "Hebrew") continue;
     if (cat) currentCat = cat;
     if (!he || !ro) continue;
     words.push({
@@ -3905,10 +3907,10 @@ function renderUser() {
         <textarea id="extInput" class="ext-textarea" placeholder="הדבק כאן טבלת Markdown או JSON...
 
 דוגמה (Markdown):
-| קטגוריה | עברית | רומנית | הגייה | הערות |
+| קטגוריה | עברית | ${state.language === 'en' ? 'אנגלית' : 'רומנית'} | הגייה | הערות |
 | :--- | :--- | :--- | :--- | :--- |
-| **חיות** | חתול | Pisică | פִּיסִיקָה | מילה בנקבה |
-|         | סוס  | Cal    | קָאל      | |"></textarea>
+${state.language === 'en' ? '| **Animals** | חתול | Cat | קָאט | |' : '| **חיות** | חתול | Pisică | פִּיסִיקָה | מילה בנקבה |'}
+${state.language === 'en' ? '|         | סוס  | Horse | הוֹרס | |' : '|         | סוס  | Cal    | קָאל      | |'}"></textarea>
 
         ${preview ? renderPreview(preview) : ""}
 
@@ -3947,7 +3949,7 @@ function renderPreview(preview) {
       <p style="color:#555;">זוהו <b>${words.length}</b> מילים ו-<b>${sentences.length}</b> משפטים.</p>
       ${words.length ? `
         <table class="m-table">
-          <tr><th>אימוג'י</th><th>עברית</th><th>רומנית</th><th>הגייה</th><th>קטגוריה</th></tr>
+          <tr><th>אימוג'י</th><th>עברית</th><th>${targetLangNameHe()}</th><th>הגייה</th><th>קטגוריה</th></tr>
           ${wPreview.map(w => `<tr>
             <td>${w.emoji}</td><td>${escapeHtml(w.he)}</td>
             <td dir="ltr"><b>${escapeHtml(w.ro)}</b></td>
@@ -3958,7 +3960,7 @@ function renderPreview(preview) {
       ` : ""}
       ${sentences.length ? `
         <table class="m-table" style="margin-top:8px;">
-          <tr><th></th><th>עברית</th><th>רומנית</th></tr>
+          <tr><th></th><th>עברית</th><th>${targetLangNameHe()}</th></tr>
           ${sPreview.map(s => `<tr>
             <td>${s.emoji}</td><td>${escapeHtml(s.he)}</td>
             <td dir="ltr"><b>${escapeHtml(s.ro)}</b></td>
@@ -3974,7 +3976,7 @@ function renderPreview(preview) {
   `;
 }
 
-const SAMPLE_MARKDOWN = `| קטגוריה | עברית | רומנית | הגייה | הערות |
+const SAMPLE_MARKDOWN_RO = `| קטגוריה | עברית | רומנית | הגייה | הערות |
 | :--- | :--- | :--- | :--- | :--- |
 | **חיות** | חתול | Pisică | פִּיסִיקָה | מילה בנקבה |
 |         | סוס  | Cal | קָאל | |
@@ -3982,6 +3984,15 @@ const SAMPLE_MARKDOWN = `| קטגוריה | עברית | רומנית | הגיי
 | **מספרים** | אחד | Unu | אוּנוּ | |
 |         | שתיים | Doi | דוֹי | זכר; נקבה: Două |
 |         | שלוש | Trei | טרֶיי | |`;
+const SAMPLE_MARKDOWN_EN = `| קטגוריה | עברית | אנגלית | הגייה | הערות |
+| :--- | :--- | :--- | :--- | :--- |
+| **Animals** | חתול | Cat | קָאט | |
+|         | סוס  | Horse | הוֹרס | |
+|         | ציפור | Bird | בֶּרד | |
+| **Numbers** | אחד | One | וואן | |
+|         | שתיים | Two | טוּ | |
+|         | שלוש | Three | ת'ריי | |`;
+function getSampleMarkdown() { return state.language === 'en' ? SAMPLE_MARKDOWN_EN : SAMPLE_MARKDOWN_RO; }
 
 function attachUserEvents() {
   // PIN gate handlers
@@ -4041,7 +4052,7 @@ function attachUserEvents() {
 
   const ta = document.getElementById("extInput");
 
-  document.getElementById("extSample").onclick = () => { ta.value = SAMPLE_MARKDOWN; };
+  document.getElementById("extSample").onclick = () => { ta.value = getSampleMarkdown(); };
   document.getElementById("extClear").onclick  = () => { ta.value = ""; state.userPreview = null; render(); };
 
   document.getElementById("extFile").onclick = () => {
@@ -4211,9 +4222,16 @@ function showUnitUnlock(n) {
 
 // ====== Render: pronunciation guide ======
 function renderGuide() {
-  return `
-    <h2 style="color:#d81b60; text-align:center; margin-bottom:12px;">📖 איך לקרוא ברומנית</h2>
-    <div class="guide">
+  const guideRows = state.language === 'en' ? `
+      <div class="letter">th</div>      <div class="desc">צליל ש"קרוב" ל-"ת'" או "ד'" — לשון בין השיניים. think = "ת'ינק"</div>
+      <div class="letter">sh</div>      <div class="desc">"ש" — shoe = "שוּ"</div>
+      <div class="letter">ch</div>      <div class="desc">"צ'" — cheese = "צ'יז"</div>
+      <div class="letter">ph</div>      <div class="desc">"פ" — phone = "פוֹאן"</div>
+      <div class="letter">silent k</div><div class="desc">"k" שותקת לפני "n" — knee = "ני"</div>
+      <div class="letter">silent gh</div><div class="desc">"gh" לעיתים שותקת — night = "נאיט"</div>
+      <div class="letter">a / an</div> <div class="desc">"a" לפני עיצור, "an" לפני תנועה — a cat / an apple</div>
+      <div class="letter">the</div>    <div class="desc">"ה-" (כל הזמן צריך "the" לפני שם עצם מסוים)</div>
+  ` : `
       <div class="letter">ă</div>     <div class="desc">צליל "א" קצר ועמום (כמו ה-"a" ב-about)</div>
       <div class="letter">â / î</div>  <div class="desc">צליל גרוני עמוק — כמו "י" מהגרון</div>
       <div class="letter">ț</div>     <div class="desc">צליל "צ" ברור</div>
@@ -4222,7 +4240,10 @@ function renderGuide() {
       <div class="letter">ch</div>    <div class="desc">"ק" (כמו cake) — Mă cheamă = "מה קְיָאמָה"</div>
       <div class="letter">j</div>     <div class="desc">"ז'" תמיד (כמו ה-J הצרפתית)</div>
       <div class="letter">i סופית</div><div class="desc">בדרך כלל מרככת את העיצור שלפניה ולא נשמעת כהברה מלאה</div>
-    </div>
+  `;
+  return `
+    <h2 style="color:#d81b60; text-align:center; margin-bottom:12px;">📖 איך לקרוא ב${targetLangNameHe()}</h2>
+    <div class="guide">${guideRows}</div>
 
     <h3 style="margin-top:20px; color:#4527a0;">🌟 כל המילים שלך:</h3>
     <div style="margin-top:8px;">
@@ -4237,7 +4258,7 @@ function renderGuide() {
                   <td style="padding:6px 4px;">${w.emoji}</td>
                   <td style="padding:6px 4px; font-weight:bold;">${w.he}</td>
                   <td style="padding:6px 4px; color:#c2185b; font-weight:bold;">${w.ro}</td>
-                  <td style="padding:6px 4px; color:#666;">${w.pron}</td>
+                  <td style="padding:6px 4px; color:#666;">${w.pron || ''}</td>
                   <td style="padding:6px 4px;"><button class="btn speak" style="padding:4px 10px; font-size:0.9rem;" data-ro="${w.ro}">🔊</button></td>
                 </tr>
               `).join("")}
