@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>לתרגל שפות עם חיוך 🌈</title>
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="bg" cx="50%25" cy="35%25" r="65%25"><stop offset="0%25" stop-color="%23fff9c4"/><stop offset="60%25" stop-color="%23fce4ec"/><stop offset="100%25" stop-color="%23e3f2fd"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(%23bg)" stroke="%23ba68c8" stroke-width="3"/><path d="M14 38a18 18 0 0 1 36 0" fill="none" stroke="%23e53935" stroke-width="3.5" stroke-linecap="round"/><path d="M18 38a14 14 0 0 1 28 0" fill="none" stroke="%23fbc02d" stroke-width="3.5" stroke-linecap="round"/><path d="M22 38a10 10 0 0 1 20 0" fill="none" stroke="%2343a047" stroke-width="3.5" stroke-linecap="round"/><path d="M26 38a6 6 0 0 1 12 0" fill="none" stroke="%231e88e5" stroke-width="3.5" stroke-linecap="round"/><circle cx="24" cy="46" r="2.2" fill="%234a148c"/><circle cx="40" cy="46" r="2.2" fill="%234a148c"/><path d="M24 51c3 3 13 3 16 0" fill="none" stroke="%234a148c" stroke-width="2.5" stroke-linecap="round"/></svg>'>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -351,7 +352,18 @@
     direction: ltr; font-size: 1.7rem; line-height: 2.2; color:#333;
     text-align: center; padding: 8px 0;
   }
-  .story-sentence { display:block; margin: 4px 0; }
+  .story-sentence { display:block; margin: 8px 0; position: relative; }
+  .story-sentence-play {
+    background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+    border: 2px solid #66bb6a; border-radius: 50%;
+    width: 34px; height: 34px; padding: 0;
+    margin-inline-end: 8px; cursor: pointer; font-size: 1rem;
+    vertical-align: middle;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    transition: transform 0.1s;
+  }
+  .story-sentence-play:hover { transform: scale(1.08); }
+  .story-sentence-play:active { transform: scale(0.94); }
   .story-word {
     position: relative; display: inline-block; padding: 2px 4px;
     border-radius: 8px; cursor: pointer; transition: background 0.1s;
@@ -398,6 +410,80 @@
     line-height: 1.6; direction: rtl;
   }
   .story-he-line { display:block; }
+
+  /* chat */
+  .chat-wrap {
+    max-width: 720px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .chat-list {
+    background: rgba(255,255,255,0.6); border-radius: 16px;
+    padding: 14px; min-height: 280px; max-height: 60vh;
+    overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+  }
+  .chat-bubble {
+    padding: 10px 14px; border-radius: 18px; max-width: 85%;
+    font-size: 1.1rem; line-height: 1.5; word-wrap: break-word;
+    position: relative;
+  }
+  .chat-user {
+    background: linear-gradient(135deg, #b3e5fc, #81d4fa);
+    color: #01579b; align-self: flex-start;
+    border-bottom-left-radius: 6px;
+    direction: ltr; text-align: left;
+  }
+  .chat-llm {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    color: #4a148c; align-self: flex-end;
+    border-bottom-right-radius: 6px;
+    padding-top: 32px;
+  }
+  .chat-bubble-text { direction: ltr; text-align: left; }
+  .chat-bubble-actions {
+    position: absolute; top: 6px; right: 8px;
+    display: flex; gap: 4px;
+  }
+  .chat-tx {
+    background: white; border: 1px solid #ce93d8;
+    border-radius: 50%; width: 26px; height: 26px;
+    padding: 0; cursor: pointer; font-size: 0.85rem;
+    line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .chat-tx:hover { background: #f3e5f5; }
+  .chat-bubble-he {
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px dashed #ba68c8;
+    direction: rtl; text-align: right;
+    color: #6a1b9a; font-size: 1rem;
+  }
+  .chat-pending {
+    display: inline-flex; gap: 6px; align-items: center;
+    padding: 14px 18px; min-width: 0;
+  }
+  .chat-pending .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ba68c8; animation: chatBounce 1.2s infinite ease-in-out;
+  }
+  .chat-pending .dot:nth-child(2) { animation-delay: 0.2s; }
+  .chat-pending .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes chatBounce {
+    0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+    40%           { opacity: 1;   transform: translateY(-4px); }
+  }
+  .chat-composer {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .chat-composer input[type="text"] {
+    flex: 1; padding: 10px 14px; font-size: 1.05rem;
+    border: 2px solid #ba68c8; border-radius: 16px;
+    direction: ltr; font-family: inherit;
+  }
+  .chat-composer input[type="text"]:disabled { opacity: 0.6; }
+  .chat-error {
+    background: #ffebee; color: #c62828;
+    border: 2px solid #ef9a9a; border-radius: 14px;
+    padding: 8px 12px; font-size: 0.95rem; text-align: center;
+  }
 
   /* manage */
   .manage-tabs {
@@ -697,6 +783,7 @@
     <button data-mode="match">🧩 התאמה</button>
     <button data-mode="sentences">🗣️ משפטים</button>
     <button data-mode="stories">📕 סיפורים</button>
+    <button data-mode="chat" data-auth-only hidden>💬 שיחה</button>
     <button data-mode="units">📚 יחידות</button>
     <button data-mode="guide">📖 הגייה</button>
     <button data-mode="manage">📝 הוסיפי</button>
@@ -3648,6 +3735,11 @@ let state = {
   storyIdx: 0,
   storyOrder: [],
   storyPlaying: false,
+  // chat (signed-in only)
+  chatMessages: [],         // [{role, body, reply_words?, reply_he?, _heVisible?, created_at}]
+  chatPending: false,
+  chatError: null,
+  chatLoaded: false,         // whether we've fetched history for current (profile,language)
   // manage
   manageTab: "words",         // "words" | "sentences"
   manageEditingId: null,
@@ -4237,7 +4329,7 @@ function renderStories() {
   // share a global `data-w` index that matches the concatenated text's
   // tokenization — used by the boundary highlighter).
   let globalWordIdx = 0;
-  const sentencesHtml = story.sentences.map(s => {
+  const sentencesHtml = story.sentences.map((s, sIdx) => {
     const tokens = tokenizeStoryLine(s.ro);
     const inner = tokens.map(t => {
       if (t.kind === 'sep') return escapeHtml(t.text);
@@ -4246,7 +4338,7 @@ function renderStories() {
       globalWordIdx += 1;
       return html;
     }).join('');
-    return `<span class="story-sentence">${inner}</span>`;
+    return `<span class="story-sentence"><button class="story-sentence-play" data-s="${sIdx}" title="השמיעי את המשפט הזה">🔊</button>${inner}</span>`;
   }).join('');
 
   const pronHtml = story.sentences
@@ -4315,10 +4407,27 @@ function setActiveStoryWord(idx) {
 
 let storyUtterance = null;
 
-function playStory(story) {
+function playStory(story, sentenceIdx) {
   if (!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
-  const { fullText, positions } = buildWordPositions(story);
+  let fullText, positions;
+  if (sentenceIdx != null) {
+    // Play just one sentence; build a single-sentence "mini story" so the
+    // highlighter still works, then offset positions by the global word
+    // index of where this sentence starts in the full story.
+    let priorWords = 0;
+    for (let i = 0; i < sentenceIdx; i++) {
+      priorWords += tokenizeStoryLine(story.sentences[i].ro).filter(t => t.kind === 'word').length;
+    }
+    const mini = { sentences: [story.sentences[sentenceIdx]] };
+    const built = buildWordPositions(mini);
+    fullText = built.fullText;
+    positions = built.positions.map(p => ({ ...p, wordIdx: p.wordIdx + priorWords }));
+  } else {
+    const built = buildWordPositions(story);
+    fullText = built.fullText;
+    positions = built.positions;
+  }
   const u = new SpeechSynthesisUtterance(fullText);
   u.lang = ttsLang();
   u.rate = state.speechRate;
@@ -4363,6 +4472,13 @@ function attachStoryEvents() {
     render();
   };
   document.getElementById('storyPlay').onclick = (e) => { e.stopPropagation(); playStory(story); };
+  document.querySelectorAll('.story-sentence-play').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const sIdx = parseInt(btn.dataset.s, 10);
+      playStory(story, sIdx);
+    };
+  });
 
   // Per-word interactions: hover handled by CSS; on touch devices we
   // toggle a `tap-open` class on click. Clicking also speaks the word.
@@ -4385,6 +4501,266 @@ function attachStoryEvents() {
       document.querySelectorAll('.story-word.tap-open').forEach(x => x.classList.remove('tap-open'));
     }, { once: true });
   }
+}
+
+// ====== Render: chat (signed-in only) ======
+// LLM bubbles reuse the story-word machinery for hover/tap tooltips
+// and TTS word-highlighting.
+
+function renderChatBubble(msg, msgIdx) {
+  if (msg.role === 'user') {
+    return `<div class="chat-bubble chat-user">${escapeHtml(msg.body || '')}</div>`;
+  }
+  // Assistant bubble — wrap each word as a story-word, look up tooltips
+  // from msg.reply_words (an array of {ro,he,pron}).
+  const replyWords = Array.isArray(msg.reply_words) ? msg.reply_words : [];
+  const wordIndex = new Map();
+  for (const w of replyWords) {
+    const key = normalizeWord(w.ro);
+    if (key && !wordIndex.has(key)) wordIndex.set(key, w);
+  }
+  const text = msg.body || '';
+  const tokens = tokenizeStoryLine(text);
+  let wIdx = 0;
+  const inner = tokens.map(t => {
+    if (t.kind === 'sep') return escapeHtml(t.text);
+    const entry = wordIndex.get(normalizeWord(t.text));
+    // Use a chat-scoped wordIdx prefix so highlighting can find the right span.
+    const safe = escapeHtml(t.text);
+    const dataW = `chat-${msgIdx}-${wIdx}`;
+    wIdx += 1;
+    if (!entry) {
+      return `<span class="story-word" data-w="${dataW}">${safe}</span>`;
+    }
+    const tipHe = escapeHtml(entry.he || '');
+    const tipPron = entry.pron ? `<span class="tt-pron">${escapeHtml(entry.pron)}</span>` : '';
+    return `<span class="story-word" data-w="${dataW}" data-ro="${escapeAttr(entry.ro)}">${safe}<span class="story-tooltip">${tipHe}${tipPron}</span></span>`;
+  }).join('');
+  const heToggle = msg.reply_he
+    ? `<button class="chat-tx" data-action="toggle-he" data-i="${msgIdx}" title="הצגי בעברית">🇮🇱</button>`
+    : '';
+  const heBlock = (msg._heVisible && msg.reply_he)
+    ? `<div class="chat-bubble-he">${escapeHtml(msg.reply_he)}</div>`
+    : '';
+  return `
+    <div class="chat-bubble chat-llm" data-i="${msgIdx}" dir="ltr">
+      <div class="chat-bubble-actions">
+        <button class="chat-tx" data-action="play" data-i="${msgIdx}" title="השמיעי">🔊</button>
+        ${heToggle}
+      </div>
+      <div class="chat-bubble-text">${inner}</div>
+      ${heBlock}
+    </div>
+  `;
+}
+
+function renderChat() {
+  if (!auth.session || !auth.currentProfile) {
+    return `<p style="text-align:center; padding:24px;">💬 השיחה זמינה רק לפרופיל מחובר. ${auth.session ? 'בחרי פרופיל בפס העליון.' : 'התחברי כדי לדבר עם הבוט.'}</p>`;
+  }
+  if (!state.chatLoaded) {
+    // Kick off a fetch but return a placeholder immediately.
+    fetchChatHistory();
+    return `<p style="text-align:center; padding:24px;">⏳ טוענת היסטוריית שיחה...</p>`;
+  }
+  const messagesHtml = state.chatMessages
+    .map((m, i) => renderChatBubble(m, i))
+    .join('');
+  const errHtml = state.chatError
+    ? `<div class="chat-error">⚠️ ${escapeHtml(state.chatError)}</div>`
+    : '';
+  const pendingHtml = state.chatPending
+    ? `<div class="chat-bubble chat-llm chat-pending"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>`
+    : '';
+  const placeholder = state.language === 'en'
+    ? 'Type in English…'
+    : 'Scrie în română…';
+  return `
+    <div class="chat-wrap">
+      <div class="chat-list" id="chatList">
+        ${state.chatMessages.length ? messagesHtml : `<p class="hint" style="text-align:center; color:#888; padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
+        ${pendingHtml}
+      </div>
+      ${errHtml}
+      <form class="chat-composer" id="chatForm" autocomplete="off">
+        <input type="text" id="chatInput" placeholder="${placeholder}" dir="ltr" lang="${state.language === 'en' ? 'en' : 'ro'}" ${state.chatPending ? 'disabled' : ''} maxlength="500">
+        <button type="submit" id="chatSend" class="btn speak" ${state.chatPending ? 'disabled' : ''}>שלחי ➤</button>
+      </form>
+      <p class="hint" style="margin-top:8px; color:#888; font-size:0.9rem; text-align:center;">
+        💡 ${matchMedia('(hover:hover)').matches ? 'ריחפי על מילה כדי לראות תרגום' : 'הקישי על מילה כדי לראות תרגום'} · 🔊 משמיעה את התשובה · 🇮🇱 מציגה תרגום
+      </p>
+    </div>
+  `;
+}
+
+async function fetchChatHistory() {
+  if (state.chatLoaded) return;
+  state.chatLoaded = true; // prevent re-entry while in flight
+  try {
+    const { data, error } = await auth.client
+      .from('chat_messages')
+      .select('id, role, body, reply_words, reply_he, created_at')
+      .eq('profile_id', auth.currentProfile.id)
+      .eq('language', state.language)
+      .order('created_at', { ascending: true })
+      .limit(60);
+    if (error) throw error;
+    state.chatMessages = (data || []).map(m => ({ ...m, _heVisible: false }));
+  } catch (e) {
+    state.chatError = 'לא הצלחתי לטעון היסטוריה: ' + (e.message || e);
+    state.chatMessages = [];
+  }
+  if (state.mode === 'chat') render();
+}
+
+function scrollChatToBottom() {
+  const el = document.getElementById('chatList');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+async function sendChatMessage(text) {
+  if (!text || !text.trim()) return;
+  if (state.chatPending) return;
+  if (!auth.session || !auth.currentProfile) return;
+  state.chatError = null;
+  state.chatPending = true;
+
+  // Optimistic: append the user's message right away.
+  const userMsg = {
+    role: 'user', body: text.trim(),
+    created_at: new Date().toISOString(),
+  };
+  state.chatMessages.push(userMsg);
+  render();
+  scrollChatToBottom();
+
+  try {
+    const token = auth.session.access_token;
+    const vocabSnapshot = getVocab().filter(inUnitScope)
+      .slice(0, 200)
+      .map(v => ({ ro: v.ro, he: v.he }));
+    const recentMessages = state.chatMessages.slice(-11, -1).map(m => ({ role: m.role, body: m.body }));
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({
+        profile_id: auth.currentProfile.id,
+        language: state.language,
+        message_text: userMsg.body,
+        vocab_snapshot: vocabSnapshot,
+        recent_messages: recentMessages,
+      }),
+    });
+    if (r.status === 429) {
+      state.chatError = 'הגעת למכסה היומית. נסי שוב מחר 🌙';
+    } else if (r.status === 401) {
+      state.chatError = 'אנא התחברי מחדש.';
+    } else if (r.status >= 400) {
+      const err = await r.json().catch(() => ({}));
+      state.chatError = 'תקלה: ' + (err.error || ('שגיאה ' + r.status));
+    } else {
+      const data = await r.json();
+      state.chatMessages.push({
+        role: 'assistant',
+        body: data.reply_text || '',
+        reply_words: data.reply_words || [],
+        reply_he: data.reply_he || '',
+        _heVisible: false,
+        created_at: new Date().toISOString(),
+      });
+    }
+  } catch (e) {
+    state.chatError = 'בעיית רשת: ' + (e.message || e);
+  } finally {
+    state.chatPending = false;
+    render();
+    scrollChatToBottom();
+  }
+}
+
+function attachChatEvents() {
+  const form = document.getElementById('chatForm');
+  if (form) {
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input ? input.value : '';
+      if (input) input.value = '';
+      sendChatMessage(text);
+    };
+  }
+  // Per-word interactions (same model as Stories).
+  const isHoverDevice = matchMedia('(hover:hover)').matches;
+  document.querySelectorAll('.chat-llm .story-word').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      if (!isHoverDevice) {
+        document.querySelectorAll('.story-word.tap-open').forEach(x => { if (x !== el) x.classList.remove('tap-open'); });
+        el.classList.toggle('tap-open');
+      }
+      const ro = el.dataset.ro;
+      if (ro) speak(ro);
+      else speak(el.textContent.trim());
+    };
+  });
+  // Bubble actions: play / Hebrew toggle.
+  document.querySelectorAll('.chat-llm .chat-tx').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.i, 10);
+      const action = btn.dataset.action;
+      const msg = state.chatMessages[idx];
+      if (!msg) return;
+      if (action === 'play') {
+        playChatBubble(msg, idx);
+      } else if (action === 'toggle-he') {
+        msg._heVisible = !msg._heVisible;
+        render();
+        scrollChatToBottom();
+      }
+    };
+  });
+  scrollChatToBottom();
+}
+
+function playChatBubble(msg, msgIdx) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const text = msg.body || '';
+  // Build positions for the chat bubble's word spans. Tokenize the same
+  // way the renderer did so wordIdx prefixes match data-w attributes.
+  const tokens = tokenizeStoryLine(text);
+  const positions = [];
+  let wIdx = 0;
+  for (const t of tokens) {
+    if (t.kind === 'word') {
+      positions.push({ start: t.idx, end: t.idx + t.text.length, wordIdx: `chat-${msgIdx}-${wIdx}` });
+      wIdx += 1;
+    }
+  }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = ttsLang();
+  u.rate = state.speechRate;
+  const voices = speechSynthesis.getVoices();
+  const prefix = state.language === 'en' ? 'en' : 'ro';
+  const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(prefix));
+  if (match) u.voice = match;
+  u.onboundary = (e) => {
+    if (e.name && e.name !== 'word') return;
+    // Find the position whose range contains charIndex
+    let hit = null;
+    for (let i = positions.length - 1; i >= 0; i--) {
+      if (positions[i].start <= e.charIndex) { hit = positions[i]; break; }
+    }
+    document.querySelectorAll('.story-word.active').forEach(el => el.classList.remove('active'));
+    if (hit) {
+      const el = document.querySelector(`.story-word[data-w="${hit.wordIdx}"]`);
+      if (el) el.classList.add('active');
+    }
+  };
+  u.onend = () => { document.querySelectorAll('.story-word.active').forEach(el => el.classList.remove('active')); };
+  u.onerror = () => { document.querySelectorAll('.story-word.active').forEach(el => el.classList.remove('active')); };
+  speechSynthesis.speak(u);
 }
 
 // ====== Render: manage (add/edit/delete words and sentences) ======
@@ -5177,6 +5553,7 @@ function render() {
   else if (state.mode === "match")     html = renderMatch();
   else if (state.mode === "sentences") html = renderSentences();
   else if (state.mode === "stories")   html = renderStories();
+  else if (state.mode === "chat")      html = renderChat();
   else if (state.mode === "units")     html = renderUnits();
   else if (state.mode === "guide")     html = renderGuide();
   else if (state.mode === "manage")    html = renderManage();
@@ -5189,6 +5566,7 @@ function render() {
   else if (state.mode === "match")     attachMatchEvents();
   else if (state.mode === "sentences") attachSentenceEvents();
   else if (state.mode === "stories")   attachStoryEvents();
+  else if (state.mode === "chat")      attachChatEvents();
   else if (state.mode === "units")     attachUnitsEvents();
   else if (state.mode === "guide")     attachGuideEvents();
   else if (state.mode === "manage")    attachManageEvents();
@@ -5311,8 +5689,12 @@ async function selectProfile(profile) {
   auth.currentProfile = profile;
   auth.view = 'app';
   try { localStorage.setItem('ro-kids-last-profile', profile.id); } catch (e) {}
+  // Chat is per-profile; clear so the next chat-mode entry re-fetches.
+  state.chatMessages = [];
+  state.chatLoaded = false;
+  state.chatError = null;
   await loadFamilyData();
-  renderAuthBar(); renderAuthOverlay(); render();
+  renderAuthBar(); renderAuthOverlay(); applyModeVisibility(); render();
 }
 
 async function loadFamilyData() {
@@ -5510,6 +5892,11 @@ async function switchLanguage(newLang) {
   state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
   state.storyOrder = [];
   state.flashIdx = 0; state.sentenceIdx = 0; state.storyIdx = 0;
+  // Chat history is scoped to (profile, language); clear and let the chat
+  // mode re-fetch on next entry.
+  state.chatMessages = [];
+  state.chatLoaded = false;
+  state.chatError = null;
   if ('speechSynthesis' in window) speechSynthesis.cancel();
   renderAuthBar();
   render();
@@ -5889,6 +6276,18 @@ function applyModeVisibility() {
     }
   } else if (req) {
     req.remove();
+  }
+  // Show the chat tab only when a profile is selected. Guests have no chat.
+  const chatBtn = modes.querySelector('[data-mode="chat"]');
+  if (chatBtn) {
+    const show = !!(auth.session && auth.currentProfile);
+    chatBtn.hidden = !show;
+    if (!show && state.mode === 'chat') {
+      state.mode = 'flash';
+      document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
+      const flashBtn = modes.querySelector('[data-mode="flash"]');
+      if (flashBtn) flashBtn.classList.add('active');
+    }
   }
   updateRequestsBadge();
 }
