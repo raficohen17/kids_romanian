@@ -7,8 +7,8 @@
 // returns the assistant reply + annotated new words + Hebrew gloss.
 //
 // Env vars (set in Vercel project settings):
-//   OPENROUTER_API_KEY   — required.
-//   OPENROUTER_MODEL     — optional, default 'anthropic/claude-haiku-4-5'.
+//   OPEN_ROUTER_API_KEY  — required. Aliases also accepted: OPEN_ROUTER, OPENROUTER_API_KEY.
+//   OPEN_ROUTER_MODEL    — optional. Alias: OPENROUTER_MODEL. Default 'anthropic/claude-haiku-4-5'.
 //   SUPABASE_URL         — required (also exposed to the browser as NEXT_PUBLIC_SUPABASE_URL).
 //   SUPABASE_ANON_KEY    — required (also exposed as NEXT_PUBLIC_SUPABASE_ANON_KEY).
 //   CHAT_DAILY_LIMIT     — optional, default 60.
@@ -20,6 +20,13 @@ const MAX_TOKENS = 600;
 
 function envOr(name, fallback) {
   return process.env[name] || process.env['NEXT_PUBLIC_' + name] || fallback;
+}
+
+function envFirst(names, fallback) {
+  for (const n of names) {
+    if (process.env[n]) return process.env[n];
+  }
+  return fallback;
 }
 
 function jsonError(res, status, error, extra) {
@@ -164,8 +171,8 @@ export default async function handler(req, res) {
 
   const SUPABASE_URL = envOr('SUPABASE_URL', '');
   const SUPABASE_ANON_KEY = envOr('SUPABASE_ANON_KEY', '');
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-  const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || DEFAULT_MODEL;
+  const OPENROUTER_API_KEY = envFirst(['OPEN_ROUTER_API_KEY', 'OPEN_ROUTER', 'OPENROUTER_API_KEY'], '');
+  const OPENROUTER_MODEL = envFirst(['OPEN_ROUTER_MODEL', 'OPENROUTER_MODEL'], DEFAULT_MODEL);
   const CHAT_DAILY_LIMIT = parseInt(process.env.CHAT_DAILY_LIMIT || '60', 10);
 
   if (!OPENROUTER_API_KEY || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
