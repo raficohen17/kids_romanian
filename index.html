@@ -442,6 +442,13 @@
     cursor:pointer; font-size:0.95rem;
   }
   .unit-pill:hover { transform:translateY(-1px); }
+  .lang-pill {
+    background:linear-gradient(135deg,#e3f2fd,#bbdefb);
+    border:2px solid #64b5f6; border-radius:14px;
+    padding:6px 14px; font-weight:bold; color:#1565c0;
+    cursor:pointer; font-size:0.95rem;
+  }
+  .lang-pill:hover { transform:translateY(-1px); }
   .units-grid {
     display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap:12px; max-width:720px; margin:0 auto;
@@ -928,6 +935,257 @@ const VOCAB = [
 
 // ====== Sentences ======
 // Each sentence has a word-by-word breakdown. New words (not in VOCAB) become learning opportunities.
+// ============ English Vocab (parallel to VOCAB above) ============
+// Starter Pack (25 entries, no unit) + Units 1-10 (20 each).
+const VOCAB_EN = [
+  // -- Starter Pack --
+  { he:"שלום / היי", ro:"Hello", pron:"הלו", cat:"ברכות", emoji:"👋" },
+  { he:"ביי", ro:"Bye", pron:"בּאיי", cat:"ברכות", emoji:"👋" },
+  { he:"תודה", ro:"Thank you", pron:"ת'נק יוּ", cat:"נימוסים", emoji:"🙏" },
+  { he:"בבקשה", ro:"Please", pron:"פּליז", cat:"נימוסים", emoji:"🙏" },
+  { he:"סליחה", ro:"Sorry", pron:"סוֹרי", cat:"נימוסים", emoji:"🙇" },
+  { he:"כן", ro:"Yes", pron:"יֶס", cat:"בסיס", emoji:"✅" },
+  { he:"לא", ro:"No", pron:"נוֹאוּ", cat:"בסיס", emoji:"❌" },
+  { he:"טוב", ro:"Good", pron:"גוּד", cat:"תיאורים", emoji:"👍" },
+  { he:"גדול", ro:"Big", pron:"ביג", cat:"גדלים", emoji:"📏" },
+  { he:"קטן", ro:"Small", pron:"סמוֹל", cat:"גדלים", emoji:"🤏" },
+  { he:"אדום", ro:"Red", pron:"רֶד", cat:"צבעים", emoji:"🔴" },
+  { he:"כחול", ro:"Blue", pron:"בּלוּ", cat:"צבעים", emoji:"🔵" },
+  { he:"צהוב", ro:"Yellow", pron:"יֶלוֹאוּ", cat:"צבעים", emoji:"🟡" },
+  { he:"ירוק", ro:"Green", pron:"גרין", cat:"צבעים", emoji:"🟢" },
+  { he:"לבן", ro:"White", pron:"ווָאיט", cat:"צבעים", emoji:"⚪" },
+  { he:"שחור", ro:"Black", pron:"בּלָאק", cat:"צבעים", emoji:"⚫" },
+  { he:"חתול", ro:"Cat", pron:"קָאט", cat:"חיות", emoji:"🐱" },
+  { he:"כלב", ro:"Dog", pron:"דוֹג", cat:"חיות", emoji:"🐕" },
+  { he:"מים", ro:"Water", pron:"ווֹטֶר", cat:"אוכל", emoji:"💧" },
+  { he:"לחם", ro:"Bread", pron:"בּרֶד", cat:"אוכל", emoji:"🍞" },
+  { he:"תפוח", ro:"Apple", pron:"אֵפֶּל", cat:"אוכל", emoji:"🍎" },
+  { he:"אמא", ro:"Mom", pron:"מוֹם", cat:"משפחה", emoji:"👩" },
+  { he:"אבא", ro:"Dad", pron:"דֵד", cat:"משפחה", emoji:"👨" },
+  { he:"אני", ro:"I", pron:"איי", cat:"כינויים", emoji:"🙋" },
+  { he:"אתה / את", ro:"You", pron:"יוּ", cat:"כינויים", emoji:"👉" },
+
+  // -- Unit 1: Numbers & basics --
+  { he:"אחת", ro:"One", pron:"וואן", cat:"מספרים", emoji:"1️⃣", unit:1 },
+  { he:"שתיים", ro:"Two", pron:"טוּ", cat:"מספרים", emoji:"2️⃣", unit:1 },
+  { he:"שלוש", ro:"Three", pron:"ת'ריי", cat:"מספרים", emoji:"3️⃣", unit:1 },
+  { he:"ארבע", ro:"Four", pron:"פוֹר", cat:"מספרים", emoji:"4️⃣", unit:1 },
+  { he:"חמש", ro:"Five", pron:"פאיב", cat:"מספרים", emoji:"5️⃣", unit:1 },
+  { he:"שש", ro:"Six", pron:"סיקס", cat:"מספרים", emoji:"6️⃣", unit:1 },
+  { he:"שבע", ro:"Seven", pron:"סֶבֶן", cat:"מספרים", emoji:"7️⃣", unit:1 },
+  { he:"שמונה", ro:"Eight", pron:"אֵייט", cat:"מספרים", emoji:"8️⃣", unit:1 },
+  { he:"תשע", ro:"Nine", pron:"נאיין", cat:"מספרים", emoji:"9️⃣", unit:1 },
+  { he:"עשר", ro:"Ten", pron:"טֶן", cat:"מספרים", emoji:"🔟", unit:1 },
+  { he:"הוא", ro:"He", pron:"היי", cat:"כינויים", emoji:"👦", unit:1 },
+  { he:"היא", ro:"She", pron:"שיי", cat:"כינויים", emoji:"👧", unit:1 },
+  { he:"אנחנו", ro:"We", pron:"וויי", cat:"כינויים", emoji:"👨‍👩‍👧", unit:1 },
+  { he:"הם", ro:"They", pron:"ד'ֵיי", cat:"כינויים", emoji:"👥", unit:1 },
+  { he:"זה", ro:"This", pron:"דיס", cat:"בסיס", emoji:"👉", unit:1 },
+  { he:"כאן", ro:"Here", pron:"היר", cat:"בסיס", emoji:"📍", unit:1 },
+  { he:"שם", ro:"There", pron:"ד'ר", cat:"בסיס", emoji:"📍", unit:1 },
+  { he:"בית", ro:"Home", pron:"הוֹם", cat:"בסיס", emoji:"🏠", unit:1 },
+  { he:"חבר", ro:"Friend", pron:"פרֶנד", cat:"אנשים", emoji:"🤝", unit:1 },
+  { he:"שם", ro:"Name", pron:"נֵיים", cat:"בסיס", emoji:"📛", unit:1 },
+
+  // -- Unit 2: Family & home --
+  { he:"משפחה", ro:"Family", pron:"פֵמילי", cat:"משפחה", emoji:"👨‍👩‍👧‍👦", unit:2 },
+  { he:"אח", ro:"Brother", pron:"בּראד'ֶר", cat:"משפחה", emoji:"👦", unit:2 },
+  { he:"אחות", ro:"Sister", pron:"סיסטֶר", cat:"משפחה", emoji:"👧", unit:2 },
+  { he:"סבא", ro:"Grandpa", pron:"גרֵנפָּה", cat:"משפחה", emoji:"👴", unit:2 },
+  { he:"סבתא", ro:"Grandma", pron:"גרֵנמָה", cat:"משפחה", emoji:"👵", unit:2 },
+  { he:"חדר", ro:"Room", pron:"רוּם", cat:"בית", emoji:"🚪", unit:2 },
+  { he:"דלת", ro:"Door", pron:"דוֹר", cat:"בית", emoji:"🚪", unit:2 },
+  { he:"חלון", ro:"Window", pron:"ווינדוֹאוּ", cat:"בית", emoji:"🪟", unit:2 },
+  { he:"שולחן", ro:"Table", pron:"טֵיבּל", cat:"בית", emoji:"🪑", unit:2 },
+  { he:"כיסא", ro:"Chair", pron:"צ'ר", cat:"בית", emoji:"💺", unit:2 },
+  { he:"מיטה", ro:"Bed", pron:"בֶּד", cat:"בית", emoji:"🛏️", unit:2 },
+  { he:"מנורה", ro:"Lamp", pron:"לָאמפּ", cat:"בית", emoji:"💡", unit:2 },
+  { he:"ספר", ro:"Book", pron:"בּוּק", cat:"בית", emoji:"📖", unit:2 },
+  { he:"צעצוע", ro:"Toy", pron:"טוֹי", cat:"בית", emoji:"🧸", unit:2 },
+  { he:"מטבח", ro:"Kitchen", pron:"קיצ'ֶן", cat:"בית", emoji:"🍳", unit:2 },
+  { he:"גן", ro:"Garden", pron:"גָארדֶן", cat:"בית", emoji:"🌳", unit:2 },
+  { he:"קיר", ro:"Wall", pron:"ווָאל", cat:"בית", emoji:"🧱", unit:2 },
+  { he:"רצפה", ro:"Floor", pron:"פלוֹר", cat:"בית", emoji:"⬛", unit:2 },
+  { he:"גג", ro:"Roof", pron:"רוּף", cat:"בית", emoji:"🏠", unit:2 },
+  { he:"מפתח", ro:"Key", pron:"קי", cat:"בית", emoji:"🔑", unit:2 },
+
+  // -- Unit 3: Colors & shapes --
+  { he:"ורוד", ro:"Pink", pron:"פּינק", cat:"צבעים", emoji:"💗", unit:3 },
+  { he:"כתום", ro:"Orange", pron:"אוֹרֶנג'", cat:"צבעים", emoji:"🟠", unit:3 },
+  { he:"סגול", ro:"Purple", pron:"פֶּרפֶּל", cat:"צבעים", emoji:"🟣", unit:3 },
+  { he:"חום", ro:"Brown", pron:"בּראון", cat:"צבעים", emoji:"🟤", unit:3 },
+  { he:"אפור", ro:"Gray", pron:"גרֵיי", cat:"צבעים", emoji:"⚫", unit:3 },
+  { he:"זהוב", ro:"Gold", pron:"גוֹלד", cat:"צבעים", emoji:"💛", unit:3 },
+  { he:"כסוף", ro:"Silver", pron:"סילבֶר", cat:"צבעים", emoji:"🤍", unit:3 },
+  { he:"עיגול", ro:"Circle", pron:"סֶרקֶל", cat:"צורות", emoji:"⭕", unit:3 },
+  { he:"ריבוע", ro:"Square", pron:"סקווֶר", cat:"צורות", emoji:"⬛", unit:3 },
+  { he:"משולש", ro:"Triangle", pron:"טרָייאֶנגֶל", cat:"צורות", emoji:"🔺", unit:3 },
+  { he:"כוכב", ro:"Star", pron:"סטָאר", cat:"צורות", emoji:"⭐", unit:3 },
+  { he:"לב", ro:"Heart", pron:"הָארט", cat:"צורות", emoji:"❤️", unit:3 },
+  { he:"ארוך", ro:"Long", pron:"לוֹנג", cat:"גדלים", emoji:"📏", unit:3 },
+  { he:"קצר", ro:"Short", pron:"שוֹרט", cat:"גדלים", emoji:"📐", unit:3 },
+  { he:"גבוה", ro:"Tall", pron:"טוֹל", cat:"גדלים", emoji:"📏", unit:3 },
+  { he:"רחב", ro:"Wide", pron:"וואיד", cat:"גדלים", emoji:"📐", unit:3 },
+  { he:"צר", ro:"Narrow", pron:"נָארוֹאוּ", cat:"גדלים", emoji:"📏", unit:3 },
+  { he:"עבה", ro:"Thick", pron:"ת'יק", cat:"גדלים", emoji:"📐", unit:3 },
+  { he:"דק", ro:"Thin", pron:"ת'ין", cat:"גדלים", emoji:"📏", unit:3 },
+  { he:"עגול", ro:"Round", pron:"ראונד", cat:"צורות", emoji:"⭕", unit:3 },
+
+  // -- Unit 4: Food & drinks --
+  { he:"חלב", ro:"Milk", pron:"מילק", cat:"אוכל", emoji:"🥛", unit:4 },
+  { he:"ביצה", ro:"Egg", pron:"אֶג", cat:"אוכל", emoji:"🥚", unit:4 },
+  { he:"גבינה", ro:"Cheese", pron:"צ'יז", cat:"אוכל", emoji:"🧀", unit:4 },
+  { he:"בשר", ro:"Meat", pron:"מיט", cat:"אוכל", emoji:"🥩", unit:4 },
+  { he:"עוף", ro:"Chicken", pron:"צ'יקֶן", cat:"אוכל", emoji:"🍗", unit:4 },
+  { he:"דג", ro:"Fish", pron:"פיש", cat:"אוכל", emoji:"🐟", unit:4 },
+  { he:"אורז", ro:"Rice", pron:"ראיס", cat:"אוכל", emoji:"🍚", unit:4 },
+  { he:"מרק", ro:"Soup", pron:"סוּפּ", cat:"אוכל", emoji:"🍲", unit:4 },
+  { he:"סלט", ro:"Salad", pron:"סָאלָאד", cat:"אוכל", emoji:"🥗", unit:4 },
+  { he:"פירות", ro:"Fruit", pron:"פרוּט", cat:"אוכל", emoji:"🍎", unit:4 },
+  { he:"ירקות", ro:"Vegetable", pron:"וֶג'טֶבּל", cat:"אוכל", emoji:"🥬", unit:4 },
+  { he:"תפוז", ro:"Orange (fruit)", pron:"אוֹרֶנג'", cat:"אוכל", emoji:"🍊", unit:4 },
+  { he:"בננה", ro:"Banana", pron:"בָּנֵנָה", cat:"אוכל", emoji:"🍌", unit:4 },
+  { he:"ענבים", ro:"Grapes", pron:"גרֵייפּס", cat:"אוכל", emoji:"🍇", unit:4 },
+  { he:"שוקולד", ro:"Chocolate", pron:"צ'וֹקלֶט", cat:"אוכל", emoji:"🍫", unit:4 },
+  { he:"סוכר", ro:"Sugar", pron:"שוּגֶר", cat:"אוכל", emoji:"🍬", unit:4 },
+  { he:"מלח", ro:"Salt", pron:"סוֹלט", cat:"אוכל", emoji:"🧂", unit:4 },
+  { he:"תה", ro:"Tea", pron:"טי", cat:"אוכל", emoji:"🍵", unit:4 },
+  { he:"קפה", ro:"Coffee", pron:"קוֹפי", cat:"אוכל", emoji:"☕", unit:4 },
+  { he:"מיץ", ro:"Juice", pron:"ג'וּס", cat:"אוכל", emoji:"🧃", unit:4 },
+
+  // -- Unit 5: Animals --
+  { he:"סוס", ro:"Horse", pron:"הוֹרס", cat:"חיות", emoji:"🐴", unit:5 },
+  { he:"פרה", ro:"Cow", pron:"קָאוּ", cat:"חיות", emoji:"🐮", unit:5 },
+  { he:"כבשה", ro:"Sheep", pron:"שיפּ", cat:"חיות", emoji:"🐑", unit:5 },
+  { he:"חזיר", ro:"Pig", pron:"פּיג", cat:"חיות", emoji:"🐷", unit:5 },
+  { he:"תרנגולת", ro:"Chicken (hen)", pron:"צ'יקֶן", cat:"חיות", emoji:"🐔", unit:5 },
+  { he:"ארנב", ro:"Rabbit", pron:"רֵבּיט", cat:"חיות", emoji:"🐰", unit:5 },
+  { he:"דב", ro:"Bear", pron:"בּר", cat:"חיות", emoji:"🐻", unit:5 },
+  { he:"זאב", ro:"Wolf", pron:"וולף", cat:"חיות", emoji:"🐺", unit:5 },
+  { he:"שועלה", ro:"Fox", pron:"פוֹקס", cat:"חיות", emoji:"🦊", unit:5 },
+  { he:"סנאי", ro:"Squirrel", pron:"סקווירֶל", cat:"חיות", emoji:"🐿️", unit:5 },
+  { he:"אריה", ro:"Lion", pron:"לאיֶן", cat:"חיות", emoji:"🦁", unit:5 },
+  { he:"נמר", ro:"Tiger", pron:"טאיגֶר", cat:"חיות", emoji:"🐯", unit:5 },
+  { he:"פיל", ro:"Elephant", pron:"אֶלֶפֶנט", cat:"חיות", emoji:"🐘", unit:5 },
+  { he:"קוף", ro:"Monkey", pron:"מָאנקי", cat:"חיות", emoji:"🐒", unit:5 },
+  { he:"ציפור", ro:"Bird", pron:"בֶּרד", cat:"חיות", emoji:"🐦", unit:5 },
+  { he:"צפרדע", ro:"Frog", pron:"פרוֹג", cat:"חיות", emoji:"🐸", unit:5 },
+  { he:"נחש", ro:"Snake", pron:"סנֵייק", cat:"חיות", emoji:"🐍", unit:5 },
+  { he:"דבורה", ro:"Bee", pron:"בּי", cat:"חיות", emoji:"🐝", unit:5 },
+  { he:"פרפר", ro:"Butterfly", pron:"בָּטֶרפלאי", cat:"חיות", emoji:"🦋", unit:5 },
+  { he:"דג זהב", ro:"Goldfish", pron:"גוֹלדפיש", cat:"חיות", emoji:"🐠", unit:5 },
+
+  // -- Unit 6: Body & health --
+  { he:"ראש", ro:"Head", pron:"הֶד", cat:"גוף", emoji:"🗣️", unit:6 },
+  { he:"עין", ro:"Eye", pron:"אאיי", cat:"גוף", emoji:"👁️", unit:6 },
+  { he:"אף", ro:"Nose", pron:"נוֹאוּז", cat:"גוף", emoji:"👃", unit:6 },
+  { he:"פה", ro:"Mouth", pron:"מאות'", cat:"גוף", emoji:"👄", unit:6 },
+  { he:"אוזן", ro:"Ear", pron:"איר", cat:"גוף", emoji:"👂", unit:6 },
+  { he:"שיער", ro:"Hair", pron:"הר", cat:"גוף", emoji:"💇", unit:6 },
+  { he:"יד", ro:"Hand", pron:"הֵנד", cat:"גוף", emoji:"✋", unit:6 },
+  { he:"רגל", ro:"Leg", pron:"לֶג", cat:"גוף", emoji:"🦵", unit:6 },
+  { he:"כף רגל", ro:"Foot", pron:"פוּט", cat:"גוף", emoji:"🦶", unit:6 },
+  { he:"בטן", ro:"Belly", pron:"בֶּלי", cat:"גוף", emoji:"🤰", unit:6 },
+  { he:"שן", ro:"Tooth", pron:"טוּת'", cat:"גוף", emoji:"🦷", unit:6 },
+  { he:"לשון", ro:"Tongue", pron:"טָאנג", cat:"גוף", emoji:"👅", unit:6 },
+  { he:"לב", ro:"Heart", pron:"הָארט", cat:"גוף", emoji:"❤️", unit:6 },
+  { he:"אצבע", ro:"Finger", pron:"פינגֶר", cat:"גוף", emoji:"👆", unit:6 },
+  { he:"בריא", ro:"Healthy", pron:"הֶלת'י", cat:"בריאות", emoji:"💪", unit:6 },
+  { he:"חולה", ro:"Sick", pron:"סיק", cat:"בריאות", emoji:"🤒", unit:6 },
+  { he:"רופא", ro:"Doctor", pron:"דוֹקטוֹר", cat:"בריאות", emoji:"👨‍⚕️", unit:6 },
+  { he:"תרופה", ro:"Medicine", pron:"מֶדיסין", cat:"בריאות", emoji:"💊", unit:6 },
+  { he:"כואב", ro:"Hurts", pron:"הֶרטס", cat:"בריאות", emoji:"😣", unit:6 },
+  { he:"בית חולים", ro:"Hospital", pron:"הוֹספּיטָל", cat:"בריאות", emoji:"🏥", unit:6 },
+
+  // -- Unit 7: School --
+  { he:"בית ספר", ro:"School", pron:"סקוּל", cat:"בית ספר", emoji:"🏫", unit:7 },
+  { he:"כיתה", ro:"Classroom", pron:"קלָאסרוּם", cat:"בית ספר", emoji:"🏛️", unit:7 },
+  { he:"מורה", ro:"Teacher", pron:"טיצ'ֶר", cat:"בית ספר", emoji:"👩‍🏫", unit:7 },
+  { he:"תלמיד", ro:"Student", pron:"סטוּדֶנט", cat:"בית ספר", emoji:"🧑", unit:7 },
+  { he:"שיעור", ro:"Lesson", pron:"לֶסון", cat:"בית ספר", emoji:"📚", unit:7 },
+  { he:"שיעורי בית", ro:"Homework", pron:"הוֹמוורק", cat:"בית ספר", emoji:"📝", unit:7 },
+  { he:"מבחן", ro:"Test", pron:"טֶסט", cat:"בית ספר", emoji:"📋", unit:7 },
+  { he:"מחברת", ro:"Notebook", pron:"נוֹטבּוּק", cat:"בית ספר", emoji:"📓", unit:7 },
+  { he:"עפרון", ro:"Pencil", pron:"פֶּנסל", cat:"בית ספר", emoji:"✏️", unit:7 },
+  { he:"עט", ro:"Pen", pron:"פֶּן", cat:"בית ספר", emoji:"🖊️", unit:7 },
+  { he:"לוח", ro:"Board", pron:"בּוֹרד", cat:"בית ספר", emoji:"📋", unit:7 },
+  { he:"תיק", ro:"Backpack", pron:"בֵּקפֵּק", cat:"בית ספר", emoji:"🎒", unit:7 },
+  { he:"לקרוא", ro:"Read", pron:"ריד", cat:"בית ספר", emoji:"📖", unit:7 },
+  { he:"לכתוב", ro:"Write", pron:"ראיט", cat:"בית ספר", emoji:"✍️", unit:7 },
+  { he:"ללמוד", ro:"Learn", pron:"לֶרן", cat:"בית ספר", emoji:"📚", unit:7 },
+  { he:"לדעת", ro:"Know", pron:"נוֹאוּ", cat:"בית ספר", emoji:"💡", unit:7 },
+  { he:"שאלה", ro:"Question", pron:"קווֶסצ'ֶן", cat:"בית ספר", emoji:"❓", unit:7 },
+  { he:"תשובה", ro:"Answer", pron:"אֵנסֶר", cat:"בית ספר", emoji:"✅", unit:7 },
+  { he:"מתמטיקה", ro:"Math", pron:"מָאת'", cat:"בית ספר", emoji:"🔢", unit:7 },
+  { he:"הפסקה", ro:"Break", pron:"בּרֵייק", cat:"בית ספר", emoji:"⏸️", unit:7 },
+
+  // -- Unit 8: Nature & weather --
+  { he:"שמש", ro:"Sun", pron:"סָאן", cat:"מזג אוויר", emoji:"☀️", unit:8 },
+  { he:"ירח", ro:"Moon", pron:"מוּן", cat:"מזג אוויר", emoji:"🌙", unit:8 },
+  { he:"ענן", ro:"Cloud", pron:"קלאוד", cat:"מזג אוויר", emoji:"☁️", unit:8 },
+  { he:"גשם", ro:"Rain", pron:"רֵיין", cat:"מזג אוויר", emoji:"🌧️", unit:8 },
+  { he:"שלג", ro:"Snow", pron:"סנוֹאוּ", cat:"מזג אוויר", emoji:"❄️", unit:8 },
+  { he:"רוח", ro:"Wind", pron:"ווינד", cat:"מזג אוויר", emoji:"💨", unit:8 },
+  { he:"חם", ro:"Hot", pron:"הוֹט", cat:"מזג אוויר", emoji:"🥵", unit:8 },
+  { he:"קר", ro:"Cold", pron:"קוֹלד", cat:"מזג אוויר", emoji:"🥶", unit:8 },
+  { he:"עץ", ro:"Tree", pron:"טרי", cat:"טבע", emoji:"🌳", unit:8 },
+  { he:"פרח", ro:"Flower", pron:"פלאוֶר", cat:"טבע", emoji:"🌸", unit:8 },
+  { he:"דשא", ro:"Grass", pron:"גרָאס", cat:"טבע", emoji:"🌱", unit:8 },
+  { he:"עלה", ro:"Leaf", pron:"ליף", cat:"טבע", emoji:"🍃", unit:8 },
+  { he:"הר", ro:"Mountain", pron:"מאונטֶן", cat:"טבע", emoji:"⛰️", unit:8 },
+  { he:"ים", ro:"Sea", pron:"סי", cat:"טבע", emoji:"🌊", unit:8 },
+  { he:"חוף", ro:"Beach", pron:"בּיץ'", cat:"טבע", emoji:"🏖️", unit:8 },
+  { he:"נהר", ro:"River", pron:"ריבֶר", cat:"טבע", emoji:"🏞️", unit:8 },
+  { he:"שמיים", ro:"Sky", pron:"סקאי", cat:"טבע", emoji:"☁️", unit:8 },
+  { he:"כוכב", ro:"Star (in sky)", pron:"סטָאר", cat:"טבע", emoji:"⭐", unit:8 },
+  { he:"פארק", ro:"Park", pron:"פָּארק", cat:"מקום", emoji:"🏞️", unit:8 },
+  { he:"רחוב", ro:"Street", pron:"סטריט", cat:"מקום", emoji:"🛣️", unit:8 },
+
+  // -- Unit 9: Feelings & time --
+  { he:"שמח", ro:"Happy", pron:"הֵפּי", cat:"רגשות", emoji:"😊", unit:9 },
+  { he:"עצוב", ro:"Sad", pron:"סָאד", cat:"רגשות", emoji:"😢", unit:9 },
+  { he:"כועס", ro:"Angry", pron:"אֵנגרי", cat:"רגשות", emoji:"😠", unit:9 },
+  { he:"עייף", ro:"Tired", pron:"טאיֶרד", cat:"רגשות", emoji:"😴", unit:9 },
+  { he:"מפחד", ro:"Scared", pron:"סקֵרד", cat:"רגשות", emoji:"😨", unit:9 },
+  { he:"נרגש", ro:"Excited", pron:"אֶקסאיטֶד", cat:"רגשות", emoji:"🤩", unit:9 },
+  { he:"רגוע", ro:"Calm", pron:"קָאם", cat:"רגשות", emoji:"😌", unit:9 },
+  { he:"גאה", ro:"Proud", pron:"פּראוד", cat:"רגשות", emoji:"💪", unit:9 },
+  { he:"בוקר", ro:"Morning", pron:"מוֹרנינג", cat:"זמן", emoji:"🌅", unit:9 },
+  { he:"צהריים", ro:"Noon", pron:"נוּן", cat:"זמן", emoji:"☀️", unit:9 },
+  { he:"ערב", ro:"Evening", pron:"איבנינג", cat:"זמן", emoji:"🌆", unit:9 },
+  { he:"לילה", ro:"Night", pron:"נאיט", cat:"זמן", emoji:"🌙", unit:9 },
+  { he:"היום", ro:"Today", pron:"טוּדֵיי", cat:"זמן", emoji:"📅", unit:9 },
+  { he:"מחר", ro:"Tomorrow", pron:"טוּמוֹרוֹאוּ", cat:"זמן", emoji:"➡️", unit:9 },
+  { he:"אתמול", ro:"Yesterday", pron:"יֶסטֶרדֵיי", cat:"זמן", emoji:"⬅️", unit:9 },
+  { he:"שבוע", ro:"Week", pron:"וויק", cat:"זמן", emoji:"📅", unit:9 },
+  { he:"שעה", ro:"Hour", pron:"אאוֶר", cat:"זמן", emoji:"🕐", unit:9 },
+  { he:"דקה", ro:"Minute", pron:"מינוט", cat:"זמן", emoji:"⏱️", unit:9 },
+  { he:"שנה", ro:"Year", pron:"יִיר", cat:"זמן", emoji:"📆", unit:9 },
+  { he:"עכשיו", ro:"Now", pron:"נאוּ", cat:"זמן", emoji:"⏰", unit:9 },
+
+  // -- Unit 10: Everyday verbs --
+  { he:"ללכת", ro:"Go", pron:"גוֹאוּ", cat:"פעלים", emoji:"🚶", unit:10 },
+  { he:"לבוא", ro:"Come", pron:"קָאם", cat:"פעלים", emoji:"➡️", unit:10 },
+  { he:"לרוץ", ro:"Run", pron:"ראן", cat:"פעלים", emoji:"🏃", unit:10 },
+  { he:"לקפוץ", ro:"Jump", pron:"ג'אמפ", cat:"פעלים", emoji:"🦘", unit:10 },
+  { he:"לרקוד", ro:"Dance", pron:"דָאנס", cat:"פעלים", emoji:"💃", unit:10 },
+  { he:"לשיר", ro:"Sing", pron:"סינג", cat:"פעלים", emoji:"🎤", unit:10 },
+  { he:"לישון", ro:"Sleep", pron:"סליפּ", cat:"פעלים", emoji:"😴", unit:10 },
+  { he:"לאכול", ro:"Eat", pron:"איט", cat:"פעלים", emoji:"🍽️", unit:10 },
+  { he:"לשתות", ro:"Drink", pron:"דרינק", cat:"פעלים", emoji:"🥤", unit:10 },
+  { he:"לראות", ro:"See", pron:"סי", cat:"פעלים", emoji:"👀", unit:10 },
+  { he:"לשמוע", ro:"Hear", pron:"היר", cat:"פעלים", emoji:"👂", unit:10 },
+  { he:"לדבר", ro:"Speak", pron:"ספּיק", cat:"פעלים", emoji:"💬", unit:10 },
+  { he:"לאהוב", ro:"Love", pron:"לאוו", cat:"פעלים", emoji:"❤️", unit:10 },
+  { he:"לתת", ro:"Give", pron:"גיב", cat:"פעלים", emoji:"🤲", unit:10 },
+  { he:"לקחת", ro:"Take", pron:"טֵייק", cat:"פעלים", emoji:"✊", unit:10 },
+  { he:"לפתוח", ro:"Open", pron:"אוֹפֶּן", cat:"פעלים", emoji:"🚪", unit:10 },
+  { he:"לסגור", ro:"Close", pron:"קלוֹאוּז", cat:"פעלים", emoji:"🔒", unit:10 },
+  { he:"לשחק", ro:"Play", pron:"פּלֵיי", cat:"פעלים", emoji:"🎮", unit:10 },
+  { he:"לעזור", ro:"Help", pron:"הֶלפּ", cat:"פעלים", emoji:"🤝", unit:10 },
+  { he:"לעבוד", ro:"Work", pron:"וורק", cat:"פעלים", emoji:"💼", unit:10 },
+];
+
 const BUILTIN_SENTENCES = [
   // === Bună ===
   { he:"שלום, אמא!", ro:"Bună, mamă!", pron:"בּוּנָה, מאמא!", emoji:"👋", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"mamă",he:"אמא",pron:"מאמא"}]},
@@ -1777,6 +2035,41 @@ const BUILTIN_SENTENCES = [
   { he:"כולם רוקדים שמחים", ro:"Toți dansează fericiți", pron:"טוֹצי דָאנסֶאזה פֶריצ'יצי", emoji:"🎉", theme:"פעלים", unit:10, words:[{ro:"Toți",he:"כולם",pron:"טוֹצי"},{ro:"dansează",he:"רוקדים",pron:"דָאנסֶאזה"},{ro:"fericiți",he:"שמחים",pron:"פֶריצ'יצי"}]},
 ];
 
+// ============ English starter + units (parallel structure to BUILTIN_SENTENCES) ============
+const BUILTIN_SENTENCES_EN = [
+  // -- Starter Pack (always available, no unit field) --
+  { he:"שלום!", ro:"Hello!", pron:"הלו", emoji:"👋", theme:"greetings", words:[{ro:"Hello",he:"שלום",pron:"הלו"}]},
+  { he:"שלום, מה שלומך?", ro:"Hi, how are you?", pron:"היי, האו אר יוּ?", emoji:"😊", theme:"greetings", words:[{ro:"Hi",he:"שלום",pron:"היי"},{ro:"how",he:"איך",pron:"האו"},{ro:"are you",he:"אתה",pron:"אר יוּ"}]},
+  { he:"אני בסדר, תודה", ro:"I'm fine, thank you", pron:"איים פיין, ת'נק יוּ", emoji:"😊", theme:"greetings", words:[{ro:"I'm",he:"אני",pron:"איים"},{ro:"fine",he:"בסדר",pron:"פיין"},{ro:"thank you",he:"תודה",pron:"ת'נק יוּ"}]},
+  { he:"להתראות!", ro:"Goodbye!", pron:"גוּדבּאיי", emoji:"👋", theme:"greetings", words:[{ro:"Goodbye",he:"להתראות",pron:"גוּדבּאיי"}]},
+  { he:"ביי", ro:"Bye", pron:"בּאיי", emoji:"👋", theme:"greetings", words:[{ro:"Bye",he:"ביי",pron:"בּאיי"}]},
+  { he:"בבקשה", ro:"Please", pron:"פּליז", emoji:"🙏", theme:"manners", words:[{ro:"Please",he:"בבקשה",pron:"פּליז"}]},
+  { he:"תודה רבה", ro:"Thank you very much", pron:"ת'נק יוּ וֶרי מאצ'", emoji:"🙏", theme:"manners", words:[{ro:"Thank you",he:"תודה",pron:"ת'נק יוּ"},{ro:"very much",he:"מאוד",pron:"וֶרי מאצ'"}]},
+  { he:"סליחה", ro:"Sorry", pron:"סוֹרי", emoji:"🙇‍♀️", theme:"manners", words:[{ro:"Sorry",he:"סליחה",pron:"סוֹרי"}]},
+  { he:"שמי דנה", ro:"My name is Dana", pron:"מאי נֵיים איז דנה", emoji:"🙋‍♀️", theme:"about me", words:[{ro:"My name is",he:"שמי",pron:"מאי נֵיים איז"}]},
+  { he:"אני בת תשע", ro:"I am nine years old", pron:"איי אם נאיין יִירז אוֹלד", emoji:"🎂", theme:"about me", words:[{ro:"I am",he:"אני",pron:"איי אם"},{ro:"nine",he:"תשע",pron:"נאיין"},{ro:"years old",he:"שנים",pron:"יִירז אוֹלד"}]},
+  { he:"אני אוהבת תפוחים", ro:"I like apples", pron:"איי לאיק אֵפּלז", emoji:"🍎", theme:"food", words:[{ro:"I like",he:"אני אוהבת",pron:"איי לאיק"},{ro:"apples",he:"תפוחים",pron:"אֵפּלז"}]},
+  { he:"אני אוהבת חתולים", ro:"I love cats", pron:"איי לאוו קָאטס", emoji:"🐱", theme:"animals", words:[{ro:"I love",he:"אני אוהבת",pron:"איי לאוו"},{ro:"cats",he:"חתולים",pron:"קָאטס"}]},
+  { he:"החתול לבן", ro:"The cat is white", pron:"דה קָאט איז ווָאיט", emoji:"🐱", theme:"animals", words:[{ro:"cat",he:"חתול",pron:"קָאט"},{ro:"white",he:"לבן",pron:"ווָאיט"}]},
+  { he:"כלב גדול", ro:"A big dog", pron:"אֶ ביג דוֹג", emoji:"🐕", theme:"animals", words:[{ro:"big",he:"גדול",pron:"ביג"},{ro:"dog",he:"כלב",pron:"דוֹג"}]},
+  { he:"השמש צהובה", ro:"The sun is yellow", pron:"דה סָאן איז יֶלוֹאוּ", emoji:"☀️", theme:"colors", words:[{ro:"sun",he:"שמש",pron:"סָאן"},{ro:"yellow",he:"צהוב",pron:"יֶלוֹאוּ"}]},
+  { he:"השמיים כחולים", ro:"The sky is blue", pron:"דה סקאי איז בּלוּ", emoji:"☁️", theme:"colors", words:[{ro:"sky",he:"שמיים",pron:"סקאי"},{ro:"blue",he:"כחול",pron:"בּלוּ"}]},
+  { he:"אני שותה מים", ro:"I drink water", pron:"איי דרינק ווֹטֶר", emoji:"💧", theme:"food", words:[{ro:"I drink",he:"אני שותה",pron:"איי דרינק"},{ro:"water",he:"מים",pron:"ווֹטֶר"}]},
+  { he:"אני אוכלת לחם", ro:"I eat bread", pron:"איי איט בּרֶד", emoji:"🍞", theme:"food", words:[{ro:"I eat",he:"אני אוכלת",pron:"איי איט"},{ro:"bread",he:"לחם",pron:"בּרֶד"}]},
+  { he:"אמא בבית", ro:"Mom is home", pron:"מוֹם איז הוֹם", emoji:"🏠", theme:"family", words:[{ro:"Mom",he:"אמא",pron:"מוֹם"},{ro:"home",he:"בית",pron:"הוֹם"}]},
+  { he:"אבא רוצה תה", ro:"Dad wants tea", pron:"דֵד ווָאנטס טי", emoji:"🍵", theme:"family", words:[{ro:"Dad",he:"אבא",pron:"דֵד"},{ro:"wants",he:"רוצה",pron:"ווָאנטס"},{ro:"tea",he:"תה",pron:"טי"}]},
+  { he:"היום יום יפה", ro:"Today is a beautiful day", pron:"טוּדֵיי איז אֶ בּיוּטיפוּל דֵיי", emoji:"☀️", theme:"time", words:[{ro:"Today",he:"היום",pron:"טוּדֵיי"},{ro:"beautiful",he:"יפה",pron:"בּיוּטיפוּל"},{ro:"day",he:"יום",pron:"דֵיי"}]},
+  { he:"מחר בית ספר", ro:"Tomorrow is school", pron:"טוּמוֹרוֹאוּ איז סקוּל", emoji:"🏫", theme:"time", words:[{ro:"Tomorrow",he:"מחר",pron:"טוּמוֹרוֹאוּ"},{ro:"school",he:"בית ספר",pron:"סקוּל"}]},
+  { he:"אני לומדת אנגלית", ro:"I learn English", pron:"איי לֶרן אינגליש", emoji:"📚", theme:"about me", words:[{ro:"I learn",he:"אני לומדת",pron:"איי לֶרן"},{ro:"English",he:"אנגלית",pron:"אינגליש"}]},
+  { he:"זה ספר", ro:"This is a book", pron:"דיס איז אֶ בּוּק", emoji:"📖", theme:"basics", words:[{ro:"This is",he:"זה",pron:"דיס איז"},{ro:"book",he:"ספר",pron:"בּוּק"}]},
+  { he:"בית גדול", ro:"A big house", pron:"אֶ ביג הָאוּס", emoji:"🏠", theme:"basics", words:[{ro:"big",he:"גדול",pron:"ביג"},{ro:"house",he:"בית",pron:"הָאוּס"}]},
+  { he:"חתול קטן", ro:"A small cat", pron:"אֶ סמוֹל קָאט", emoji:"🐱", theme:"basics", words:[{ro:"small",he:"קטן",pron:"סמוֹל"},{ro:"cat",he:"חתול",pron:"קָאט"}]},
+  { he:"אני אוהבת לקרוא", ro:"I like to read", pron:"איי לאיק טוּ ריד", emoji:"📖", theme:"hobbies", words:[{ro:"I like",he:"אני אוהבת",pron:"איי לאיק"},{ro:"to read",he:"לקרוא",pron:"טוּ ריד"}]},
+  { he:"אני אוהבת לרקוד", ro:"I like to dance", pron:"איי לאיק טוּ דָאנס", emoji:"💃", theme:"hobbies", words:[{ro:"to dance",he:"לרקוד",pron:"טוּ דָאנס"}]},
+  { he:"אני אוהבת לשיר", ro:"I like to sing", pron:"איי לאיק טוּ סינג", emoji:"🎤", theme:"hobbies", words:[{ro:"to sing",he:"לשיר",pron:"טוּ סינג"}]},
+  { he:"לילה טוב", ro:"Good night", pron:"גוּד נאיט", emoji:"🌙", theme:"greetings", words:[{ro:"Good",he:"טוב",pron:"גוּד"},{ro:"night",he:"לילה",pron:"נאיט"}]},
+];
+
 const SENTENCES_KEY = "ro-kids-user-sentences-v1";
 let userSentences = [];
 try {
@@ -1788,7 +2081,10 @@ function saveUserSentences() {
   if (typeof isAuthed === 'function' && isAuthed()) { syncSentencesFull(); return; }
   try { localStorage.setItem(SENTENCES_KEY, JSON.stringify(userSentences)); } catch (e) {}
 }
-function getSentences() { return BUILTIN_SENTENCES.concat(userSentences); }
+function getSentences() {
+  const builtin = state.language === 'en' ? BUILTIN_SENTENCES_EN : BUILTIN_SENTENCES;
+  return builtin.concat(userSentences.filter(s => (s.language || 'ro') === state.language));
+}
 function getSentencesInScope() { return getSentences().filter(inUnitScope); }
 
 const BUILTIN_VOCAB = VOCAB;  // alias — practice modes always use the merged list via getVocab()
@@ -1806,7 +2102,10 @@ function saveUserVocab() {
   if (typeof isAuthed === 'function' && isAuthed()) { syncVocabFull(); return; }
   try { localStorage.setItem(USER_VOCAB_KEY, JSON.stringify(userVocab)); } catch (e) {}
 }
-function getVocab() { return BUILTIN_VOCAB.concat(userVocab); }
+function getVocab() {
+  const builtin = state.language === 'en' ? VOCAB_EN : BUILTIN_VOCAB;
+  return builtin.concat(userVocab.filter(v => (v.language || 'ro') === state.language));
+}
 function getCategories() {
   const cats = [];
   const seen = new Set();
@@ -1819,10 +2118,10 @@ function getCategoryEmoji(cat) {
 }
 
 // ====== Curriculum units ======
-// 10 ordered units. Built-in vocab/sentences tagged with `unit: N` are
-// gated by `state.currentUnit`. Starter Pack content has no `unit`
-// field and is always available.
-const UNITS = [
+// 10 ordered units PER LANGUAGE. Built-in vocab/sentences tagged with
+// `unit: N` are gated by `state.currentUnit`. Starter Pack content has
+// no `unit` field and is always available.
+const UNITS_RO = [
   { n:  1, name: "מספרים והתחלות",    emoji: "🔢", threshold:    0 },
   { n:  2, name: "משפחה ובית",         emoji: "🏠", threshold:  500 },
   { n:  3, name: "צבעים, צורות וגדלים", emoji: "🎨", threshold: 1000 },
@@ -1834,15 +2133,32 @@ const UNITS = [
   { n:  9, name: "רגשות וזמן",          emoji: "⏰", threshold: 4000 },
   { n: 10, name: "פעלים יומיומיים",     emoji: "🏃", threshold: 4500 },
 ];
-function unitOf(n) { return UNITS.find(u => u.n === n) || UNITS[0]; }
+const UNITS_EN = [
+  { n:  1, name: "Numbers & basics",     emoji: "🔢", threshold:    0 },
+  { n:  2, name: "Family & home",        emoji: "🏠", threshold:  500 },
+  { n:  3, name: "Colors & shapes",      emoji: "🎨", threshold: 1000 },
+  { n:  4, name: "Food & drinks",        emoji: "🍽️", threshold: 1500 },
+  { n:  5, name: "Animals",              emoji: "🐾", threshold: 2000 },
+  { n:  6, name: "Body & health",        emoji: "💪", threshold: 2500 },
+  { n:  7, name: "School",               emoji: "🎒", threshold: 3000 },
+  { n:  8, name: "Nature & weather",     emoji: "🌳", threshold: 3500 },
+  { n:  9, name: "Feelings & time",      emoji: "⏰", threshold: 4000 },
+  { n: 10, name: "Everyday verbs",       emoji: "🏃", threshold: 4500 },
+];
+function getUnits() { return state.language === 'en' ? UNITS_EN : UNITS_RO; }
+// Backwards-compat alias (some code may still reference UNITS)
+const UNITS = UNITS_RO;
+function unitOf(n) { const u = getUnits(); return u.find(x => x.n === n) || u[0]; }
 function maxUnitForScore(score) {
-  for (let i = UNITS.length - 1; i >= 0; i--) if (score >= UNITS[i].threshold) return UNITS[i].n;
+  const u = getUnits();
+  for (let i = u.length - 1; i >= 0; i--) if (score >= u[i].threshold) return u[i].n;
   return 1;
 }
 
 // ====== State ======
 let state = {
   mode: "flash",
+  language: "ro",                // 'ro' | 'en'  — target language to learn
   category: "הכול",
   currentUnit: 1,
   maxUnlockedUnit: 1,
@@ -1905,16 +2221,18 @@ function pickOne(arr, exclude) {
   const pool = arr.filter(x => x !== exclude);
   return pool[Math.floor(Math.random() * pool.length)];
 }
+function ttsLang() { return state.language === 'en' ? 'en-US' : 'ro-RO'; }
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "ro-RO";
+  u.lang = ttsLang();
   u.rate = 0.85;
-  // Try to find a Romanian voice
+  // Try to find a voice matching the active language
   const voices = speechSynthesis.getVoices();
-  const ro = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("ro"));
-  if (ro) u.voice = ro;
+  const prefix = state.language === 'en' ? 'en' : 'ro';
+  const match = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(prefix));
+  if (match) u.voice = match;
   speechSynthesis.speak(u);
 }
 // Pre-load voices (some browsers populate async)
@@ -3198,11 +3516,18 @@ function loadGuestSentences() {
   try { userSentences = JSON.parse(localStorage.getItem(SENTENCES_KEY) || "[]"); } catch (e) { userSentences = []; }
 }
 function loadGuestStats() {
+  // Apply last-used language from localStorage if present
   try {
-    const saved = JSON.parse(localStorage.getItem("ro-kids-stats") || "{}");
+    const lang = localStorage.getItem('ro-kids-language');
+    if (lang === 'ro' || lang === 'en') state.language = lang;
+  } catch (e) {}
+  try {
+    const saved = JSON.parse(localStorage.getItem("ro-kids-stats-" + state.language) || "{}");
     state.score = saved.score || 0;
     state.bestStreak = saved.bestStreak || 0;
     state.seen = saved.seen || 0;
+    state.maxUnlockedUnit = saved.maxUnlockedUnit || 1;
+    state.currentUnit = state.maxUnlockedUnit;
   } catch (e) {}
 }
 
@@ -3261,7 +3586,7 @@ async function loadFamilyData() {
     .select('*').eq('family_id', auth.family.id).order('created_at');
   userSentences = (sentences || []).map(s => ({ ...s, words: Array.isArray(s.words) ? s.words : [] }));
   const { data: prog } = await auth.client.from('progress')
-    .select('*').eq('profile_id', auth.currentProfile.id).maybeSingle();
+    .select('*').eq('profile_id', auth.currentProfile.id).eq('language', state.language).maybeSingle();
   if (prog) {
     state.score = prog.score || 0;
     state.bestStreak = prog.best_streak || 0;
@@ -3270,7 +3595,7 @@ async function loadFamilyData() {
   } else {
     state.score = 0; state.bestStreak = 0; state.seen = 0;
     state.maxUnlockedUnit = 1;
-    try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id, max_unlocked_unit: 1 }); } catch (e) {}
+    try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id, language: state.language, max_unlocked_unit: 1 }); } catch (e) {}
   }
   state.currentUnit = state.maxUnlockedUnit;
   state.streak = 0;
@@ -3364,6 +3689,7 @@ function saveProgressDebounced() {
     try {
       await auth.client.from('progress').upsert({
         profile_id: auth.currentProfile.id,
+        language: state.language,
         score: state.score,
         best_streak: state.bestStreak,
         seen: state.seen,
@@ -3379,19 +3705,21 @@ function renderAuthBar() {
   const bar = document.getElementById('auth-bar');
   if (!bar) return;
   bar.hidden = false;
+  const langPill = `<span class="lang-pill" id="lang-pill">${state.language === 'en' ? '🇬🇧 English' : '🇷🇴 רומנית'}</span>`;
   if (!auth.client) {
-    bar.innerHTML = `<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit} · ${escapeHtml(unitOf(state.currentUnit).name)}</span>
+    bar.innerHTML = `${langPill}<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit} · ${escapeHtml(unitOf(state.currentUnit).name)}</span>
       <span style="color:#888; font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:#7e57c2;">SETUP.md</a></span>`;
-    wireUnitPill();
+    wireUnitPill(); wireLangPill();
     return;
   }
   const profSpan = auth.currentProfile ? `<span class="ab-greet">${auth.currentProfile.emoji || '🌟'} ${escapeHtml(auth.currentProfile.name)}</span>` : '';
   const unitPill = `<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}</span>`;
   if (!auth.session) {
-    bar.innerHTML = `${unitPill}<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
+    bar.innerHTML = `${langPill}${unitPill}<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
     document.getElementById('ab-signin').onclick = () => { auth.view = 'signing_in'; renderAuthOverlay(); };
   } else {
     bar.innerHTML = `
+      ${langPill}
       ${unitPill}
       ${profSpan}
       ${auth.currentProfile ? `<button class="ab-btn" id="ab-switch">🔄 החלפת פרופיל</button>` : ''}
@@ -3402,6 +3730,61 @@ function renderAuthBar() {
     document.getElementById('ab-signout').onclick = signOut;
   }
   wireUnitPill();
+  wireLangPill();
+}
+
+function wireLangPill() {
+  const pill = document.getElementById('lang-pill');
+  if (pill) pill.onclick = () => switchLanguage(state.language === 'en' ? 'ro' : 'en');
+}
+
+async function switchLanguage(newLang) {
+  if (newLang === state.language) return;
+  state.language = newLang;
+  try { localStorage.setItem('ro-kids-language', newLang); } catch (e) {}
+  // Reset shuffles + reload per-language progress
+  if (isAuthed()) {
+    await loadLanguageProgress();
+  } else {
+    loadGuestStatsForLanguage();
+  }
+  // Reset unit/practice state for the new language
+  state.currentUnit = state.maxUnlockedUnit;
+  state.flashOrder = shuffle(filtered().map((_, i) => i));
+  state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
+  state.flashIdx = 0; state.sentenceIdx = 0;
+  renderAuthBar();
+  render();
+}
+
+async function loadLanguageProgress() {
+  if (!isAuthed()) return;
+  const { data: prog } = await auth.client.from('progress')
+    .select('*')
+    .eq('profile_id', auth.currentProfile.id)
+    .eq('language', state.language)
+    .maybeSingle();
+  if (prog) {
+    state.score = prog.score || 0;
+    state.bestStreak = prog.best_streak || 0;
+    state.seen = prog.seen || 0;
+    state.maxUnlockedUnit = prog.max_unlocked_unit || 1;
+  } else {
+    state.score = 0; state.bestStreak = 0; state.seen = 0; state.maxUnlockedUnit = 1;
+    try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id, language: state.language, max_unlocked_unit: 1 }); } catch (e) {}
+  }
+  state.streak = 0;
+}
+
+function loadGuestStatsForLanguage() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("ro-kids-stats-" + state.language) || "{}");
+    state.score = saved.score || 0;
+    state.bestStreak = saved.bestStreak || 0;
+    state.seen = saved.seen || 0;
+    state.maxUnlockedUnit = saved.maxUnlockedUnit || 1;
+  } catch (e) {}
+  state.streak = 0;
 }
 
 function wireUnitPill() {
@@ -3836,8 +4219,8 @@ loadGuestStats();
 window.addEventListener("beforeunload", () => {
   if (isAuthed()) return;
   try {
-    localStorage.setItem("ro-kids-stats", JSON.stringify({
-      score: state.score, bestStreak: state.bestStreak, seen: state.seen,
+    localStorage.setItem("ro-kids-stats-" + state.language, JSON.stringify({
+      score: state.score, bestStreak: state.bestStreak, seen: state.seen, maxUnlockedUnit: state.maxUnlockedUnit,
     }));
   } catch (e) {}
 });
