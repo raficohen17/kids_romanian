@@ -4635,6 +4635,7 @@ async function requestOpener() {
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify({
         profile_id: auth.currentProfile.id,
+        profile_name: auth.currentProfile.name || '',
         language: state.language,
         opener: true,
         vocab_snapshot: vocabSnapshot,
@@ -4700,6 +4701,7 @@ async function sendChatMessage(text) {
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
       body: JSON.stringify({
         profile_id: auth.currentProfile.id,
+        profile_name: auth.currentProfile.name || '',
         language: state.language,
         message_text: userMsg.body,
         vocab_snapshot: vocabSnapshot,
