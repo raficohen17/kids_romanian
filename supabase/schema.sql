@@ -71,11 +71,12 @@ create table public.sentences (
 create index sentences_family_idx on public.sentences(family_id);
 
 create table public.progress (
-  profile_id   uuid primary key references public.profiles(id) on delete cascade,
-  score        int not null default 0,
-  best_streak  int not null default 0,
-  seen         int not null default 0,
-  updated_at   timestamptz not null default now()
+  profile_id          uuid primary key references public.profiles(id) on delete cascade,
+  score               int not null default 0,
+  best_streak         int not null default 0,
+  seen                int not null default 0,
+  max_unlocked_unit   int not null default 1,
+  updated_at          timestamptz not null default now()
 );
 
 create table public.access_requests (

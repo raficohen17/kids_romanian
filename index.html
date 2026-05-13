@@ -434,6 +434,45 @@
   .pin-row input:focus { border-color:#ba68c8; }
   .pin-error { color:#c62828; font-weight:bold; margin-top:8px; min-height:1.2em; }
 
+  /* curriculum units */
+  .unit-pill {
+    background:linear-gradient(135deg,#fff3e0,#ffe0b2);
+    border:2px solid #ffb74d; border-radius:14px;
+    padding:6px 14px; font-weight:bold; color:#e65100;
+    cursor:pointer; font-size:0.95rem;
+  }
+  .unit-pill:hover { transform:translateY(-1px); }
+  .units-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap:12px; max-width:720px; margin:0 auto;
+  }
+  .unit-tile {
+    background:white; border:3px solid #e0e0e0; border-radius:18px;
+    padding:14px 12px; text-align:right; cursor:pointer; font-family:inherit;
+    transition:transform 0.15s, border-color 0.15s;
+  }
+  .unit-tile.unlocked:hover { transform:translateY(-2px); border-color:#ba68c8; }
+  .unit-tile.locked { opacity:0.5; cursor:not-allowed; background:#fafafa; }
+  .unit-tile.current { border-color:#fbc02d; background:linear-gradient(135deg,#fff8e1,#ffecb3); }
+  .unit-tile .unit-num   { font-size:1.05rem; font-weight:bold; color:#4527a0; }
+  .unit-tile .unit-name  { font-size:1.2rem; font-weight:bold; color:#c2185b; margin-top:4px; }
+  .unit-tile .unit-meta  { font-size:0.85rem; color:#666; margin-top:4px; }
+  .unit-tile .unit-hint  { font-size:0.85rem; color:#888; margin-top:4px; font-style:italic; }
+  .unit-tile.current .unit-hint { color:#e65100; font-weight:bold; font-style:normal; }
+
+  .unit-unlock-toast {
+    position:fixed; left:50%; top:30%; transform:translateX(-50%);
+    background:linear-gradient(135deg,#ff7043,#ffb74d);
+    color:white; padding:18px 28px; border-radius:18px;
+    font-size:1.3rem; font-weight:bold; text-align:center;
+    box-shadow:0 12px 40px rgba(255,112,67,0.4);
+    z-index:9999; animation: unitPop 0.4s ease-out;
+  }
+  @keyframes unitPop {
+    0%   { transform:translate(-50%, -20px) scale(0.8); opacity:0; }
+    100% { transform:translate(-50%, 0)     scale(1);   opacity:1; }
+  }
+
   /* emoji picker */
   .emoji-grid {
     display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; margin-top:10px;
@@ -585,6 +624,7 @@
     <button data-mode="listen">🔊 הקשבה</button>
     <button data-mode="match">🧩 התאמה</button>
     <button data-mode="sentences">🗣️ משפטים</button>
+    <button data-mode="units">📚 יחידות</button>
     <button data-mode="guide">📖 הגייה</button>
     <button data-mode="manage">📝 הוסיפי</button>
     <button data-mode="user">👤 שלי</button>
@@ -885,6 +925,7 @@ function saveUserSentences() {
   try { localStorage.setItem(SENTENCES_KEY, JSON.stringify(userSentences)); } catch (e) {}
 }
 function getSentences() { return BUILTIN_SENTENCES.concat(userSentences); }
+function getSentencesInScope() { return getSentences().filter(inUnitScope); }
 
 const BUILTIN_VOCAB = VOCAB;  // alias — practice modes always use the merged list via getVocab()
 const BUILTIN_CAT_EMOJI = { "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨" };
@@ -913,10 +954,34 @@ function getCategoryEmoji(cat) {
   return BUILTIN_CAT_EMOJI[cat] || "🏷️";
 }
 
+// ====== Curriculum units ======
+// 10 ordered units. Built-in vocab/sentences tagged with `unit: N` are
+// gated by `state.currentUnit`. Starter Pack content has no `unit`
+// field and is always available.
+const UNITS = [
+  { n:  1, name: "מספרים והתחלות",    emoji: "🔢", threshold:    0 },
+  { n:  2, name: "משפחה ובית",         emoji: "🏠", threshold:  500 },
+  { n:  3, name: "צבעים, צורות וגדלים", emoji: "🎨", threshold: 1000 },
+  { n:  4, name: "אוכל ומשקאות",       emoji: "🍽️", threshold: 1500 },
+  { n:  5, name: "חיות",                emoji: "🐾", threshold: 2000 },
+  { n:  6, name: "גוף ובריאות",        emoji: "💪", threshold: 2500 },
+  { n:  7, name: "בית הספר",            emoji: "🎒", threshold: 3000 },
+  { n:  8, name: "טבע ומזג אוויר",     emoji: "🌳", threshold: 3500 },
+  { n:  9, name: "רגשות וזמן",          emoji: "⏰", threshold: 4000 },
+  { n: 10, name: "פעלים יומיומיים",     emoji: "🏃", threshold: 4500 },
+];
+function unitOf(n) { return UNITS.find(u => u.n === n) || UNITS[0]; }
+function maxUnitForScore(score) {
+  for (let i = UNITS.length - 1; i >= 0; i--) if (score >= UNITS[i].threshold) return UNITS[i].n;
+  return 1;
+}
+
 // ====== State ======
 let state = {
   mode: "flash",
   category: "הכול",
+  currentUnit: 1,
+  maxUnlockedUnit: 1,
   score: 0,
   streak: 0,
   bestStreak: 0,
@@ -958,8 +1023,14 @@ function shuffle(arr) {
   }
   return a;
 }
+// A vocab/sentence row is "in scope" if it has no `unit` (Starter Pack or
+// user-added) or its unit number is <= the kid's currently-selected unit.
+function inUnitScope(row) {
+  return row.unit == null || row.unit <= state.currentUnit;
+}
+
 function filtered() {
-  const v = getVocab();
+  const v = getVocab().filter(inUnitScope);
   return state.category === "הכול" ? v : v.filter(w => w.cat === state.category);
 }
 function pickRandom(arr, n, exclude) {
@@ -1005,7 +1076,9 @@ function updateStats() {
   document.getElementById("score").textContent = state.score;
   document.getElementById("streak").textContent = state.streak;
   document.getElementById("seen").textContent = state.seen;
+  if (typeof maybeUnlockNextUnit === 'function') maybeUnlockNextUnit();
   if (typeof saveProgressDebounced === 'function') saveProgressDebounced();
+  if (typeof updateUnitPill === 'function') updateUnitPill();
 }
 
 function pickFeedback(good) {
@@ -1017,7 +1090,7 @@ function pickFeedback(good) {
 // ====== Render: filters ======
 function renderFilters() {
   const wrap = document.getElementById("filters");
-  if (["guide", "manage", "sentences", "user"].includes(state.mode)) { wrap.innerHTML = ""; return; }
+  if (["guide", "manage", "sentences", "user", "units", "requests"].includes(state.mode)) { wrap.innerHTML = ""; return; }
   const cats = getCategories();
   wrap.innerHTML = cats.map(c =>
     `<button class="chip ${state.category === c ? "active" : ""}" data-cat="${c}">${getCategoryEmoji(c)} ${c}</button>`
@@ -1042,7 +1115,7 @@ function resetModeState() {
   state.matchMatched = new Set();
   state.sentenceIdx = 0;
   state.sentenceRevealed = false;
-  state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+  state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
   state.manageEditingId = null;
   state.manageDraft = null;
 }
@@ -1346,7 +1419,7 @@ function knownWord(ro) {
   return getVocab().some(w => norm(w.ro) === n);
 }
 function renderSentences() {
-  const list = getSentences();
+  const list = getSentencesInScope();
   if (list.length === 0) return "<p style='text-align:center'>אין משפטים. אפשר להוסיף ב-📝 הוסיפי</p>";
   if (!state.sentenceOrder.length || state.sentenceOrder.length !== list.length) {
     state.sentenceOrder = shuffle(list.map((_, i) => i));
@@ -1391,7 +1464,7 @@ function renderSentences() {
   `;
 }
 function attachSentenceEvents() {
-  const list = getSentences();
+  const list = getSentencesInScope();
   const s = list[state.sentenceOrder[state.sentenceIdx]];
   document.getElementById("sentenceCard").onclick = () => {
     state.sentenceRevealed = !state.sentenceRevealed;
@@ -1579,7 +1652,7 @@ function attachManageEvents() {
     state.manageDraft = null;
     // invalidate orders since vocab/sentence count changed
     state.flashOrder = shuffle(filtered().map((_, i) => i));
-    state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+    state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
     render();
   };
 
@@ -1615,7 +1688,7 @@ function attachManageEvents() {
         if (i >= 0) list.splice(i, 1);
         if (state.manageTab === "words") saveUserVocab(); else saveUserSentences();
         state.flashOrder = shuffle(filtered().map((_, i) => i));
-        state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+        state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
         render();
       }
     };
@@ -2003,7 +2076,7 @@ function attachUserEvents() {
     saveUserVocab(); saveUserSentences();
     state.userPreview = null;
     state.flashOrder = shuffle(filtered().map((_, i) => i));
-    state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+    state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
     alert(`נוספו ${words.length} מילים ו-${sentences.length} משפטים 🎉`);
     render();
   };
@@ -2056,9 +2129,78 @@ function attachUserEvents() {
   document.getElementById("uResetProgress").onclick = () => {
     if (!confirm("לאפס נקודות, רצף שיא ומונה תרגולים?")) return;
     state.score = 0; state.bestStreak = 0; state.streak = 0; state.seen = 0;
+    state.maxUnlockedUnit = 1; state.currentUnit = 1;
     try { localStorage.setItem("ro-kids-stats", JSON.stringify({})); } catch (e) {}
     render();
   };
+}
+
+// ====== Render: curriculum unit picker ======
+function renderUnits() {
+  const tiles = UNITS.map(u => {
+    const unlocked = u.n <= state.maxUnlockedUnit;
+    const current = u.n === state.currentUnit;
+    const hint = unlocked
+      ? (current ? '✓ נוכחית' : 'זמינה')
+      : `נעולה · ${u.threshold - state.score} נקודות עד הפתיחה`;
+    const vocabInUnit = getVocab().filter(w => w.unit === u.n).length;
+    const sentencesInUnit = getSentences().filter(s => s.unit === u.n).length;
+    return `
+      <button class="unit-tile ${unlocked ? 'unlocked' : 'locked'} ${current ? 'current' : ''}" data-unit="${u.n}" ${unlocked ? '' : 'disabled'}>
+        <div class="unit-num">${unlocked ? u.emoji : '🔒'} יחידה ${u.n}</div>
+        <div class="unit-name">${escapeHtml(u.name)}</div>
+        <div class="unit-meta">${vocabInUnit} מילים · ${sentencesInUnit} משפטים</div>
+        <div class="unit-hint">${hint}</div>
+      </button>`;
+  }).join('');
+  return `
+    <h2 style="text-align:center; color:#d81b60; margin-bottom:6px;">📚 יחידות לימוד</h2>
+    <p class="hint" style="text-align:center; margin-bottom:14px;">
+      התרגול ביחידה N כולל את כל המילים והמשפטים מהמילון הבסיסי, הוספות שלך, ויחידות 1 עד N.
+    </p>
+    <div class="units-grid">${tiles}</div>
+  `;
+}
+
+function attachUnitsEvents() {
+  document.querySelectorAll('.unit-tile[data-unit]').forEach(b => {
+    b.onclick = () => {
+      const n = parseInt(b.dataset.unit, 10);
+      if (n > state.maxUnlockedUnit) return;
+      state.currentUnit = n;
+      // reset shuffle orders so the new pool reflects
+      state.flashOrder = shuffle(filtered().map((_, i) => i));
+      state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
+      state.flashIdx = 0; state.sentenceIdx = 0; state.flashFlipped = false; state.sentenceRevealed = false;
+      // jump back to last-used practice mode (flash by default)
+      state.mode = 'flash';
+      document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
+      const flashBtn = document.querySelector('.modes button[data-mode="flash"]');
+      if (flashBtn) flashBtn.classList.add('active');
+      render();
+    };
+  });
+}
+
+// ====== Unit unlocking ======
+function maybeUnlockNextUnit() {
+  const calculatedMax = maxUnitForScore(state.score);
+  if (calculatedMax > state.maxUnlockedUnit) {
+    state.maxUnlockedUnit = calculatedMax;
+    state.currentUnit = calculatedMax;  // auto-advance to the new unit
+    showUnitUnlock(calculatedMax);
+    state.flashOrder = shuffle(filtered().map((_, i) => i));
+    state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
+  }
+}
+
+function showUnitUnlock(n) {
+  const u = unitOf(n);
+  const t = document.createElement('div');
+  t.className = 'unit-unlock-toast';
+  t.innerHTML = `🎉 יחידה ${n} נפתחה!<br><b>${u.emoji} ${escapeHtml(u.name)}</b>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
 }
 
 // ====== Render: pronunciation guide ======
@@ -2116,6 +2258,7 @@ function render() {
   else if (state.mode === "listen")    html = renderListen();
   else if (state.mode === "match")     html = renderMatch();
   else if (state.mode === "sentences") html = renderSentences();
+  else if (state.mode === "units")     html = renderUnits();
   else if (state.mode === "guide")     html = renderGuide();
   else if (state.mode === "manage")    html = renderManage();
   else if (state.mode === "user")      html = renderUser();
@@ -2126,6 +2269,7 @@ function render() {
   else if (state.mode === "listen")    attachListenEvents();
   else if (state.mode === "match")     attachMatchEvents();
   else if (state.mode === "sentences") attachSentenceEvents();
+  else if (state.mode === "units")     attachUnitsEvents();
   else if (state.mode === "guide")     attachGuideEvents();
   else if (state.mode === "manage")    attachManageEvents();
   else if (state.mode === "user")      attachUserEvents();
@@ -2179,7 +2323,7 @@ async function clearLocalSession() {
   loadGuestVocab(); loadGuestSentences(); loadGuestStats();
   state.streak = 0;
   state.flashOrder = shuffle(filtered().map((_, i) => i));
-  state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+  state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
   renderAuthBar(); renderAuthOverlay(); applyModeVisibility(); render();
 }
 
@@ -2258,13 +2402,16 @@ async function loadFamilyData() {
     state.score = prog.score || 0;
     state.bestStreak = prog.best_streak || 0;
     state.seen = prog.seen || 0;
+    state.maxUnlockedUnit = prog.max_unlocked_unit || maxUnitForScore(state.score);
   } else {
     state.score = 0; state.bestStreak = 0; state.seen = 0;
-    try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id }); } catch (e) {}
+    state.maxUnlockedUnit = 1;
+    try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id, max_unlocked_unit: 1 }); } catch (e) {}
   }
+  state.currentUnit = state.maxUnlockedUnit;
   state.streak = 0;
   state.flashOrder = shuffle(filtered().map((_, i) => i));
-  state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
+  state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
 }
 
 async function signInWithPassword(email, password) {
@@ -2356,6 +2503,7 @@ function saveProgressDebounced() {
         score: state.score,
         best_streak: state.bestStreak,
         seen: state.seen,
+        max_unlocked_unit: state.maxUnlockedUnit,
         updated_at: new Date().toISOString(),
       });
     } catch (e) { console.warn('progress sync', e); }
@@ -2368,23 +2516,44 @@ function renderAuthBar() {
   if (!bar) return;
   bar.hidden = false;
   if (!auth.client) {
-    bar.innerHTML = `<span style="color:#888; font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:#7e57c2;">SETUP.md</a></span>`;
+    bar.innerHTML = `<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit} · ${escapeHtml(unitOf(state.currentUnit).name)}</span>
+      <span style="color:#888; font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:#7e57c2;">SETUP.md</a></span>`;
+    wireUnitPill();
     return;
   }
+  const profSpan = auth.currentProfile ? `<span class="ab-greet">${auth.currentProfile.emoji || '🌟'} ${escapeHtml(auth.currentProfile.name)}</span>` : '';
+  const unitPill = `<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}</span>`;
   if (!auth.session) {
-    bar.innerHTML = `<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
+    bar.innerHTML = `${unitPill}<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
     document.getElementById('ab-signin').onclick = () => { auth.view = 'signing_in'; renderAuthOverlay(); };
   } else {
-    const prof = auth.currentProfile;
     bar.innerHTML = `
-      ${prof ? `<span class="ab-greet">${prof.emoji || '🌟'} ${escapeHtml(prof.name)}</span>` : ''}
-      ${prof ? `<button class="ab-btn" id="ab-switch">🔄 החלפת פרופיל</button>` : ''}
+      ${unitPill}
+      ${profSpan}
+      ${auth.currentProfile ? `<button class="ab-btn" id="ab-switch">🔄 החלפת פרופיל</button>` : ''}
       <button class="ab-btn" id="ab-signout">🚪 יציאה</button>
     `;
     const sw = document.getElementById('ab-switch');
     if (sw) sw.onclick = () => { auth.view = 'picker'; renderAuthOverlay(); };
     document.getElementById('ab-signout').onclick = signOut;
   }
+  wireUnitPill();
+}
+
+function wireUnitPill() {
+  const pill = document.getElementById('unit-pill');
+  if (pill) pill.onclick = () => {
+    state.mode = 'units';
+    document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
+    const b = document.querySelector('.modes button[data-mode="units"]');
+    if (b) b.classList.add('active');
+    render();
+  };
+}
+
+function updateUnitPill() {
+  const pill = document.getElementById('unit-pill');
+  if (pill) pill.innerHTML = `${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}`;
 }
 
 function renderAuthOverlay() {
