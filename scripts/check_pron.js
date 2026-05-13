@@ -70,7 +70,7 @@ function snippetAround(body, offset) {
 
 function main() {
   const src = fs.readFileSync(FILE, 'utf8');
-  const targets = ['VOCAB_EN', 'BUILTIN_SENTENCES_EN'];
+  const targets = ['VOCAB_EN', 'BUILTIN_SENTENCES_EN', 'STORIES_EN'];
   let total = 0;
   const offenders = [];
 
