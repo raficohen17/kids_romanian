@@ -2,47 +2,49 @@
 
 ## 1. Lint script (gatekeeper, do this first)
 
-- [ ] 1.1 Create `scripts/check_pron.js` — zero-dependency Node script that scans `index.html` for `pron:"..."` inside `VOCAB_EN` and `BUILTIN_SENTENCES_EN` and flags Hebrew-containing prons with no niqqud diacritic.
-- [ ] 1.2 Add an `EXEMPT` whitelist constant inside the script (initially empty).
-- [ ] 1.3 Add `"lint:pron": "node scripts/check_pron.js"` to `package.json`.
-- [ ] 1.4 Run lint, capture the baseline offender count (expected ~700+). Save the count in commit message for reference.
+- [x] 1.1 Create `scripts/check_pron.js` — zero-dependency Node script that scans `index.html` for `pron:"..."` inside `VOCAB_EN` and `BUILTIN_SENTENCES_EN` and flags Hebrew-containing prons with no niqqud diacritic.
+- [x] 1.2 Add an `EXEMPT` whitelist constant inside the script (initially empty).
+- [x] 1.3 Add `"lint:pron": "node scripts/check_pron.js"` to `package.json`.
+- [x] 1.4 Run lint, capture the baseline offender count. Baseline turned out to be **34 of 1,906** (not the ~700 originally estimated — earlier mass-replace passes covered more than expected).
 
 ## 2. Canonical EN_PRON_DICT
 
-- [ ] 2.1 Add `const EN_PRON_DICT = { … }` constant inside `index.html` near the top of the English-data block. Cover the ~80 most-frequent English words used in sentences (pronouns, articles, numbers 1–20, common verbs, common nouns, days, weather, family).
-- [ ] 2.2 Cross-check `EN_PRON_DICT` entries against `VOCAB_EN` to ensure no contradictions.
+- [ ] 2.1 Add `const EN_PRON_DICT = { … }` constant inside `index.html`. _Deferred:_ baseline offenders were only 34, so a direct replace-map in `/tmp/fix_niqqud_v3.py` was enough. The dict is still a good follow-up when authoring new content; revisit if the lint starts flagging fresh content.
+- [ ] 2.2 Cross-check `EN_PRON_DICT` entries against `VOCAB_EN` to ensure no contradictions. _(Blocked by 2.1.)_
 
 ## 3. Bulk niqqud sweep — sentence-level pron
 
-- [ ] 3.1 Write a one-shot Python script (e.g. `/tmp/add_niqqud_v3.py`) using `EN_PRON_DICT` as the replacement table, ANCHORED with surrounding quotes/spaces to prevent mid-word substitution.
-- [ ] 3.2 Apply the sweep to the `BUILTIN_SENTENCES_EN` block only.
-- [ ] 3.3 Re-run `npm run lint:pron`, expect the offender count to drop sharply.
+- [x] 3.1 Wrote `/tmp/fix_niqqud_v3.py` — scoped regex substitution against `pron:"..."` only (so `he:"..."` Hebrew translations are untouched).
+- [x] 3.2 Applied the sweep to the `BUILTIN_SENTENCES_EN` block.
+- [x] 3.3 Re-ran `npm run lint:pron`, offender count dropped to 0.
 
 ## 4. Bulk niqqud sweep — per-word breakdown pron
 
-- [ ] 4.1 Reuse the same script to sweep the `words` arrays within each sentence (same `pron:"..."` pattern, different surrounding context).
-- [ ] 4.2 Re-run lint, expect another large drop.
+- [x] 4.1 Same script — it matches every `pron:"..."` whether at sentence top-level or inside `words[]`.
+- [x] 4.2 Lint clean.
 
 ## 5. Chain-regression repair
 
-- [ ] 5.1 Identify all chain-regressions by grepping for known broken patterns (`נאַין`, `באַי`, `פאַיב`, etc.).
-- [ ] 5.2 Apply a corrective-pass replace table to fix them all.
-- [ ] 5.3 Spot-check 10 random sentences in the browser to confirm the pron renders correctly.
+- [x] 5.1 Identified `"נאַין"` (5 occurrences) as the only material chain-regression for "nine". `"באַי"`, `"פאַיב"`, `"פאַיין"`, etc. all came up 0.
+- [x] 5.2 Applied a corrective regex pass scoped to `pron:"..."` to fix `"נאַין" → "נַאיין"`.
+- [ ] 5.3 Spot-check in the browser. _Pending user smoke-test — file is a static HTML, no dev server needed; open `index.html` directly._
 
 ## 6. Long-tail manual cleanup
 
-- [ ] 6.1 Run lint, take the remaining offenders list (should be < ~50).
-- [ ] 6.2 Hand-edit each remaining offender — these are rare/unique words not in `EN_PRON_DICT`.
-- [ ] 6.3 Run lint, confirm exit code 0 and "All N pron values look niqqud-bearing." message.
+- [x] 6.1 Lint after sweep showed 0 offenders — no long tail.
+- [x] 6.2 N/A.
+- [x] 6.3 `npm run lint:pron` exits 0 with `All 1906 pron values look niqqud-bearing.`
 
 ## 7. Verify in the running app
 
-- [ ] 7.1 Open `index.html` locally, switch to English mode, browse Flashcards through Units 1–10 and the Starter Pack. Confirm pron looks right.
-- [ ] 7.2 Switch to Sentences mode, browse a sample across all units. Confirm sentence-level and word-breakdown prons both render with niqqud.
-- [ ] 7.3 Use the browser inspector to confirm no `undefined` rendering, no leakage of Romanian text.
+- [ ] 7.1 Open `index.html` locally, switch to English mode, browse Flashcards through Units 1–10 and the Starter Pack.
+- [ ] 7.2 Switch to Sentences mode, browse a sample across all units.
+- [ ] 7.3 Inspector check for `undefined` or Romanian text leakage.
+
+_All three are pending a manual smoke-test from the user._
 
 ## 8. Ship
 
-- [ ] 8.1 Commit `scripts/check_pron.js`, the `package.json` change, and the `index.html` content updates in coherent chunks (lint first, content second).
-- [ ] 8.2 Push to `feat/english-niqqud-completion` (or whichever branch is active).
-- [ ] 8.3 Open PR. PR description should include the before/after lint counts.
+- [x] 8.1 Commit `scripts/check_pron.js`, `package.json`, and `index.html` content updates in coherent chunks.
+- [x] 8.2 Push to the feature branch.
+- [ ] 8.3 Open PR. PR description includes before/after lint counts (34 → 0).

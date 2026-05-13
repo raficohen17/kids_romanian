@@ -449,6 +449,13 @@
     cursor:pointer; font-size:0.95rem;
   }
   .lang-pill:hover { transform:translateY(-1px); }
+  .speed-pill {
+    background:linear-gradient(135deg,#f3e5f5,#e1bee7);
+    border:2px solid #ba68c8; border-radius:14px;
+    padding:6px 14px; font-weight:bold; color:#6a1b9a;
+    cursor:pointer; font-size:0.95rem;
+  }
+  .speed-pill:hover { transform:translateY(-1px); }
   .units-grid {
     display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap:12px; max-width:720px; margin:0 auto;
@@ -2066,7 +2073,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"תודה רבה", ro:"Thank you very much", pron:"ת'ֶנְק יוּ וֶרי מאצ'", emoji:"🙏", theme:"manners", words:[{ro:"Thank you",he:"תודה",pron:"ת'ֶנְק יוּ"},{ro:"very much",he:"מאוד",pron:"וֶרי מאצ'"}]},
   { he:"סליחה", ro:"Sorry", pron:"סוֹרִי", emoji:"🙇‍♀️", theme:"manners", words:[{ro:"Sorry",he:"סליחה",pron:"סוֹרִי"}]},
   { he:"שמי דנה", ro:"My name is Dana", pron:"מַאי נֵיים איז דנה", emoji:"🙋‍♀️", theme:"about me", words:[{ro:"My name is",he:"שמי",pron:"מַאי נֵיים איז"}]},
-  { he:"אני בת תשע", ro:"I am nine years old", pron:"אַי אֵם נאַין יִירְז אוֹלְד", emoji:"🎂", theme:"about me", words:[{ro:"I am",he:"אני",pron:"אַי אֵם"},{ro:"nine",he:"תשע",pron:"נַאַין"},{ro:"years old",he:"שנים",pron:"יִירְז אוֹלְד"}]},
+  { he:"אני בת תשע", ro:"I am nine years old", pron:"אַי אֵם נַאיין יִירְז אוֹלְד", emoji:"🎂", theme:"about me", words:[{ro:"I am",he:"אני",pron:"אַי אֵם"},{ro:"nine",he:"תשע",pron:"נַאַין"},{ro:"years old",he:"שנים",pron:"יִירְז אוֹלְד"}]},
   { he:"אני אוהבת תפוחים", ro:"I like apples", pron:"אַי לַאיק אֵפּלז", emoji:"🍎", theme:"food", words:[{ro:"I like",he:"אני אוהבת",pron:"אַי לַאיק"},{ro:"apples",he:"תפוחים",pron:"אֵפּלז"}]},
   { he:"אני אוהבת חתולים", ro:"I love cats", pron:"אַי לָאוו קֶטס", emoji:"🐱", theme:"animals", words:[{ro:"I love",he:"אני אוהבת",pron:"אַי לָאוו"},{ro:"cats",he:"חתולים",pron:"קֶטְס"}]},
   { he:"החתול לבן", ro:"The cat is white", pron:"דה קֶט איז ווָאִיט", emoji:"🐱", theme:"animals", words:[{ro:"cat",he:"חתול",pron:"קֶט"},{ro:"white",he:"לבן",pron:"ווָאִיט"}]},
@@ -2079,7 +2086,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"אבא רוצה תה", ro:"Dad wants tea", pron:"דֵד ווָאנְטְס טִי", emoji:"🍵", theme:"family", words:[{ro:"Dad",he:"אבא",pron:"דֵד"},{ro:"wants",he:"רוצה",pron:"ווָאנְטְס"},{ro:"tea",he:"תה",pron:"טִי"}]},
   { he:"היום יום יפה", ro:"Today is a beautiful day", pron:"טוּדֵיי איז אֶ בְּיוּטִיפוּל דֵיי", emoji:"☀️", theme:"time", words:[{ro:"Today",he:"היום",pron:"טוּדֵיי"},{ro:"beautiful",he:"יפה",pron:"בְּיוּטִיפוּל"},{ro:"day",he:"יום",pron:"דֵיי"}]},
   { he:"מחר בית ספר", ro:"Tomorrow is school", pron:"טוּמוֹרוֹאוּ איז סְקוּל", emoji:"🏫", theme:"time", words:[{ro:"Tomorrow",he:"מחר",pron:"טוּמוֹרוֹאוּ"},{ro:"school",he:"בית ספר",pron:"סְקוּל"}]},
-  { he:"אני לומדת אנגלית", ro:"I learn English", pron:"אַי לֶרְן אינגליש", emoji:"📚", theme:"about me", words:[{ro:"I learn",he:"אני לומדת",pron:"אַי לֶרְן"},{ro:"English",he:"אנגלית",pron:"אינגליש"}]},
+  { he:"אני לומדת אנגלית", ro:"I learn English", pron:"אַי לֶרְן אִינְגלִיש", emoji:"📚", theme:"about me", words:[{ro:"I learn",he:"אני לומדת",pron:"אַי לֶרְן"},{ro:"English",he:"אנגלית",pron:"אִינְגלִיש"}]},
   { he:"זה ספר", ro:"This is a book", pron:"דִיס איז אֶ בּוּק", emoji:"📖", theme:"basics", words:[{ro:"This is",he:"זה",pron:"דִיס איז"},{ro:"book",he:"ספר",pron:"בּוּק"}]},
   { he:"בית גדול", ro:"A big house", pron:"אֶ בִּיג הָאוּס", emoji:"🏠", theme:"basics", words:[{ro:"big",he:"גדול",pron:"בִּיג"},{ro:"house",he:"בית",pron:"הָאוּס"}]},
   { he:"חתול קטן", ro:"A small cat", pron:"אֶ סְמוֹל קֶט", emoji:"🐱", theme:"basics", words:[{ro:"small",he:"קטן",pron:"סְמוֹל"},{ro:"cat",he:"חתול",pron:"קֶט"}]},
@@ -2096,19 +2103,19 @@ const BUILTIN_SENTENCES_EN = [
   { he:"ביי ילדים", ro:"Bye, kids", pron:"בּאַי, קִידְז", emoji:"👋", theme:"greetings", words:[{ro:"kids",he:"ילדים",pron:"קִידְז"}]},
   { he:"נתראה!", ro:"See you!", pron:"סִי יוּ", emoji:"👀", theme:"greetings", words:[{ro:"See you",he:"נתראה",pron:"סִי יוּ"}]},
   { he:"איך אתה?", ro:"How are you?", pron:"הַאוּ אַר יוּ", emoji:"😊", theme:"greetings", words:[{ro:"How",he:"איך",pron:"הַאוּ"},{ro:"are you",he:"אתה",pron:"אַר יוּ"}]},
-  { he:"אני טוב, תודה!", ro:"I am good, thanks!", pron:"אַי אֵם גוּד, ת'נקס", emoji:"😊", theme:"greetings", words:[{ro:"good",he:"טוב",pron:"גוּד"},{ro:"thanks",he:"תודה",pron:"ת'נקס"}]},
+  { he:"אני טוב, תודה!", ro:"I am good, thanks!", pron:"אַי אֵם גוּד, ת'ֶנְקְס", emoji:"😊", theme:"greetings", words:[{ro:"good",he:"טוב",pron:"גוּד"},{ro:"thanks",he:"תודה",pron:"ת'ֶנְקְס"}]},
   { he:"מה שלומך היום?", ro:"How are you today?", pron:"הַאוּ אַר יוּ טוּדֵיי", emoji:"😊", theme:"greetings", words:[{ro:"today",he:"היום",pron:"טוּדֵיי"}]},
   { he:"תודה רבה, אבא", ro:"Thank you very much, dad", pron:"ת'ֶנְק יוּ וֶרי מאצ', דֵד", emoji:"🙏", theme:"manners", words:[{ro:"very much",he:"מאוד",pron:"וֶרי מאצ'"},{ro:"dad",he:"אבא",pron:"דֵד"}]},
-  { he:"תודה רבה!", ro:"Thanks a lot!", pron:"ת'נקס אֶ לוֹט", emoji:"🙏", theme:"manners", words:[{ro:"Thanks",he:"תודה",pron:"ת'נקס"},{ro:"a lot",he:"הרבה",pron:"אֶ לוֹט"}]},
+  { he:"תודה רבה!", ro:"Thanks a lot!", pron:"ת'ֶנְקְס אֶ לוֹט", emoji:"🙏", theme:"manners", words:[{ro:"Thanks",he:"תודה",pron:"ת'ֶנְקְס"},{ro:"a lot",he:"הרבה",pron:"אֶ לוֹט"}]},
   { he:"תגידי תודה", ro:"Say thank you", pron:"סֵיי ת'ֶנְק יוּ", emoji:"🙏", theme:"manners", words:[{ro:"Say",he:"תגידי",pron:"סֵיי"}]},
-  { he:"סליחה!", ro:"Excuse me!", pron:"אֶקסקיוז מי", emoji:"🙇", theme:"manners", words:[{ro:"Excuse me",he:"סליחה",pron:"אֶקסקיוז מי"}]},
+  { he:"סליחה!", ro:"Excuse me!", pron:"אֶקסקִיוז מִי", emoji:"🙇", theme:"manners", words:[{ro:"Excuse me",he:"סליחה",pron:"אֶקסקִיוז מִי"}]},
   { he:"זה בסדר", ro:"It's okay", pron:"אִיטס אוֹקֵיי", emoji:"👍", theme:"manners", words:[{ro:"It's",he:"זה",pron:"אִיטס"},{ro:"okay",he:"בסדר",pron:"אוֹקֵיי"}]},
   { he:"אני מצטערת מאוד", ro:"I'm very sorry", pron:"אַים וֶרי סוֹרִי", emoji:"😔", theme:"manners", words:[{ro:"very sorry",he:"מצטערת מאוד",pron:"וֶרי סוֹרִי"}]},
   { he:"בבקשה, אמא", ro:"Please, mom", pron:"פְּלִיז, מוֹם", emoji:"🙏", theme:"manners", words:[{ro:"Please",he:"בבקשה",pron:"פְּלִיז"}]},
   { he:"שמי...", ro:"My name is...", pron:"מַאי נֵיים איז", emoji:"🙋", theme:"about me", words:[{ro:"My name is",he:"שמי",pron:"מַאי נֵיים איז"}]},
   { he:"איך קוראים לך?", ro:"What's your name?", pron:"ווָאטס יוֹר נֵיים", emoji:"❓", theme:"about me", words:[{ro:"What's",he:"מה",pron:"ווָאטס"},{ro:"your name",he:"שמך",pron:"יוֹר נֵיים"}]},
   { he:"קוראים לי דנה", ro:"My name is Dana", pron:"מַאי נֵיים איז דנה", emoji:"🙋", theme:"about me", words:[]},
-  { he:"אני בת תשע", ro:"I'm nine years old", pron:"אַים נאַין יִירְז אוֹלְד", emoji:"🎂", theme:"about me", words:[{ro:"nine",he:"תשע",pron:"נַאַין"},{ro:"years old",he:"שנים",pron:"יִירְז אוֹלְד"}]},
+  { he:"אני בת תשע", ro:"I'm nine years old", pron:"אַים נַאיין יִירְז אוֹלְד", emoji:"🎂", theme:"about me", words:[{ro:"nine",he:"תשע",pron:"נַאַין"},{ro:"years old",he:"שנים",pron:"יִירְז אוֹלְד"}]},
   { he:"בן כמה אתה?", ro:"How old are you?", pron:"הַאוּ אוֹלד אַר יוּ", emoji:"❓", theme:"about me", words:[{ro:"How old",he:"בן כמה",pron:"הַאוּ אוֹלד"}]},
   { he:"יש לי שני אחים", ro:"I have two brothers", pron:"אַי הֵב טוּ בֶּראד'ֶרז", emoji:"👬", theme:"family", words:[{ro:"two",he:"שני",pron:"טוּ"},{ro:"brothers",he:"אחים",pron:"בֶּראד'ֶרז"}]},
   { he:"יש לי אחות אחת", ro:"I have one sister", pron:"אַי הֵב וָואן סִיסטֶר", emoji:"👧", theme:"family", words:[{ro:"one",he:"אחת",pron:"וָואן"},{ro:"sister",he:"אחות",pron:"סִיסְטֶר"}]},
@@ -2144,8 +2151,8 @@ const BUILTIN_SENTENCES_EN = [
   { he:"חלב חם", ro:"Hot milk", pron:"הוֹט מִילְק", emoji:"🥛", theme:"food", words:[{ro:"Hot",he:"חם",pron:"הוֹט"},{ro:"milk",he:"חלב",pron:"מִילְק"}]},
   { he:"מים קרים", ro:"Cold water", pron:"קוֹלְד ווֹטֶר", emoji:"💧", theme:"food", words:[{ro:"Cold",he:"קרים",pron:"קוֹלְד"}]},
   { he:"אני אוהבת שוקולד", ro:"I love chocolate", pron:"אַי לָאוו צ'וֹקְלֶט", emoji:"🍫", theme:"food", words:[{ro:"chocolate",he:"שוקולד",pron:"צ'וֹקְלֶט"}]},
-  { he:"בבקשה תני לי לחם", ro:"Please give me bread", pron:"פְּלִיז גִיב מי בֶּרֶד", emoji:"🍞", theme:"food", words:[{ro:"give me",he:"תני לי",pron:"גִיב מי"}]},
-  { he:"זה טעים!", ro:"This is yummy!", pron:"דִיס איז יָאמי", emoji:"😋", theme:"food", words:[{ro:"This is",he:"זה",pron:"דִיס איז"},{ro:"yummy",he:"טעים",pron:"יָאמי"}]},
+  { he:"בבקשה תני לי לחם", ro:"Please give me bread", pron:"פְּלִיז גִיב מִי בֶּרֶד", emoji:"🍞", theme:"food", words:[{ro:"give me",he:"תני לי",pron:"גִיב מִי"}]},
+  { he:"זה טעים!", ro:"This is yummy!", pron:"דִיס איז יָאמִי", emoji:"😋", theme:"food", words:[{ro:"This is",he:"זה",pron:"דִיס איז"},{ro:"yummy",he:"טעים",pron:"יָאמִי"}]},
   { he:"אני בבית הספר", ro:"I am at school", pron:"אַי אֵם אֶט סְקוּל", emoji:"🏫", theme:"school", words:[{ro:"school",he:"בית ספר",pron:"סְקוּל"}]},
   { he:"מחר בית ספר", ro:"Tomorrow is school", pron:"טוּמוֹרוֹאוּ איז סְקוּל", emoji:"🏫", theme:"time", words:[{ro:"Tomorrow",he:"מחר",pron:"טוּמוֹרוֹאוּ"}]},
   { he:"אתמול הייתי בבית ספר", ro:"Yesterday I was at school", pron:"יֶסְטֶרְדֵיי אַי ווָאז אֶט סְקוּל", emoji:"🏫", theme:"time", words:[{ro:"Yesterday",he:"אתמול",pron:"יֶסְטֶרְדֵיי"},{ro:"was",he:"הייתי",pron:"ווָאז"}]},
@@ -2188,7 +2195,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"זה רע", ro:"This is bad", pron:"דִיס איז בֵּד", emoji:"👎", theme:"basics", words:[{ro:"bad",he:"רע",pron:"בֵּד"}]},
   { he:"אני יכולה", ro:"I can", pron:"אַי קֵן", emoji:"💪", theme:"basics", words:[{ro:"can",he:"יכולה",pron:"קֵן"}]},
   { he:"אני לא יכולה", ro:"I can't", pron:"אַי קָאנְט", emoji:"🚫", theme:"basics", words:[{ro:"can't",he:"לא יכולה",pron:"קָאנט"}]},
-  { he:"בבקשה תעזרי לי", ro:"Please help me", pron:"פְּלִיז הֶלְפּ מי", emoji:"🤝", theme:"manners", words:[{ro:"help",he:"לעזור",pron:"הֶלְפּ"}]},
+  { he:"בבקשה תעזרי לי", ro:"Please help me", pron:"פְּלִיז הֶלְפּ מִי", emoji:"🤝", theme:"manners", words:[{ro:"help",he:"לעזור",pron:"הֶלְפּ"}]},
   { he:"איפה אתה?", ro:"Where are you?", pron:"ווֶר אַר יוּ", emoji:"❓", theme:"basics", words:[]},
   { he:"אני כאן", ro:"I am here", pron:"אַי אֵם הִיר", emoji:"📍", theme:"basics", words:[{ro:"here",he:"כאן",pron:"הִיר"}]},
   { he:"זה שם", ro:"It's there", pron:"אִיטס ד'ֶר", emoji:"📍", theme:"basics", words:[{ro:"there",he:"שם",pron:"ד'ֶר"}]},
@@ -2208,7 +2215,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"עשר אצבעות", ro:"Ten fingers", pron:"טֶן פִינְגֶרז", emoji:"🖐️", theme:"numbers", words:[{ro:"Ten",he:"עשר",pron:"טֶן"},{ro:"fingers",he:"אצבעות",pron:"פִינְגֶרז"}]},
   { he:"שבעה ילדים", ro:"Seven kids", pron:"סֶבֶן קִידְז", emoji:"🧒", theme:"numbers", words:[{ro:"Seven",he:"שבעה",pron:"סֶבֶן"}]},
   { he:"ארבעה ספרים", ro:"Four books", pron:"פוֹר בּוּקס", emoji:"📚", theme:"numbers", words:[{ro:"Four",he:"ארבעה",pron:"פוֹר"},{ro:"books",he:"ספרים",pron:"בּוּקס"}]},
-  { he:"ספירה לעשר", ro:"Count to ten", pron:"קאונט טוּ טֶן", emoji:"🔢", theme:"numbers", words:[{ro:"Count",he:"ספירה",pron:"קאונט"}]},
+  { he:"ספירה לעשר", ro:"Count to ten", pron:"קַאוּנְט טוּ טֶן", emoji:"🔢", theme:"numbers", words:[{ro:"Count",he:"ספירה",pron:"קַאוּנְט"}]},
   { he:"שתי ידיים", ro:"Two hands", pron:"טוּ הֶנְדז", emoji:"🙌", theme:"body", words:[{ro:"hands",he:"ידיים",pron:"הֶנְדז"}]},
   { he:"שתי רגליים", ro:"Two legs", pron:"טוּ לֶגז", emoji:"🦵", theme:"body", words:[{ro:"legs",he:"רגליים",pron:"לֶגז"}]},
   { he:"שתי עיניים", ro:"Two eyes", pron:"טוּ אאַיז", emoji:"👁️", theme:"body", words:[{ro:"eyes",he:"עיניים",pron:"אאַיז"}]},
@@ -2224,7 +2231,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"אני אוהבת מתמטיקה", ro:"I love math", pron:"אַי לָאוו מָאת'", emoji:"🔢", theme:"school", words:[{ro:"math",he:"מתמטיקה",pron:"מָאת'"}]},
   { he:"זאת ארוחת בוקר", ro:"This is breakfast", pron:"דִיס איז בֶּרֶקפֶסט", emoji:"🍳", theme:"food", words:[{ro:"breakfast",he:"ארוחת בוקר",pron:"בֶּרֶקפֶסט"}]},
   { he:"זאת ארוחת ערב", ro:"This is dinner", pron:"דִיס איז דינֶר", emoji:"🍽️", theme:"food", words:[{ro:"dinner",he:"ארוחת ערב",pron:"דינֶר"}]},
-  { he:"זאת ארוחת צהריים", ro:"This is lunch", pron:"דִיס איז לאנץ'", emoji:"🥪", theme:"food", words:[{ro:"lunch",he:"ארוחת צהריים",pron:"לאנץ'"}]},
+  { he:"זאת ארוחת צהריים", ro:"This is lunch", pron:"דִיס איז לַאנְץ'", emoji:"🥪", theme:"food", words:[{ro:"lunch",he:"ארוחת צהריים",pron:"לַאנְץ'"}]},
   { he:"אני אוכלת תפוח", ro:"I am eating an apple", pron:"אַי אֵם אִיטִינג אן אֵפֶּל", emoji:"🍎", theme:"food", words:[{ro:"eating",he:"אוכלת",pron:"אִיטִינג"}]},
   { he:"אנחנו אוכלים יחד", ro:"We eat together", pron:"ווִי אִיט טוּגֶד'ֶר", emoji:"🍽️", theme:"food", words:[{ro:"together",he:"יחד",pron:"טוּגֶד'ֶר"}]},
   { he:"זאת המכונית שלנו", ro:"This is our car", pron:"דִיס איז אַאוֶר קָאר", emoji:"🚗", theme:"basics", words:[{ro:"car",he:"מכונית",pron:"קָאר"}]},
@@ -2244,13 +2251,13 @@ const BUILTIN_SENTENCES_EN = [
   { he:"זה הכובע שלי", ro:"This is my hat", pron:"דִיס איז מַאי הֵט", emoji:"🧢", theme:"basics", words:[{ro:"hat",he:"כובע",pron:"הֵט"}]},
   { he:"זאת הנעל שלי", ro:"This is my shoe", pron:"דִיס איז מַאי שוּ", emoji:"👟", theme:"basics", words:[{ro:"shoe",he:"נעל",pron:"שוּ"}]},
   { he:"שמלה ורודה ויפה", ro:"A pink and pretty dress", pron:"אֶ פִּינְק אֶנְד פּרֶטִי דרֶס", emoji:"👗", theme:"basics", words:[{ro:"pretty",he:"יפה",pron:"פּרֶטִי"},{ro:"dress",he:"שמלה",pron:"דרֶס"}]},
-  { he:"שירים מתוקים", ro:"Sweet songs", pron:"סוויט סוֹנגז", emoji:"🎶", theme:"basics", words:[{ro:"Sweet",he:"מתוקים",pron:"סוויט"},{ro:"songs",he:"שירים",pron:"סוֹנגז"}]},
+  { he:"שירים מתוקים", ro:"Sweet songs", pron:"סְווִיט סוֹנגז", emoji:"🎶", theme:"basics", words:[{ro:"Sweet",he:"מתוקים",pron:"סְווִיט"},{ro:"songs",he:"שירים",pron:"סוֹנגז"}]},
   { he:"רוקדים יחד", ro:"Dancing together", pron:"דָאנְסִינג טוּגֶד'ֶר", emoji:"💃", theme:"basics", words:[{ro:"Dancing",he:"רוקדים",pron:"דָאנְסִינג"}]},
   { he:"שמחה בלב", ro:"Joy in the heart", pron:"ג'וֹי אין דה הָארְט", emoji:"💖", theme:"feelings", words:[{ro:"Joy",he:"שמחה",pron:"ג'וֹי"},{ro:"heart",he:"לב",pron:"הָארְט"}]},
   { he:"חיוך גדול", ro:"A big smile", pron:"אֶ בִּיג סמַאיל", emoji:"😄", theme:"feelings", words:[{ro:"smile",he:"חיוך",pron:"סמַאיל"}]},
   { he:"שלום וברכה", ro:"Hello and welcome", pron:"הֶלוֹ אֶנְד וֶלקָאֵם", emoji:"🤗", theme:"greetings", words:[{ro:"welcome",he:"ברוך הבא",pron:"וֶלְקָאֵם"}]},
   { he:"תודה על העזרה", ro:"Thank you for the help", pron:"ת'ֶנְק יוּ פוֹר דה הֶלְפּ", emoji:"🙏", theme:"manners", words:[{ro:"for",he:"על",pron:"פוֹר"},{ro:"help",he:"עזרה",pron:"הֶלְפּ"}]},
-  { he:"בבקשה תני לי מים", ro:"Please give me water", pron:"פְּלִיז גִיב מי ווֹטֶר", emoji:"💧", theme:"food", words:[]},
+  { he:"בבקשה תני לי מים", ro:"Please give me water", pron:"פְּלִיז גִיב מִי ווֹטֶר", emoji:"💧", theme:"food", words:[]},
   { he:"רוצה לישון", ro:"I want to sleep", pron:"אַי ווָאנט טוּ סְלִיפּ", emoji:"😴", theme:"basics", words:[{ro:"sleep",he:"לישון",pron:"סְלִיפּ"}]},
   { he:"אני אוהבת אותך, אמא", ro:"I love you, mom", pron:"אַי לָאוו יוּ, מוֹם", emoji:"💖", theme:"family", words:[]},
   { he:"אני אוהבת אותך, אבא", ro:"I love you, dad", pron:"אַי לָאוו יוּ, דֵד", emoji:"💖", theme:"family", words:[]},
@@ -2261,7 +2268,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"דג קטן וכחול", ro:"A small blue fish", pron:"אֶ סְמוֹל בְּלוּ פִיש", emoji:"🐠", theme:"animals", words:[]},
   { he:"ציפור מעופפת", ro:"A flying bird", pron:"אֶ פלאַינג בֶּרְד", emoji:"🐦", theme:"animals", words:[{ro:"flying",he:"מעופפת",pron:"פלאַינג"}]},
   { he:"שלוש פעמים ביום", ro:"Three times a day", pron:"ת'רִי טאַימז אֶ דֵיי", emoji:"⏰", theme:"time", words:[{ro:"times",he:"פעמים",pron:"טאַימז"}]},
-  { he:"פעם אחת בשבוע", ro:"Once a week", pron:"וואנס אֶ ווִיק", emoji:"📅", theme:"time", words:[{ro:"Once",he:"פעם אחת",pron:"וואנס"},{ro:"week",he:"שבוע",pron:"ווִיק"}]},
+  { he:"פעם אחת בשבוע", ro:"Once a week", pron:"וָואנְס אֶ ווִיק", emoji:"📅", theme:"time", words:[{ro:"Once",he:"פעם אחת",pron:"וָואנְס"},{ro:"week",he:"שבוע",pron:"ווִיק"}]},
 
   // ========= Unit 1: Numbers & basics (60 sentences) =========
   { he:"אני שמחה", ro:"I am happy", pron:"אַי אֵם הֵפִּי", emoji:"😊", theme:"basics", unit:1, words:[{ro:"I am",he:"אני",pron:"אַי אֵם"},{ro:"happy",he:"שמחה",pron:"הֵפִּי"}]},
@@ -2275,10 +2282,10 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שלושה תפוחים בבקשה", ro:"Three apples, please", pron:"ת'רִי אֵפּלז, פְּלִיז", emoji:"🍎", unit:1, theme:"numbers", words:[{ro:"Three",he:"שלושה",pron:"ת'רִי"},{ro:"apples",he:"תפוחים",pron:"אֵפּלז"}]},
   { he:"ארבעה ספרים על השולחן", ro:"Four books on the table", pron:"פוֹר בּוּקס אוֹן דה טֵיבּל", emoji:"📚", unit:1, theme:"numbers", words:[{ro:"Four",he:"ארבעה",pron:"פוֹר"},{ro:"books",he:"ספרים",pron:"בּוּקס"},{ro:"table",he:"שולחן",pron:"טֵיבּל"}]},
   { he:"חמש ציפורים על העץ", ro:"Five birds in the tree", pron:"פַאיב בֶּרְדז אין דה טְרִי", emoji:"🐦", unit:1, theme:"numbers", words:[{ro:"Five",he:"חמש",pron:"פַאיב"},{ro:"birds",he:"ציפורים",pron:"בֶּרְדז"}]},
-  { he:"שש עוגיות", ro:"Six cookies", pron:"סִיקְס קוּקיז", emoji:"🍪", unit:1, theme:"numbers", words:[{ro:"Six",he:"שש",pron:"סִיקְס"},{ro:"cookies",he:"עוגיות",pron:"קוּקיז"}]},
+  { he:"שש עוגיות", ro:"Six cookies", pron:"סִיקְס קוּקִיז", emoji:"🍪", unit:1, theme:"numbers", words:[{ro:"Six",he:"שש",pron:"סִיקְס"},{ro:"cookies",he:"עוגיות",pron:"קוּקִיז"}]},
   { he:"שבעה ימים בשבוע", ro:"Seven days a week", pron:"סֶבֶן דֵייז אֶ ווִיק", emoji:"📅", unit:1, theme:"numbers", words:[{ro:"Seven",he:"שבעה",pron:"סֶבֶן"},{ro:"days",he:"ימים",pron:"דֵייז"},{ro:"week",he:"שבוע",pron:"ווִיק"}]},
   { he:"שמונה חתולים", ro:"Eight cats", pron:"אֵייט קֶטס", emoji:"🐱", unit:1, theme:"numbers", words:[{ro:"Eight",he:"שמונה",pron:"אֵייט"}]},
-  { he:"בת תשע", ro:"Nine years old", pron:"נאַין יִירְז אוֹלְד", emoji:"🎂", unit:1, theme:"about me", words:[{ro:"Nine",he:"תשע",pron:"נַאַין"},{ro:"years old",he:"שנים",pron:"יִירְז אוֹלְד"}]},
+  { he:"בת תשע", ro:"Nine years old", pron:"נַאיין יִירְז אוֹלְד", emoji:"🎂", unit:1, theme:"about me", words:[{ro:"Nine",he:"תשע",pron:"נַאַין"},{ro:"years old",he:"שנים",pron:"יִירְז אוֹלְד"}]},
   { he:"עשר אצבעות", ro:"Ten fingers", pron:"טֶן פִינְגֶרז", emoji:"🖐️", unit:1, theme:"numbers", words:[{ro:"Ten",he:"עשר",pron:"טֶן"},{ro:"fingers",he:"אצבעות",pron:"פִינְגֶרז"}]},
   { he:"זה הבית שלי", ro:"This is my home", pron:"דִיס איז מַאי הוֹם", emoji:"🏠", unit:1, theme:"basics", words:[{ro:"This is",he:"זה",pron:"דִיס איז"},{ro:"home",he:"בית",pron:"הוֹם"}]},
   { he:"כאן הספר שלי", ro:"Here is my book", pron:"הִיר איז מַאי בּוּק", emoji:"📖", unit:1, theme:"basics", words:[{ro:"Here",he:"כאן",pron:"הִיר"},{ro:"book",he:"ספר",pron:"בּוּק"}]},
@@ -2289,7 +2296,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שלום, חבר!", ro:"Hello, friend!", pron:"הֶלוֹ, פְרֶנד!", emoji:"👋", unit:1, theme:"greetings", words:[{ro:"Hello",he:"שלום",pron:"הֶלוֹ"},{ro:"friend",he:"חבר",pron:"פְרֶנד"}]},
   { he:"כן, אני מוכנה", ro:"Yes, I am ready", pron:"יֶס, אַי אֵם רֶדי", emoji:"✅", unit:1, theme:"basics", words:[{ro:"Yes",he:"כן",pron:"יֶס"},{ro:"ready",he:"מוכנה",pron:"רֶדי"}]},
   { he:"לא תודה", ro:"No, thank you", pron:"נוֹאוּ, ת'ֶנְק יוּ", emoji:"❌", unit:1, theme:"basics", words:[{ro:"No",he:"לא",pron:"נוֹאוּ"},{ro:"thank you",he:"תודה",pron:"ת'ֶנְק יוּ"}]},
-  { he:"בבקשה תני לי מים", ro:"Please give me water", pron:"פְּלִיז גִיב מי ווֹטֶר", emoji:"💧", unit:1, theme:"basics", words:[{ro:"Please",he:"בבקשה",pron:"פְּלִיז"},{ro:"give me",he:"תני לי",pron:"גִיב מי"},{ro:"water",he:"מים",pron:"ווֹטֶר"}]},
+  { he:"בבקשה תני לי מים", ro:"Please give me water", pron:"פְּלִיז גִיב מִי ווֹטֶר", emoji:"💧", unit:1, theme:"basics", words:[{ro:"Please",he:"בבקשה",pron:"פְּלִיז"},{ro:"give me",he:"תני לי",pron:"גִיב מִי"},{ro:"water",he:"מים",pron:"ווֹטֶר"}]},
   { he:"אני מצטערת", ro:"I am sorry", pron:"אַי אֵם סוֹרִי", emoji:"🙇", unit:1, theme:"manners", words:[{ro:"I am sorry",he:"אני מצטערת",pron:"אַי אֵם סוֹרִי"}]},
   { he:"להתראות!", ro:"Goodbye!", pron:"גוּדבּאַי!", emoji:"👋", unit:1, theme:"greetings", words:[{ro:"Goodbye",he:"להתראות",pron:"גוּדְבָּאי"}]},
   { he:"לילה טוב", ro:"Good night", pron:"גוּד נַאִיט", emoji:"🌙", unit:1, theme:"greetings", words:[{ro:"Good night",he:"לילה טוב",pron:"גוּד נַאִיט"}]},
@@ -2305,12 +2312,12 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שמונה-עשרה ילדים", ro:"Eighteen kids", pron:"אֵייטִין קִידְז", emoji:"🧒", unit:1, theme:"numbers", words:[{ro:"Eighteen",he:"שמונה-עשרה",pron:"אֵייטִין"}]},
   { he:"תשע-עשרה פרפרים", ro:"Nineteen butterflies", pron:"נאַינטִין בָּטֶרְפְלַאיז", emoji:"🦋", unit:1, theme:"numbers", words:[{ro:"Nineteen",he:"תשע-עשרה",pron:"נַאַינְטִין"}]},
   { he:"עשרים פרחים", ro:"Twenty flowers", pron:"טְווֶנְטִי פְלַאוֶרז", emoji:"💐", unit:1, theme:"numbers", words:[{ro:"Twenty",he:"עשרים",pron:"טְווֶנְטִי"},{ro:"flowers",he:"פרחים",pron:"פְלַאוֶרז"}]},
-  { he:"אני וחבר שלי", ro:"My friend and me", pron:"מַאי פְרֶנד אֶנְד מי", emoji:"👫", unit:1, theme:"friends", words:[{ro:"and",he:"ו-",pron:"אֶנְד"},{ro:"me",he:"אני",pron:"מי"}]},
+  { he:"אני וחבר שלי", ro:"My friend and me", pron:"מַאי פְרֶנד אֶנְד מִי", emoji:"👫", unit:1, theme:"friends", words:[{ro:"and",he:"ו-",pron:"אֶנְד"},{ro:"me",he:"אני",pron:"מִי"}]},
   { he:"אנחנו עם אמא", ro:"We are with mom", pron:"ווִי אר ווִיד' מוֹם", emoji:"👩‍👧‍👦", unit:1, theme:"family", words:[{ro:"with",he:"עם",pron:"ווִיד'"}]},
-  { he:"כן, זה אני", ro:"Yes, it's me", pron:"יֶס, אִיטס מי", emoji:"🙋", unit:1, theme:"basics", words:[]},
+  { he:"כן, זה אני", ro:"Yes, it's me", pron:"יֶס, אִיטס מִי", emoji:"🙋", unit:1, theme:"basics", words:[]},
   { he:"לא, זה לא הוא", ro:"No, it's not him", pron:"נוֹאוּ, אִיטס נוֹט הים", emoji:"❌", unit:1, theme:"basics", words:[{ro:"not",he:"לא",pron:"נוֹט"},{ro:"him",he:"הוא",pron:"הִים"}]},
   { he:"אבא וגם אמא", ro:"Daddy and mommy", pron:"דֵדִי אֶנְד מָאמִי", emoji:"👨‍👩‍👧", unit:1, theme:"family", words:[{ro:"Daddy",he:"אבא",pron:"דֵדִי"},{ro:"mommy",he:"אמא",pron:"מָאמִי"}]},
-  { he:"שמי דנה ואני בת תשע", ro:"My name is Dana and I am nine", pron:"מַאי נֵיים איז דנה אֶנְד אַי אֵם נאַין", emoji:"🙋‍♀️", unit:1, theme:"about me", words:[]},
+  { he:"שמי דנה ואני בת תשע", ro:"My name is Dana and I am nine", pron:"מַאי נֵיים איז דנה אֶנְד אַי אֵם נַאיין", emoji:"🙋‍♀️", unit:1, theme:"about me", words:[]},
   { he:"שני ילדים בבית", ro:"Two kids at home", pron:"טוּ קִידְז אֶט הוֹם", emoji:"🏠", unit:1, theme:"family", words:[{ro:"kids",he:"ילדים",pron:"קִידְז"},{ro:"home",he:"בית",pron:"הוֹם"}]},
   { he:"שלוש שנים", ro:"Three years", pron:"ת'רִי יִירז", emoji:"📆", unit:1, theme:"numbers", words:[{ro:"years",he:"שנים",pron:"יִירז"}]},
   { he:"עשר אצבעות וחמש על יד אחת", ro:"Ten fingers, five on one hand", pron:"טֶן פִינְגֶרז, פַאיב אוֹן וָואן הֶנְד", emoji:"🖐️", unit:1, theme:"numbers", words:[{ro:"hand",he:"יד",pron:"הֶנְד"}]},
@@ -2335,30 +2342,30 @@ const BUILTIN_SENTENCES_EN = [
   { he:"תפתח את הדלת", ro:"Open the door", pron:"אוֹפֶּן דה דוֹר", emoji:"🚪", unit:2, theme:"home", words:[{ro:"Open",he:"תפתח",pron:"אוֹפֶּן"},{ro:"door",he:"דלת",pron:"דוֹר"}]},
   { he:"תסגרי את החלון", ro:"Close the window", pron:"קְלוֹאוּז דה ווִינְדוֹאוּ", emoji:"🪟", unit:2, theme:"home", words:[{ro:"Close",he:"תסגרי",pron:"קְלוֹאוּז"},{ro:"window",he:"חלון",pron:"ווִינְדוֹאוּ"}]},
   { he:"הספר על השולחן", ro:"The book is on the table", pron:"דה בּוּק איז אוֹן דה טֵיבּל", emoji:"📚", unit:2, theme:"home", words:[{ro:"book",he:"ספר",pron:"בּוּק"},{ro:"on",he:"על",pron:"אוֹן"},{ro:"table",he:"שולחן",pron:"טֵיבּל"}]},
-  { he:"החתול על הכיסא", ro:"The cat is on the chair", pron:"דה קֶט איז אוֹן דה צ'ר", emoji:"🐱", unit:2, theme:"home", words:[{ro:"cat",he:"חתול",pron:"קֶט"},{ro:"chair",he:"כיסא",pron:"צ'ר"}]},
+  { he:"החתול על הכיסא", ro:"The cat is on the chair", pron:"דה קֶט איז אוֹן דה צֶ'ר", emoji:"🐱", unit:2, theme:"home", words:[{ro:"cat",he:"חתול",pron:"קֶט"},{ro:"chair",he:"כיסא",pron:"צֶ'ר"}]},
   { he:"יש לי מיטה גדולה", ro:"I have a big bed", pron:"אַי הֵב אֶ בִּיג בֶּד", emoji:"🛏️", unit:2, theme:"home", words:[{ro:"big",he:"גדולה",pron:"בִּיג"},{ro:"bed",he:"מיטה",pron:"בֶּד"}]},
   { he:"המנורה צהובה", ro:"The lamp is yellow", pron:"דה לָאמפּ איז יֶלוֹאוּ", emoji:"💡", unit:2, theme:"home", words:[{ro:"lamp",he:"מנורה",pron:"לָאמפּ"},{ro:"yellow",he:"צהובה",pron:"יֶלוֹאוּ"}]},
   { he:"הצעצוע שלי קטן", ro:"My toy is small", pron:"מַאי טוֹי איז סְמוֹל", emoji:"🧸", unit:2, theme:"home", words:[{ro:"toy",he:"צעצוע",pron:"טוֹי"},{ro:"small",he:"קטן",pron:"סְמוֹל"}]},
-  { he:"אמא במטבח", ro:"Mom is in the kitchen", pron:"מוֹם איז אין דה קיצ'ֶן", emoji:"🍳", unit:2, theme:"home", words:[{ro:"kitchen",he:"מטבח",pron:"קיצ'ֶן"}]},
+  { he:"אמא במטבח", ro:"Mom is in the kitchen", pron:"מוֹם איז אין דה קִיצ'ֶן", emoji:"🍳", unit:2, theme:"home", words:[{ro:"kitchen",he:"מטבח",pron:"קִיצ'ֶן"}]},
   { he:"אבא בגן", ro:"Dad is in the garden", pron:"דֵד איז אין דה גָארדֶן", emoji:"🌳", unit:2, theme:"home", words:[{ro:"garden",he:"גן",pron:"גָארדֶן"}]},
   { he:"הקיר לבן", ro:"The wall is white", pron:"דה ווָאל איז ווָאִיט", emoji:"🧱", unit:2, theme:"home", words:[{ro:"wall",he:"קיר",pron:"ווָאל"}]},
   { he:"הרצפה חומה", ro:"The floor is brown", pron:"דה פלוֹר איז בְּראון", emoji:"⬛", unit:2, theme:"home", words:[{ro:"floor",he:"רצפה",pron:"פלוֹר"},{ro:"brown",he:"חומה",pron:"בְּראון"}]},
   { he:"הגג אדום", ro:"The roof is red", pron:"דה רוּף איז רֶד", emoji:"🏠", unit:2, theme:"home", words:[{ro:"roof",he:"גג",pron:"רוּף"},{ro:"red",he:"אדום",pron:"רֶד"}]},
-  { he:"הנה המפתח", ro:"Here is the key", pron:"הִיר איז דה קי", emoji:"🔑", unit:2, theme:"home", words:[{ro:"key",he:"מפתח",pron:"קי"}]},
-  { he:"שני כיסאות ושולחן", ro:"Two chairs and a table", pron:"טוּ צ'רז אֶנְד אֶ טֵיבּל", emoji:"🪑", unit:2, theme:"home", words:[{ro:"chairs",he:"כיסאות",pron:"צ'רז"},{ro:"and",he:"ו-",pron:"אֶנְד"}]},
+  { he:"הנה המפתח", ro:"Here is the key", pron:"הִיר איז דה קִי", emoji:"🔑", unit:2, theme:"home", words:[{ro:"key",he:"מפתח",pron:"קִי"}]},
+  { he:"שני כיסאות ושולחן", ro:"Two chairs and a table", pron:"טוּ צֶ'רְז אֶנְד אֶ טֵיבּל", emoji:"🪑", unit:2, theme:"home", words:[{ro:"chairs",he:"כיסאות",pron:"צֶ'רְז"},{ro:"and",he:"ו-",pron:"אֶנְד"}]},
   { he:"בית קטן", ro:"A small house", pron:"אֶ סְמוֹל הָאוּס", emoji:"🏠", unit:2, theme:"home", words:[{ro:"small",he:"קטן",pron:"סְמוֹל"},{ro:"house",he:"בית",pron:"הָאוּס"}]},
   // -- Unit 2 expansion to 60 --
   { he:"אבא שלי בעבודה", ro:"My dad is at work", pron:"מַאי דֵד איז אֶט וורְק", emoji:"💼", unit:2, theme:"family", words:[{ro:"work",he:"עבודה",pron:"וורְק"}]},
-  { he:"אמא שלי במטבח", ro:"My mom is in the kitchen", pron:"מַאי מוֹם איז אין דה קיצ'ֶן", emoji:"🍳", unit:2, theme:"family", words:[{ro:"kitchen",he:"מטבח",pron:"קיצ'ֶן"}]},
+  { he:"אמא שלי במטבח", ro:"My mom is in the kitchen", pron:"מַאי מוֹם איז אין דה קִיצ'ֶן", emoji:"🍳", unit:2, theme:"family", words:[{ro:"kitchen",he:"מטבח",pron:"קִיצ'ֶן"}]},
   { he:"סבא שלי טוב מאוד", ro:"My grandpa is very good", pron:"מַאי גְרֵנְפָּה איז וֶרי גוּד", emoji:"👴", unit:2, theme:"family", words:[]},
   { he:"סבתא מבשלת מרק", ro:"Grandma cooks soup", pron:"גְרֵנְמָה קוּקס סוּפּ", emoji:"🍲", unit:2, theme:"family", words:[{ro:"cooks",he:"מבשלת",pron:"קוּקס"},{ro:"soup",he:"מרק",pron:"סוּפּ"}]},
-  { he:"אחי מתחבא בחדר", ro:"My brother hides in the room", pron:"מַאי בֶּראד'ֶר האידז אין דה רוּם", emoji:"🙈", unit:2, theme:"home", words:[{ro:"hides",he:"מתחבא",pron:"האידז"},{ro:"room",he:"חדר",pron:"רוּם"}]},
+  { he:"אחי מתחבא בחדר", ro:"My brother hides in the room", pron:"מַאי בֶּראד'ֶר הַאיידְז אין דה רוּם", emoji:"🙈", unit:2, theme:"home", words:[{ro:"hides",he:"מתחבא",pron:"הַאיידְז"},{ro:"room",he:"חדר",pron:"רוּם"}]},
   { he:"אחותי קוראת ספר", ro:"My sister reads a book", pron:"מַאי סִיסטֶר רִידז אֶ בּוּק", emoji:"📖", unit:2, theme:"family", words:[{ro:"reads",he:"קוראת",pron:"רִידז"}]},
   { he:"החדר שלי גדול", ro:"My room is big", pron:"מַאי רוּם איז בִּיג", emoji:"🚪", unit:2, theme:"home", words:[{ro:"room",he:"חדר",pron:"רוּם"}]},
   { he:"בחדר יש מיטה", ro:"There is a bed in the room", pron:"ד'ֶר איז אֶ בֶּד אין דה רוּם", emoji:"🛏️", unit:2, theme:"home", words:[{ro:"There is",he:"יש",pron:"ד'ֶר איז"},{ro:"bed",he:"מיטה",pron:"בֶּד"}]},
   { he:"שלוש מנורות", ro:"Three lamps", pron:"ת'רִי לָאמפּס", emoji:"💡", unit:2, theme:"home", words:[{ro:"lamps",he:"מנורות",pron:"לָאמפּס"}]},
   { he:"שני שולחנות", ro:"Two tables", pron:"טוּ טֵיבּלז", emoji:"🪑", unit:2, theme:"home", words:[{ro:"tables",he:"שולחנות",pron:"טֵיבּלז"}]},
-  { he:"ארבעה כיסאות", ro:"Four chairs", pron:"פוֹר צ'רז", emoji:"💺", unit:2, theme:"home", words:[]},
+  { he:"ארבעה כיסאות", ro:"Four chairs", pron:"פוֹר צֶ'רְז", emoji:"💺", unit:2, theme:"home", words:[]},
   { he:"חמש מיטות בחדר", ro:"Five beds in the room", pron:"פַאיב בֶּדז אין דה רוּם", emoji:"🛏️", unit:2, theme:"home", words:[]},
   { he:"הספר שלי כחול", ro:"My book is blue", pron:"מַאי בּוּק איז בְּלוּ", emoji:"📘", unit:2, theme:"home", words:[]},
   { he:"הצעצוע שלי אדום", ro:"My toy is red", pron:"מַאי טוֹי איז רֶד", emoji:"🧸", unit:2, theme:"home", words:[]},
@@ -2366,7 +2373,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"הכלב בגן", ro:"The dog is in the garden", pron:"דה דוֹג איז אין דה גָארדֶן", emoji:"🌳", unit:2, theme:"home", words:[{ro:"garden",he:"גן",pron:"גָארדֶן"}]},
   { he:"החתול על הספה", ro:"The cat is on the sofa", pron:"דה קֶט איז אוֹן דה סוֹפָה", emoji:"🛋️", unit:2, theme:"home", words:[{ro:"sofa",he:"ספה",pron:"סוֹפָה"}]},
   { he:"הילדים בחדר", ro:"The kids are in the room", pron:"דה קִידְז אר אין דה רוּם", emoji:"🚪", unit:2, theme:"family", words:[]},
-  { he:"אבא מתקן את הדלת", ro:"Dad fixes the door", pron:"דֵד פיקסז דה דוֹר", emoji:"🚪", unit:2, theme:"home", words:[{ro:"fixes",he:"מתקן",pron:"פיקסז"}]},
+  { he:"אבא מתקן את הדלת", ro:"Dad fixes the door", pron:"דֵד פִיקְסְז דה דוֹר", emoji:"🚪", unit:2, theme:"home", words:[{ro:"fixes",he:"מתקן",pron:"פִיקְסְז"}]},
   { he:"אמא פותחת את החלון", ro:"Mom opens the window", pron:"מוֹם אוֹפֶּנז דה ווִינְדוֹאוּ", emoji:"🪟", unit:2, theme:"home", words:[{ro:"opens",he:"פותחת",pron:"אוֹפֶּנז"}]},
   { he:"בית גדול וירוק", ro:"A big green house", pron:"אֶ בִּיג גְרִין הָאוּס", emoji:"🏠", unit:2, theme:"home", words:[]},
   { he:"חדר קטן ואדום", ro:"A small red room", pron:"אֶ סְמוֹל רֶד רוּם", emoji:"🚪", unit:2, theme:"home", words:[]},
@@ -2460,12 +2467,12 @@ const BUILTIN_SENTENCES_EN = [
   { he:"דג לארוחה", ro:"Fish for dinner", pron:"פִיש פוֹר דינֶר", emoji:"🐟", unit:4, theme:"food", words:[{ro:"fish",he:"דג",pron:"פִיש"},{ro:"dinner",he:"ארוחה",pron:"דינֶר"}]},
   { he:"קערת מרק", ro:"A bowl of soup", pron:"אֶ בּוֹאוּל אוף סוּפּ", emoji:"🍲", unit:4, theme:"food", words:[{ro:"bowl",he:"קערה",pron:"בּוֹאוּל"},{ro:"soup",he:"מרק",pron:"סוּפּ"}]},
   { he:"סלט טרי", ro:"A fresh salad", pron:"אֶ פרֶש סָאלָאד", emoji:"🥗", unit:4, theme:"food", words:[{ro:"fresh",he:"טרי",pron:"פרֶש"},{ro:"salad",he:"סלט",pron:"סָאלָאד"}]},
-  { he:"פירות מתוקים", ro:"Sweet fruit", pron:"סוויט פְרוּט", emoji:"🍎", unit:4, theme:"food", words:[{ro:"sweet",he:"מתוקים",pron:"סוויט"},{ro:"fruit",he:"פירות",pron:"פְרוּט"}]},
+  { he:"פירות מתוקים", ro:"Sweet fruit", pron:"סְווִיט פְרוּט", emoji:"🍎", unit:4, theme:"food", words:[{ro:"sweet",he:"מתוקים",pron:"סְווִיט"},{ro:"fruit",he:"פירות",pron:"פְרוּט"}]},
   { he:"ירקות ירוקים", ro:"Green vegetables", pron:"גְרִין וֶג'ְטֶבְּלז", emoji:"🥬", unit:4, theme:"food", words:[{ro:"green",he:"ירוקים",pron:"גְרִין"},{ro:"vegetables",he:"ירקות",pron:"וֶג'ְטֶבְּלז"}]},
-  { he:"תפוז מתוק", ro:"An orange is sweet", pron:"אן אוֹרֶנְג' איז סוויט", emoji:"🍊", unit:4, theme:"food", words:[{ro:"orange",he:"תפוז",pron:"אוֹרֶנְג'"},{ro:"sweet",he:"מתוק",pron:"סוויט"}]},
+  { he:"תפוז מתוק", ro:"An orange is sweet", pron:"אן אוֹרֶנְג' איז סְווִיט", emoji:"🍊", unit:4, theme:"food", words:[{ro:"orange",he:"תפוז",pron:"אוֹרֶנְג'"},{ro:"sweet",he:"מתוק",pron:"סְווִיט"}]},
   { he:"בננה צהובה", ro:"A yellow banana", pron:"אֶ יֶלוֹאוּ בָּנֵנָה", emoji:"🍌", unit:4, theme:"food", words:[{ro:"yellow",he:"צהובה",pron:"יֶלוֹאוּ"},{ro:"banana",he:"בננה",pron:"בָּנֵנָה"}]},
   { he:"ענבים סגולים", ro:"Purple grapes", pron:"פֶּרְפֶּל גְרֵייפּס", emoji:"🍇", unit:4, theme:"food", words:[{ro:"grapes",he:"ענבים",pron:"גְרֵייפּס"}]},
-  { he:"שוקולד מתוק", ro:"Chocolate is sweet", pron:"צ'וֹקְלֶט איז סוויט", emoji:"🍫", unit:4, theme:"food", words:[{ro:"chocolate",he:"שוקולד",pron:"צ'וֹקְלֶט"}]},
+  { he:"שוקולד מתוק", ro:"Chocolate is sweet", pron:"צ'וֹקְלֶט איז סְווִיט", emoji:"🍫", unit:4, theme:"food", words:[{ro:"chocolate",he:"שוקולד",pron:"צ'וֹקְלֶט"}]},
   { he:"סוכר בתה", ro:"Sugar in tea", pron:"שוּגֶר אין טִי", emoji:"🍵", unit:4, theme:"food", words:[{ro:"sugar",he:"סוכר",pron:"שוּגֶר"},{ro:"tea",he:"תה",pron:"טִי"}]},
   { he:"מלח על הלחם", ro:"Salt on bread", pron:"סוֹלְט אוֹן בֶּרֶד", emoji:"🧂", unit:4, theme:"food", words:[{ro:"salt",he:"מלח",pron:"סוֹלְט"},{ro:"bread",he:"לחם",pron:"בְּרֶד"}]},
   { he:"קפה חם", ro:"Hot coffee", pron:"הוֹט קוֹפִי", emoji:"☕", unit:4, theme:"food", words:[{ro:"hot",he:"חם",pron:"הוֹט"},{ro:"coffee",he:"קפה",pron:"קוֹפִי"}]},
@@ -2486,11 +2493,11 @@ const BUILTIN_SENTENCES_EN = [
   { he:"פסטה עם רוטב", ro:"Pasta with sauce", pron:"פָּאסטָה ווִיד' סוֹס", emoji:"🍝", unit:4, theme:"food", words:[{ro:"Pasta",he:"פסטה",pron:"פָּאסטָה"},{ro:"sauce",he:"רוטב",pron:"סוֹס"}]},
   { he:"מרק עוף לחורף", ro:"Chicken soup for winter", pron:"צִ'יקֶן סוּפּ פוֹר ווינטֶר", emoji:"🍲", unit:4, theme:"food", words:[{ro:"winter",he:"חורף",pron:"ווינטֶר"}]},
   { he:"מרק עגבניות", ro:"Tomato soup", pron:"טוּמֵייטוֹאוּ סוּפּ", emoji:"🍅", unit:4, theme:"food", words:[{ro:"Tomato",he:"עגבניות",pron:"טוּמֵייטוֹאוּ"}]},
-  { he:"סלט עם עגבניות ומלפפונים", ro:"Salad with tomatoes and cucumbers", pron:"סָאלָאד ווִיד' טוּמֵייטוֹאוּז אֶנְד קיוּקאמבֶּרז", emoji:"🥗", unit:4, theme:"food", words:[{ro:"cucumbers",he:"מלפפונים",pron:"קיוּקאמבֶּרז"}]},
+  { he:"סלט עם עגבניות ומלפפונים", ro:"Salad with tomatoes and cucumbers", pron:"סָאלָאד ווִיד' טוּמֵייטוֹאוּז אֶנְד קִיוּקאמבֶּרז", emoji:"🥗", unit:4, theme:"food", words:[{ro:"cucumbers",he:"מלפפונים",pron:"קִיוּקאמבֶּרז"}]},
   { he:"ירקות ירוקים בריאים", ro:"Green vegetables are healthy", pron:"גְרִין וֶג'ְטֶבְּלז אר הֶלְת'י", emoji:"🥬", unit:4, theme:"food", words:[{ro:"healthy",he:"בריאים",pron:"הֶלְת'י"}]},
-  { he:"פירות מתוקים בקיץ", ro:"Sweet fruit in summer", pron:"סוויט פְרוּט אין סָאמֶר", emoji:"🍓", unit:4, theme:"food", words:[{ro:"summer",he:"קיץ",pron:"סָאמֶר"}]},
+  { he:"פירות מתוקים בקיץ", ro:"Sweet fruit in summer", pron:"סְווִיט פְרוּט אין סָאמֶר", emoji:"🍓", unit:4, theme:"food", words:[{ro:"summer",he:"קיץ",pron:"סָאמֶר"}]},
   { he:"תפוז גדול ועסיסי", ro:"A big juicy orange", pron:"אֶ בִּיג ג'וּסִי אוֹרֶנְג'", emoji:"🍊", unit:4, theme:"food", words:[{ro:"juicy",he:"עסיסי",pron:"ג'וּסִי"}]},
-  { he:"ענבים סגולים מתוקים", ro:"Sweet purple grapes", pron:"סוויט פֶּרְפֶּל גְרֵייפּס", emoji:"🍇", unit:4, theme:"food", words:[]},
+  { he:"ענבים סגולים מתוקים", ro:"Sweet purple grapes", pron:"סְווִיט פֶּרְפֶּל גְרֵייפּס", emoji:"🍇", unit:4, theme:"food", words:[]},
   { he:"עגבנייה אדומה וטרייה", ro:"A red fresh tomato", pron:"אֶ רֶד פרֶש טוּמֵייטוֹאוּ", emoji:"🍅", unit:4, theme:"food", words:[{ro:"fresh",he:"טרייה",pron:"פרֶש"}]},
   { he:"שוקולד חם בחורף", ro:"Hot chocolate in winter", pron:"הוֹט צ'וֹקְלֶט אין ווינטֶר", emoji:"☕", unit:4, theme:"food", words:[]},
   { he:"סוכר ומלח על השולחן", ro:"Sugar and salt on the table", pron:"שוּגֶר אֶנְד סוֹלְט אוֹן דה טֵיבּל", emoji:"🧂", unit:4, theme:"food", words:[]},
@@ -2502,12 +2509,12 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שלושה תפוחים על העץ", ro:"Three apples on the tree", pron:"ת'רִי אֵפּלז אוֹן דה טְרִי", emoji:"🍎", unit:4, theme:"food", words:[{ro:"tree",he:"עץ",pron:"טְרִי"}]},
   { he:"מסיבה עם עוגה", ro:"A party with cake", pron:"אֶ פָּארטִי ווִיד' קֵייק", emoji:"🎂", unit:4, theme:"food", words:[{ro:"party",he:"מסיבה",pron:"פָּארטִי"},{ro:"cake",he:"עוגה",pron:"קֵייק"}]},
   { he:"עוגה ליום הולדת", ro:"A birthday cake", pron:"אֶ בֶּרת'דֵיי קֵייק", emoji:"🎂", unit:4, theme:"food", words:[{ro:"birthday",he:"יום הולדת",pron:"בֶּרת'דֵיי"}]},
-  { he:"גלידה בקיץ", ro:"Ice cream in summer", pron:"אאיס קרים אין סָאמֶר", emoji:"🍦", unit:4, theme:"food", words:[{ro:"Ice cream",he:"גלידה",pron:"אאיס קרים"}]},
-  { he:"גלידת שוקולד", ro:"Chocolate ice cream", pron:"צ'וֹקְלֶט אאיס קרים", emoji:"🍫", unit:4, theme:"food", words:[]},
+  { he:"גלידה בקיץ", ro:"Ice cream in summer", pron:"אַייס קְרִים אין סָאמֶר", emoji:"🍦", unit:4, theme:"food", words:[{ro:"Ice cream",he:"גלידה",pron:"אַייס קְרִים"}]},
+  { he:"גלידת שוקולד", ro:"Chocolate ice cream", pron:"צ'וֹקְלֶט אַייס קְרִים", emoji:"🍫", unit:4, theme:"food", words:[]},
   { he:"שני כוסות מים", ro:"Two glasses of water", pron:"טוּ גלָאסֶז אוף ווֹטֶר", emoji:"💧", unit:4, theme:"food", words:[{ro:"glasses",he:"כוסות",pron:"גלָאסֶז"}]},
   { he:"לחם וחמאה לארוחת בוקר", ro:"Bread and butter for breakfast", pron:"בֶּרֶד אֶנְד בָּטֶר פוֹר בֶּרֶקפֶסט", emoji:"🥐", unit:4, theme:"food", words:[]},
   { he:"דגים לארוחת ערב", ro:"Fish for dinner", pron:"פִיש פוֹר דינֶר", emoji:"🐟", unit:4, theme:"food", words:[]},
-  { he:"פסטה לארוחת צהריים", ro:"Pasta for lunch", pron:"פָּאסטָה פוֹר לאנץ'", emoji:"🍝", unit:4, theme:"food", words:[]},
+  { he:"פסטה לארוחת צהריים", ro:"Pasta for lunch", pron:"פָּאסטָה פוֹר לַאנְץ'", emoji:"🍝", unit:4, theme:"food", words:[]},
   { he:"אני אוהבת לאכול", ro:"I love to eat", pron:"אַי לָאוו טוּ אִיט", emoji:"🍽️", unit:4, theme:"food", words:[{ro:"to eat",he:"לאכול",pron:"טוּ אִיט"}]},
   { he:"אני אוהבת לבשל", ro:"I love to cook", pron:"אַי לָאוו טוּ קוּק", emoji:"👨‍🍳", unit:4, theme:"food", words:[{ro:"to cook",he:"לבשל",pron:"טוּ קוּק"}]},
   { he:"אמא מבשלת מצוין", ro:"Mom cooks great", pron:"מוֹם קוּקס גְרֵייט", emoji:"👩‍🍳", unit:4, theme:"food", words:[]},
@@ -2525,7 +2532,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"זאב אפור", ro:"A gray wolf", pron:"אֶ גְרֵיי וּולְף", emoji:"🐺", unit:5, theme:"animals", words:[{ro:"wolf",he:"זאב",pron:"וּולְף"}]},
   { he:"שועלה אדומה", ro:"A red fox", pron:"אֶ רֶד פוֹקְס", emoji:"🦊", unit:5, theme:"animals", words:[{ro:"fox",he:"שועלה",pron:"פוֹקְס"}]},
   { he:"סנאי קטן", ro:"A small squirrel", pron:"אֶ סְמוֹל סְקְווִירֶל", emoji:"🐿️", unit:5, theme:"animals", words:[{ro:"squirrel",he:"סנאי",pron:"סְקְווִירֶל"}]},
-  { he:"האריה מלך", ro:"The lion is king", pron:"דה לַאיֶן איז קינג", emoji:"🦁", unit:5, theme:"animals", words:[{ro:"lion",he:"אריה",pron:"לַאיֶן"},{ro:"king",he:"מלך",pron:"קינג"}]},
+  { he:"האריה מלך", ro:"The lion is king", pron:"דה לַאיֶן איז קִינְג", emoji:"🦁", unit:5, theme:"animals", words:[{ro:"lion",he:"אריה",pron:"לַאיֶן"},{ro:"king",he:"מלך",pron:"קִינְג"}]},
   { he:"לנמר יש פסים", ro:"The tiger has stripes", pron:"דה טַאיגֶר הֵז סטראיפּס", emoji:"🐯", unit:5, theme:"animals", words:[{ro:"tiger",he:"נמר",pron:"טַאיגֶר"},{ro:"stripes",he:"פסים",pron:"סטראיפּס"}]},
   { he:"פיל ענק", ro:"A huge elephant", pron:"אֶ היוּג' אֶלֶפֶנְט", emoji:"🐘", unit:5, theme:"animals", words:[{ro:"huge",he:"ענק",pron:"היוּג'"},{ro:"elephant",he:"פיל",pron:"אֶלֶפֶנְט"}]},
   { he:"קוף מטפס", ro:"A monkey climbs", pron:"אֶ מָאנְקִי קלאַימז", emoji:"🐒", unit:5, theme:"animals", words:[{ro:"monkey",he:"קוף",pron:"מָאנְקִי"},{ro:"climbs",he:"מטפס",pron:"קלאַימז"}]},
@@ -2538,7 +2545,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"אני אוהבת חיות", ro:"I love animals", pron:"אַי לָאוו אֵנימָלז", emoji:"❤️", unit:5, theme:"animals", words:[{ro:"animals",he:"חיות",pron:"אֵנימָלז"}]},
   // -- Unit 5 expansion to 60 --
   { he:"החתול ישן על המיטה", ro:"The cat sleeps on the bed", pron:"דה קֶט סְלִיפּס אוֹן דה בֶּד", emoji:"🐱", unit:5, theme:"animals", words:[{ro:"sleeps",he:"ישן",pron:"סְלִיפּס"}]},
-  { he:"הכלב רץ בגן", ro:"The dog runs in the garden", pron:"דה דוֹג ראנז אין דה גָארדֶן", emoji:"🐕", unit:5, theme:"animals", words:[{ro:"runs",he:"רץ",pron:"ראנז"}]},
+  { he:"הכלב רץ בגן", ro:"The dog runs in the garden", pron:"דה דוֹג רַאנְז אין דה גָארדֶן", emoji:"🐕", unit:5, theme:"animals", words:[{ro:"runs",he:"רץ",pron:"רַאנְז"}]},
   { he:"הסוס שותה מים", ro:"The horse drinks water", pron:"דה הוֹרְס דְרִינְקס ווֹטֶר", emoji:"🐴", unit:5, theme:"animals", words:[]},
   { he:"הפרה אוכלת דשא", ro:"The cow eats grass", pron:"דה קָאוּ אִיטס גְרָאס", emoji:"🐮", unit:5, theme:"animals", words:[{ro:"grass",he:"דשא",pron:"גְרָאס"}]},
   { he:"כבשה לבנה ורכה", ro:"A white soft sheep", pron:"אֶ ווָאִיט סוֹפט שִיפּ", emoji:"🐑", unit:5, theme:"animals", words:[{ro:"soft",he:"רכה",pron:"סוֹפט"}]},
@@ -2565,11 +2572,11 @@ const BUILTIN_SENTENCES_EN = [
   { he:"פרות אוכלות עשב", ro:"Cows eat grass", pron:"קָאוּז אִיט גְרָאס", emoji:"🐮", unit:5, theme:"animals", words:[]},
   { he:"סוסים רצים מהר", ro:"Horses run fast", pron:"הוֹרְסֶז רָאן פֵסט", emoji:"🐴", unit:5, theme:"animals", words:[{ro:"Horses",he:"סוסים",pron:"הוֹרְסֶז"}]},
   { he:"ארנבים אוכלים גזר", ro:"Rabbits eat carrots", pron:"רֵבִּיטס אִיט קֵרוֹטס", emoji:"🥕", unit:5, theme:"animals", words:[{ro:"carrots",he:"גזרים",pron:"קֵרוֹטס"}]},
-  { he:"דבים גרים ביער", ro:"Bears live in the forest", pron:"בֶּרז ליב אין דה פוֹרֶסט", emoji:"🐻", unit:5, theme:"animals", words:[{ro:"live",he:"גרים",pron:"ליב"}]},
+  { he:"דבים גרים ביער", ro:"Bears live in the forest", pron:"בֶּרז לִיב אין דה פוֹרֶסט", emoji:"🐻", unit:5, theme:"animals", words:[{ro:"live",he:"גרים",pron:"לִיב"}]},
   { he:"זאבים מיללים בלילה", ro:"Wolves howl at night", pron:"וולבז הַאוּל אֶט נַאִיט", emoji:"🌙", unit:5, theme:"animals", words:[{ro:"howl",he:"מיללים",pron:"הַאוּל"}]},
   { he:"שועלים חכמים", ro:"Foxes are clever", pron:"פוֹקְסֶז אר קלֶבֶר", emoji:"🦊", unit:5, theme:"animals", words:[]},
-  { he:"סנאי חמוד מאוד", ro:"A very cute squirrel", pron:"אֶ וֶרי קיוּט סְקְווִירֶל", emoji:"🐿️", unit:5, theme:"animals", words:[{ro:"cute",he:"חמוד",pron:"קיוּט"}]},
-  { he:"אריה הוא מלך החיות", ro:"The lion is the king of animals", pron:"דה לַאיֶן איז דה קינג אוף אֵנימָלז", emoji:"🦁", unit:5, theme:"animals", words:[{ro:"king",he:"מלך",pron:"קינג"}]},
+  { he:"סנאי חמוד מאוד", ro:"A very cute squirrel", pron:"אֶ וֶרי קִיוּט סְקְווִירֶל", emoji:"🐿️", unit:5, theme:"animals", words:[{ro:"cute",he:"חמוד",pron:"קִיוּט"}]},
+  { he:"אריה הוא מלך החיות", ro:"The lion is the king of animals", pron:"דה לַאיֶן איז דה קִינְג אוף אֵנימָלז", emoji:"🦁", unit:5, theme:"animals", words:[{ro:"king",he:"מלך",pron:"קִינְג"}]},
   { he:"נמר עם פסים שחורים", ro:"A tiger with black stripes", pron:"אֶ טַאיגֶר ווִיד' בְּלֵק סטראיפּס", emoji:"🐯", unit:5, theme:"animals", words:[]},
   { he:"פיל אוהב לרחוץ", ro:"An elephant loves to wash", pron:"אן אֶלֶפֶנְט לָאווז טוּ ווָאש", emoji:"🐘", unit:5, theme:"animals", words:[{ro:"wash",he:"לרחוץ",pron:"ווָאש"}]},
   { he:"קופים אוכלים בננות", ro:"Monkeys eat bananas", pron:"מָאנְקִיז אִיט בָּנֵנָז", emoji:"🐒", unit:5, theme:"animals", words:[]},
@@ -2586,10 +2593,10 @@ const BUILTIN_SENTENCES_EN = [
   { he:"תקשיבי עם האוזניים", ro:"Listen with ears", pron:"ליסֶן ווִיד' אִירז", emoji:"👂", unit:6, theme:"body", words:[{ro:"Listen",he:"תקשיבי",pron:"ליסֶן"},{ro:"ears",he:"אוזניים",pron:"אִירז"}]},
   { he:"שיער ארוך", ro:"Long hair", pron:"לוֹנְג הֶר", emoji:"💇", unit:6, theme:"body", words:[{ro:"Long",he:"ארוך",pron:"לוֹנְג"},{ro:"hair",he:"שיער",pron:"הֶר"}]},
   { he:"תרחצי ידיים", ro:"Wash your hands", pron:"ווָאש יוֹר הֶנְדז", emoji:"🚿", unit:6, theme:"health", words:[{ro:"Wash",he:"תרחצי",pron:"ווָאש"},{ro:"hands",he:"ידיים",pron:"הֶנְדז"}]},
-  { he:"שתי רגליים ושתי כפות רגל", ro:"Two legs and two feet", pron:"טוּ לֶגז אֶנְד טוּ פיט", emoji:"🦵", unit:6, theme:"body", words:[{ro:"legs",he:"רגליים",pron:"לֶגז"},{ro:"feet",he:"כפות רגל",pron:"פיט"}]},
+  { he:"שתי רגליים ושתי כפות רגל", ro:"Two legs and two feet", pron:"טוּ לֶגז אֶנְד טוּ פִיט", emoji:"🦵", unit:6, theme:"body", words:[{ro:"legs",he:"רגליים",pron:"לֶגז"},{ro:"feet",he:"כפות רגל",pron:"פִיט"}]},
   { he:"בטן עגולה", ro:"A round belly", pron:"אֶ רַאוּנְד בֶּלִי", emoji:"🤰", unit:6, theme:"body", words:[{ro:"round",he:"עגולה",pron:"רַאוּנְד"},{ro:"belly",he:"בטן",pron:"בֶּלִי"}]},
   { he:"תצחצח שיניים", ro:"Brush your teeth", pron:"בֶּראש יוֹר טִית'", emoji:"🦷", unit:6, theme:"health", words:[{ro:"Brush",he:"תצחצח",pron:"בֶּראש"},{ro:"teeth",he:"שיניים",pron:"טִית'"}]},
-  { he:"תראי את הלשון", ro:"Show me your tongue", pron:"שוֹאוּ מי יוֹר טָאנְג", emoji:"👅", unit:6, theme:"body", words:[{ro:"Show",he:"תראי",pron:"שוֹאוּ"},{ro:"tongue",he:"לשון",pron:"טָאנְג"}]},
+  { he:"תראי את הלשון", ro:"Show me your tongue", pron:"שוֹאוּ מִי יוֹר טָאנְג", emoji:"👅", unit:6, theme:"body", words:[{ro:"Show",he:"תראי",pron:"שוֹאוּ"},{ro:"tongue",he:"לשון",pron:"טָאנְג"}]},
   { he:"הלב שלי פועם", ro:"My heart beats", pron:"מַאי הָארְט בִּיטס", emoji:"❤️", unit:6, theme:"body", words:[{ro:"heart",he:"לב",pron:"הָארְט"},{ro:"beats",he:"פועם",pron:"בִּיטס"}]},
   { he:"עשר אצבעות", ro:"Ten fingers", pron:"טֶן פִינְגֶרז", emoji:"🖐️", unit:6, theme:"body", words:[{ro:"fingers",he:"אצבעות",pron:"פִינְגֶרז"}]},
   { he:"אני בריאה", ro:"I am healthy", pron:"אַי אֵם הֶלְת'י", emoji:"💪", unit:6, theme:"health", words:[{ro:"healthy",he:"בריאה",pron:"הֶלְת'י"}]},
@@ -2600,19 +2607,19 @@ const BUILTIN_SENTENCES_EN = [
   { he:"ללכת לבית חולים", ro:"Go to the hospital", pron:"גוֹאוּ טוּ דה הוֹסְפִּיטָל", emoji:"🏥", unit:6, theme:"health", words:[{ro:"Go",he:"ללכת",pron:"גוֹאוּ"},{ro:"hospital",he:"בית חולים",pron:"הוֹסְפִּיטָל"}]},
   { he:"היזהרי", ro:"Be careful", pron:"בִּי קֵרפוּל", emoji:"⚠️", unit:6, theme:"health", words:[{ro:"careful",he:"זהירה",pron:"קֵרפוּל"}]},
   // -- Unit 6 expansion to 60 --
-  { he:"שיני קדמיות", ro:"Front teeth", pron:"פראנט טִית'", emoji:"🦷", unit:6, theme:"body", words:[{ro:"Front",he:"קדמיות",pron:"פראנט"},{ro:"teeth",he:"שיניים",pron:"טִית'"}]},
-  { he:"כפות ידיים נקיות", ro:"Clean palms", pron:"קלין פָּאמז", emoji:"🤲", unit:6, theme:"body", words:[{ro:"Clean",he:"נקיות",pron:"קלין"},{ro:"palms",he:"כפות ידיים",pron:"פָּאמז"}]},
+  { he:"שיני קדמיות", ro:"Front teeth", pron:"פְרַאנְט טִית'", emoji:"🦷", unit:6, theme:"body", words:[{ro:"Front",he:"קדמיות",pron:"פְרַאנְט"},{ro:"teeth",he:"שיניים",pron:"טִית'"}]},
+  { he:"כפות ידיים נקיות", ro:"Clean palms", pron:"קְלִין פָּאמז", emoji:"🤲", unit:6, theme:"body", words:[{ro:"Clean",he:"נקיות",pron:"קְלִין"},{ro:"palms",he:"כפות ידיים",pron:"פָּאמז"}]},
   { he:"ראש חכם", ro:"A smart head", pron:"אֶ סמָארט הֶד", emoji:"🧠", unit:6, theme:"body", words:[{ro:"smart",he:"חכם",pron:"סמָארט"}]},
   { he:"שיער קצר ושחור", ro:"Short black hair", pron:"שוֹרְט בְּלֵק הֶר", emoji:"💇", unit:6, theme:"body", words:[]},
   { he:"שיער ארוך וזהוב", ro:"Long golden hair", pron:"לוֹנְג גוֹלְדֶן הֶר", emoji:"💇‍♀️", unit:6, theme:"body", words:[{ro:"golden",he:"זהוב",pron:"גוֹלְדֶן"}]},
   { he:"עיניים ירוקות", ro:"Green eyes", pron:"גְרִין אאַיז", emoji:"👁️", unit:6, theme:"body", words:[]},
   { he:"עיניים חומות", ro:"Brown eyes", pron:"בְּראון אאַיז", emoji:"👁️", unit:6, theme:"body", words:[{ro:"brown",he:"חומות",pron:"בְּראון"}]},
-  { he:"אף קטן וחמוד", ro:"A small cute nose", pron:"אֶ סְמוֹל קיוּט נוֹאוּז", emoji:"👃", unit:6, theme:"body", words:[{ro:"cute",he:"חמוד",pron:"קיוּט"}]},
+  { he:"אף קטן וחמוד", ro:"A small cute nose", pron:"אֶ סְמוֹל קִיוּט נוֹאוּז", emoji:"👃", unit:6, theme:"body", words:[{ro:"cute",he:"חמוד",pron:"קִיוּט"}]},
   { he:"פה מחייך", ro:"A smiling mouth", pron:"אֶ סמאַילינג מַאוּת'", emoji:"😊", unit:6, theme:"body", words:[{ro:"smiling",he:"מחייך",pron:"סמאַילינג"}]},
   { he:"אוזניים גדולות", ro:"Big ears", pron:"בִּיג אִירז", emoji:"👂", unit:6, theme:"body", words:[]},
   { he:"חמש אצבעות ביד", ro:"Five fingers on a hand", pron:"פַאיב פִינְגֶרז אוֹן אֶ הֶנְד", emoji:"🖐️", unit:6, theme:"body", words:[]},
   { he:"רגליים חזקות", ro:"Strong legs", pron:"סטרוֹנג לֶגז", emoji:"🦵", unit:6, theme:"body", words:[]},
-  { he:"כפות רגליים גדולות", ro:"Big feet", pron:"בִּיג פיט", emoji:"🦶", unit:6, theme:"body", words:[]},
+  { he:"כפות רגליים גדולות", ro:"Big feet", pron:"בִּיג פִיט", emoji:"🦶", unit:6, theme:"body", words:[]},
   { he:"בטן רעבה", ro:"A hungry belly", pron:"אֶ הָאנגרי בֶּלִי", emoji:"🤤", unit:6, theme:"body", words:[{ro:"hungry",he:"רעבה",pron:"הָאנגרי"}]},
   { he:"גב חזק", ro:"A strong back", pron:"אֶ סטרוֹנג בֵּק", emoji:"💪", unit:6, theme:"body", words:[{ro:"back",he:"גב",pron:"בֵּק"}]},
   { he:"לב פועם", ro:"A beating heart", pron:"אֶ בִּיטִינג הָארְט", emoji:"❤️", unit:6, theme:"body", words:[{ro:"beating",he:"פועם",pron:"בִּיטִינג"}]},
@@ -2622,14 +2629,14 @@ const BUILTIN_SENTENCES_EN = [
   { he:"אני מצוננת", ro:"I have a cold", pron:"אַי הֵב אֶ קוֹלְד", emoji:"🤧", unit:6, theme:"health", words:[{ro:"cold",he:"הצטננות",pron:"קוֹלְד"}]},
   { he:"יש לי חום", ro:"I have a fever", pron:"אַי הֵב אֶ פיבֶר", emoji:"🌡️", unit:6, theme:"health", words:[{ro:"fever",he:"חום",pron:"פיבֶר"}]},
   { he:"הולכת לרופא", ro:"Going to the doctor", pron:"גוֹאינג טוּ דה דוֹקְטוֹר", emoji:"👨‍⚕️", unit:6, theme:"health", words:[]},
-  { he:"הרופאה נחמדה", ro:"The doctor is nice", pron:"דה דוֹקְטוֹר איז נאיס", emoji:"👩‍⚕️", unit:6, theme:"health", words:[{ro:"nice",he:"נחמדה",pron:"נאיס"}]},
+  { he:"הרופאה נחמדה", ro:"The doctor is nice", pron:"דה דוֹקְטוֹר איז נַאיס", emoji:"👩‍⚕️", unit:6, theme:"health", words:[{ro:"nice",he:"נחמדה",pron:"נַאיס"}]},
   { he:"לקחת תרופה", ro:"To take medicine", pron:"טוּ טֵייק מֶדִיסִין", emoji:"💊", unit:6, theme:"health", words:[]},
   { he:"שתי תרופות ביום", ro:"Two medicines a day", pron:"טוּ מֶדִיסִינז אֶ דֵיי", emoji:"💊", unit:6, theme:"health", words:[]},
   { he:"בית חולים גדול ולבן", ro:"A big white hospital", pron:"אֶ בִּיג ווָאִיט הוֹסְפִּיטָל", emoji:"🏥", unit:6, theme:"health", words:[]},
   { he:"אני בריאה ושמחה", ro:"I am healthy and happy", pron:"אַי אֵם הֶלְת'י אֶנְד הֵפִּי", emoji:"💪", unit:6, theme:"health", words:[]},
   { he:"לרחוץ ידיים לפני האוכל", ro:"Wash hands before eating", pron:"ווָאש הֶנְדז בִּיפוֹר אִיטִינג", emoji:"🚿", unit:6, theme:"health", words:[{ro:"before",he:"לפני",pron:"בִּיפוֹר"}]},
-  { he:"לצחצח שיניים פעמיים ביום", ro:"Brush teeth twice a day", pron:"בֶּראש טִית' טוואיס אֶ דֵיי", emoji:"🦷", unit:6, theme:"health", words:[{ro:"twice",he:"פעמיים",pron:"טוואיס"}]},
-  { he:"לישון 9 שעות", ro:"Sleep nine hours", pron:"סְלִיפּ נאַין אַאוֶרז", emoji:"😴", unit:6, theme:"health", words:[]},
+  { he:"לצחצח שיניים פעמיים ביום", ro:"Brush teeth twice a day", pron:"בֶּראש טִית' טְוַואיס אֶ דֵיי", emoji:"🦷", unit:6, theme:"health", words:[{ro:"twice",he:"פעמיים",pron:"טְוַואיס"}]},
+  { he:"לישון 9 שעות", ro:"Sleep nine hours", pron:"סְלִיפּ נַאיין אַאוֶרז", emoji:"😴", unit:6, theme:"health", words:[]},
   { he:"לאכול הרבה ירקות", ro:"Eat lots of vegetables", pron:"אִיט לוֹטס אוף וֶג'ְטֶבְּלז", emoji:"🥬", unit:6, theme:"health", words:[{ro:"lots of",he:"הרבה",pron:"לוֹטס אוף"}]},
   { he:"לשתות הרבה מים", ro:"Drink lots of water", pron:"דְרִינְק לוֹטס אוף ווֹטֶר", emoji:"💧", unit:6, theme:"health", words:[]},
   { he:"לעשות ספורט כל יום", ro:"Do sports every day", pron:"דוּ ספּוֹרטס אֶבֶרי דֵיי", emoji:"⚽", unit:6, theme:"health", words:[{ro:"sports",he:"ספורט",pron:"ספּוֹרטס"},{ro:"every day",he:"כל יום",pron:"אֶבֶרי דֵיי"}]},
@@ -2638,7 +2645,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"לצחוק עם חברים", ro:"Laugh with friends", pron:"לָאף ווִיד' פְרֶנדז", emoji:"😄", unit:6, theme:"health", words:[{ro:"Laugh",he:"לצחוק",pron:"לָאף"}]},
   { he:"לאהוב את המשפחה", ro:"Love the family", pron:"לָאוו דה פֵמִילִי", emoji:"💖", unit:6, theme:"health", words:[]},
   { he:"להיות מאושר", ro:"To be happy", pron:"טוּ בִּי הֵפִּי", emoji:"😊", unit:6, theme:"health", words:[{ro:"To be",he:"להיות",pron:"טוּ בִּי"}]},
-  { he:"שיניים נקיות וצחורות", ro:"Clean white teeth", pron:"קלין ווָאִיט טִית'", emoji:"🦷", unit:6, theme:"health", words:[]},
+  { he:"שיניים נקיות וצחורות", ro:"Clean white teeth", pron:"קְלִין ווָאִיט טִית'", emoji:"🦷", unit:6, theme:"health", words:[]},
   { he:"להירגע כשעייפים", ro:"Relax when tired", pron:"רילֵקס ווֶן טַאיֶרְד", emoji:"😌", unit:6, theme:"health", words:[{ro:"Relax",he:"להירגע",pron:"רילֵקס"},{ro:"when",he:"כש-",pron:"ווֶן"}]},
 
   // ========= Unit 7: School (20) =========
@@ -2656,7 +2663,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"התיק שלי כבד", ro:"My backpack is heavy", pron:"מַאי בֵּקְפֵּק איז הֵבי", emoji:"🎒", unit:7, theme:"school", words:[{ro:"backpack",he:"תיק",pron:"בֵּקְפֵּק"},{ro:"heavy",he:"כבד",pron:"הֵבי"}]},
   { he:"אני קוראת ספר", ro:"I read a book", pron:"אַי רִיד אֶ בּוּק", emoji:"📖", unit:7, theme:"school", words:[{ro:"read",he:"קוראת",pron:"רִיד"},{ro:"book",he:"ספר",pron:"בּוּק"}]},
   { he:"אני כותבת מכתב", ro:"I write a letter", pron:"אַי רַאִיט אֶ לֶטֶר", emoji:"✍️", unit:7, theme:"school", words:[{ro:"write",he:"כותבת",pron:"רַאִיט"},{ro:"letter",he:"מכתב",pron:"לֶטֶר"}]},
-  { he:"אני לומדת אנגלית", ro:"I learn English", pron:"אַי לֶרְן אינגליש", emoji:"📚", unit:7, theme:"school", words:[{ro:"learn",he:"לומדת",pron:"לֶרְן"},{ro:"English",he:"אנגלית",pron:"אינגליש"}]},
+  { he:"אני לומדת אנגלית", ro:"I learn English", pron:"אַי לֶרְן אִינְגלִיש", emoji:"📚", unit:7, theme:"school", words:[{ro:"learn",he:"לומדת",pron:"לֶרְן"},{ro:"English",he:"אנגלית",pron:"אִינְגלִיש"}]},
   { he:"אני יודעת את התשובה", ro:"I know the answer", pron:"אַי נוֹאוּ דה אֵנְסֶר", emoji:"💡", unit:7, theme:"school", words:[{ro:"know",he:"יודעת",pron:"נוֹאוּ"},{ro:"answer",he:"תשובה",pron:"אֵנְסֶר"}]},
   { he:"שאלה טובה", ro:"A good question", pron:"אֶ גוּד קְווֶסְצֶ'ן", emoji:"❓", unit:7, theme:"school", words:[{ro:"good",he:"טובה",pron:"גוּד"},{ro:"question",he:"שאלה",pron:"קְווֶסְצֶ'ן"}]},
   { he:"התשובה הנכונה", ro:"The right answer", pron:"דה רַאִיט אֵנְסֶר", emoji:"✅", unit:7, theme:"school", words:[{ro:"right",he:"נכון",pron:"רַאִיט"},{ro:"answer",he:"תשובה",pron:"אֵנְסֶר"}]},
@@ -2667,9 +2674,9 @@ const BUILTIN_SENTENCES_EN = [
   { he:"כיתה גדולה ויפה", ro:"A big pretty classroom", pron:"אֶ בִּיג פּרֶטִי קְלָאסְרוּם", emoji:"🏛️", unit:7, theme:"school", words:[]},
   { he:"שלוש מורות", ro:"Three teachers", pron:"ת'רִי טִיצ'ֶרז", emoji:"👩‍🏫", unit:7, theme:"school", words:[{ro:"teachers",he:"מורות",pron:"טִיצ'ֶרז"}]},
   { he:"עשרים תלמידים בכיתה", ro:"Twenty students in class", pron:"טְווֶנְטִי סְטוּדֶנְטס אין קלָאס", emoji:"🧑", unit:7, theme:"school", words:[]},
-  { he:"שיעור אנגלית כיף", ro:"Fun English lesson", pron:"פָאן אינגליש לֶסְון", emoji:"📚", unit:7, theme:"school", words:[{ro:"Fun",he:"כיף",pron:"פָאן"}]},
+  { he:"שיעור אנגלית כיף", ro:"Fun English lesson", pron:"פָאן אִינְגלִיש לֶסְון", emoji:"📚", unit:7, theme:"school", words:[{ro:"Fun",he:"כיף",pron:"פָאן"}]},
   { he:"הרבה שיעורי בית", ro:"Lots of homework", pron:"לוֹטס אוף הוֹמְוורְק", emoji:"📝", unit:7, theme:"school", words:[]},
-  { he:"מבחן באנגלית", ro:"English test", pron:"אינגליש טֶסְט", emoji:"📋", unit:7, theme:"school", words:[]},
+  { he:"מבחן באנגלית", ro:"English test", pron:"אִינְגלִיש טֶסְט", emoji:"📋", unit:7, theme:"school", words:[]},
   { he:"מחברת ירוקה ועפרון ורוד", ro:"A green notebook and a pink pencil", pron:"אֶ גְרִין נוֹטְבּוּק אֶנְד אֶ פִּינְק פֶּנְסְל", emoji:"📓", unit:7, theme:"school", words:[]},
   { he:"חמישה עפרונות בקלמר", ro:"Five pencils in the case", pron:"פַאיב פֶּנְסְלז אין דה קֵייס", emoji:"✏️", unit:7, theme:"school", words:[{ro:"case",he:"קלמר",pron:"קֵייס"}]},
   { he:"עט אדום וכחול", ro:"A red and blue pen", pron:"אֶ רֶד אֶנְד בְּלוּ פֶּן", emoji:"🖊️", unit:7, theme:"school", words:[]},
@@ -2686,14 +2693,14 @@ const BUILTIN_SENTENCES_EN = [
   { he:"הפסקה קצרה", ro:"A short break", pron:"אֶ שוֹרְט בֶּרֵייק", emoji:"⏸️", unit:7, theme:"school", words:[]},
   { he:"לצייר בכיתה", ro:"To draw in class", pron:"טוּ דרוֹ אין קלָאס", emoji:"🎨", unit:7, theme:"school", words:[{ro:"draw",he:"לצייר",pron:"דרוֹ"}]},
   { he:"לצבוע בצבעים", ro:"To color with colors", pron:"טוּ קָאלֶר ווִיד' קָאלֶרז", emoji:"🖍️", unit:7, theme:"school", words:[{ro:"color",he:"לצבוע",pron:"קָאלֶר"}]},
-  { he:"שיעור מוזיקה", ro:"A music lesson", pron:"אֶ מיוּזיק לֶסְון", emoji:"🎵", unit:7, theme:"school", words:[{ro:"music",he:"מוזיקה",pron:"מיוּזיק"}]},
-  { he:"שיעור התעמלות", ro:"A gym lesson", pron:"אֶ ג'ים לֶסְון", emoji:"🏃", unit:7, theme:"school", words:[{ro:"gym",he:"התעמלות",pron:"ג'ים"}]},
+  { he:"שיעור מוזיקה", ro:"A music lesson", pron:"אֶ מִיוּזיק לֶסְון", emoji:"🎵", unit:7, theme:"school", words:[{ro:"music",he:"מוזיקה",pron:"מִיוּזיק"}]},
+  { he:"שיעור התעמלות", ro:"A gym lesson", pron:"אֶ גִ'ים לֶסְון", emoji:"🏃", unit:7, theme:"school", words:[{ro:"gym",he:"התעמלות",pron:"גִ'ים"}]},
   { he:"חברים בכיתה", ro:"Friends in class", pron:"פְרֶנדז אין קלָאס", emoji:"🤝", unit:7, theme:"school", words:[]},
   { he:"זאת המורה הטובה ביותר", ro:"This is the best teacher", pron:"דִיס איז דה בֶּסט טִיצ'ֶר", emoji:"👩‍🏫", unit:7, theme:"school", words:[{ro:"best",he:"הטוב ביותר",pron:"בֶּסט"}]},
   { he:"מבחן קל", ro:"An easy test", pron:"אן איזי טֶסְט", emoji:"📋", unit:7, theme:"school", words:[{ro:"easy",he:"קל",pron:"אִיזִי"}]},
   { he:"קיבלתי ציון מצוין", ro:"I got an excellent grade", pron:"אַי גוֹט אן אֶקסֶלֶנט גְרֵייד", emoji:"💯", unit:7, theme:"school", words:[{ro:"excellent",he:"מצוין",pron:"אֶקסֶלֶנט"}]},
   { he:"ספר מתמטיקה", ro:"A math book", pron:"אֶ מָאת' בּוּק", emoji:"📕", unit:7, theme:"school", words:[]},
-  { he:"ספר אנגלית", ro:"An English book", pron:"אן אינגליש בּוּק", emoji:"📘", unit:7, theme:"school", words:[]},
+  { he:"ספר אנגלית", ro:"An English book", pron:"אן אִינְגלִיש בּוּק", emoji:"📘", unit:7, theme:"school", words:[]},
   { he:"שיעור היסטוריה", ro:"A history lesson", pron:"אֶ היסטוֹרי לֶסְון", emoji:"📜", unit:7, theme:"school", words:[{ro:"history",he:"היסטוריה",pron:"היסטוֹרי"}]},
   { he:"שיעור מדע מעניין", ro:"An interesting science lesson", pron:"אן אינטֶרֶסטִינג סָאיֶנס לֶסְון", emoji:"🔬", unit:7, theme:"school", words:[{ro:"science",he:"מדע",pron:"סָאיֶנס"}]},
   { he:"לצאת להפסקה", ro:"Go out for break", pron:"גוֹאוּ אאוט פוֹר בֶּרֵייק", emoji:"⏸️", unit:7, theme:"school", words:[]},
@@ -2702,7 +2709,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"בית ספר טוב", ro:"A good school", pron:"אֶ גוּד סְקוּל", emoji:"🏫", unit:7, theme:"school", words:[]},
   { he:"מורה מצחיקה", ro:"A funny teacher", pron:"אֶ פָאני טִיצ'ֶר", emoji:"😄", unit:7, theme:"school", words:[]},
   { he:"שיעור ארוך", ro:"A long lesson", pron:"אֶ לוֹנְג לֶסְון", emoji:"📚", unit:7, theme:"school", words:[]},
-  { he:"לקרוא ולכתוב יפה", ro:"Read and write nicely", pron:"רִיד אֶנְד רַאִיט נאיסלי", emoji:"📖", unit:7, theme:"school", words:[{ro:"nicely",he:"יפה",pron:"נאיסלי"}]},
+  { he:"לקרוא ולכתוב יפה", ro:"Read and write nicely", pron:"רִיד אֶנְד רַאִיט נַאיסְלִי", emoji:"📖", unit:7, theme:"school", words:[{ro:"nicely",he:"יפה",pron:"נַאיסְלִי"}]},
 
   // ========= Unit 8: Nature & weather (20) =========
   { he:"השמש זורחת", ro:"The sun shines", pron:"דה סָאן שאַינז", emoji:"☀️", unit:8, theme:"weather", words:[{ro:"sun",he:"שמש",pron:"סָאן"},{ro:"shines",he:"זורחת",pron:"שאַינז"}]},
@@ -2715,7 +2722,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"עץ גבוה", ro:"A tall tree", pron:"אֶ טוֹל טְרִי", emoji:"🌳", unit:8, theme:"nature", words:[{ro:"tall",he:"גבוה",pron:"טוֹל"},{ro:"tree",he:"עץ",pron:"טְרִי"}]},
   { he:"פרח ורוד", ro:"A pink flower", pron:"אֶ פִּינְק פְלַאוֶר", emoji:"🌸", unit:8, theme:"nature", words:[{ro:"flower",he:"פרח",pron:"פְלַאוֶר"}]},
   { he:"דשא ירוק", ro:"Green grass", pron:"גְרִין גְרָאס", emoji:"🌱", unit:8, theme:"nature", words:[{ro:"grass",he:"דשא",pron:"גְרָאס"}]},
-  { he:"עלים צהובים", ro:"Yellow leaves", pron:"יֶלוֹאוּ ליבז", emoji:"🍂", unit:8, theme:"nature", words:[{ro:"leaves",he:"עלים",pron:"ליבז"}]},
+  { he:"עלים צהובים", ro:"Yellow leaves", pron:"יֶלוֹאוּ לִיבְז", emoji:"🍂", unit:8, theme:"nature", words:[{ro:"leaves",he:"עלים",pron:"לִיבְז"}]},
   { he:"הר גבוה", ro:"A high mountain", pron:"אֶ האַי מַאוּנְטֶן", emoji:"⛰️", unit:8, theme:"nature", words:[{ro:"high",he:"גבוה",pron:"האַי"},{ro:"mountain",he:"הר",pron:"מַאוּנְטֶן"}]},
   { he:"ים כחול", ro:"Blue sea", pron:"בְּלוּ סִי", emoji:"🌊", unit:8, theme:"nature", words:[{ro:"sea",he:"ים",pron:"סִי"}]},
   { he:"חוף ארוך", ro:"A long beach", pron:"אֶ לוֹנְג בִּיץ'", emoji:"🏖️", unit:8, theme:"nature", words:[{ro:"beach",he:"חוף",pron:"בִּיץ'"}]},
@@ -2739,7 +2746,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"עץ ענק בגן", ro:"A huge tree in the garden", pron:"אֶ היוּג' טְרִי אין דה גָארדֶן", emoji:"🌳", unit:8, theme:"nature", words:[{ro:"huge",he:"ענק",pron:"היוּג'"}]},
   { he:"פרחים אדומים בגינה", ro:"Red flowers in the garden", pron:"רֶד פְלַאוֶרז אין דה גָארדֶן", emoji:"🌹", unit:8, theme:"nature", words:[]},
   { he:"דשא ירוק ורענן", ro:"Green fresh grass", pron:"גְרִין פרֶש גְרָאס", emoji:"🌱", unit:8, theme:"nature", words:[]},
-  { he:"עלים נופלים בסתיו", ro:"Leaves fall in autumn", pron:"ליבז פוֹל אין אוֹטֶם", emoji:"🍂", unit:8, theme:"nature", words:[{ro:"fall",he:"נופלים",pron:"פוֹל"},{ro:"autumn",he:"סתיו",pron:"אוֹטֶם"}]},
+  { he:"עלים נופלים בסתיו", ro:"Leaves fall in autumn", pron:"לִיבְז פוֹל אין אוֹטֶם", emoji:"🍂", unit:8, theme:"nature", words:[{ro:"fall",he:"נופלים",pron:"פוֹל"},{ro:"autumn",he:"סתיו",pron:"אוֹטֶם"}]},
   { he:"הר עם שלג", ro:"A mountain with snow", pron:"אֶ מַאוּנְטֶן ווִיד' סְנוֹאוּ", emoji:"🏔️", unit:8, theme:"nature", words:[]},
   { he:"ים גדול וכחול", ro:"A big blue sea", pron:"אֶ בִּיג בְּלוּ סִי", emoji:"🌊", unit:8, theme:"nature", words:[]},
   { he:"חוף ארוך וצהוב", ro:"A long yellow beach", pron:"אֶ לוֹנְג יֶלוֹאוּ בִּיץ'", emoji:"🏖️", unit:8, theme:"nature", words:[]},
@@ -2757,10 +2764,10 @@ const BUILTIN_SENTENCES_EN = [
   { he:"קשת אחרי גשם", ro:"A rainbow after rain", pron:"אֶ רֵיינבּוֹאוּ אֵפטֶר רֵיין", emoji:"🌈", unit:8, theme:"weather", words:[{ro:"rainbow",he:"קשת",pron:"רֵיינבּוֹאוּ"},{ro:"after",he:"אחרי",pron:"אֵפטֶר"}]},
   { he:"ענן כהה לפני סופה", ro:"Dark cloud before a storm", pron:"דָארק קְלַאוּד בִּיפוֹר אֶ סטוֹרם", emoji:"⛈️", unit:8, theme:"weather", words:[{ro:"Dark",he:"כהה",pron:"דָארק"},{ro:"storm",he:"סופה",pron:"סטוֹרם"}]},
   { he:"רעם וברק", ro:"Thunder and lightning", pron:"ת'אנדֶר אֶנְד לאִיטנינג", emoji:"⚡", unit:8, theme:"weather", words:[{ro:"Thunder",he:"רעם",pron:"ת'אנדֶר"},{ro:"lightning",he:"ברק",pron:"לאִיטנינג"}]},
-  { he:"שמיים כחולים נקיים", ro:"Clear blue sky", pron:"קליר בְּלוּ סְקַאי", emoji:"☀️", unit:8, theme:"weather", words:[{ro:"Clear",he:"נקיים",pron:"קליר"}]},
+  { he:"שמיים כחולים נקיים", ro:"Clear blue sky", pron:"קְלִיר בְּלוּ סְקַאי", emoji:"☀️", unit:8, theme:"weather", words:[{ro:"Clear",he:"נקיים",pron:"קְלִיר"}]},
   { he:"בטיול ביער", ro:"On a trip in the forest", pron:"אוֹן אֶ טְרִיפּ אין דה פוֹרֶסט", emoji:"🌲", unit:8, theme:"nature", words:[{ro:"trip",he:"טיול",pron:"טְרִיפּ"},{ro:"forest",he:"יער",pron:"פוֹרֶסט"}]},
   { he:"בגן ציבורי", ro:"In a public garden", pron:"אין אֶ פָּאבּליק גָארדֶן", emoji:"🌳", unit:8, theme:"places", words:[{ro:"public",he:"ציבורי",pron:"פָּאבּליק"}]},
-  { he:"מסלול הליכה", ro:"A walking path", pron:"אֶ ווָאקינג פָּאת'", emoji:"🚶", unit:8, theme:"places", words:[{ro:"walking",he:"הליכה",pron:"ווָאקינג"},{ro:"path",he:"מסלול",pron:"פָּאת'"}]},
+  { he:"מסלול הליכה", ro:"A walking path", pron:"אֶ ווָאקִינְג פָּאת'", emoji:"🚶", unit:8, theme:"places", words:[{ro:"walking",he:"הליכה",pron:"ווָאקִינְג"},{ro:"path",he:"מסלול",pron:"פָּאת'"}]},
   { he:"גשר על הנהר", ro:"A bridge over the river", pron:"אֶ בֶּרִידג' אוֹאוּבֶר דה רִיבֶר", emoji:"🌉", unit:8, theme:"places", words:[{ro:"bridge",he:"גשר",pron:"בֶּרִידג'"},{ro:"over",he:"על",pron:"אוֹאוּבֶר"}]},
   { he:"שמש זוהרת בים", ro:"Sun shining on the sea", pron:"סָאן שאַינינג אוֹן דה סִי", emoji:"🌊", unit:8, theme:"nature", words:[]},
   { he:"גלים גדולים", ro:"Big waves", pron:"בִּיג ווֵייבז", emoji:"🌊", unit:8, theme:"nature", words:[{ro:"waves",he:"גלים",pron:"ווֵייבז"}]},
@@ -2789,7 +2796,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שנה טובה!", ro:"Happy new year", pron:"הֵפִּי נוּ יִיר", emoji:"🎉", unit:9, theme:"time", words:[{ro:"new year",he:"שנה חדשה",pron:"נוּ יִיר"}]},
   { he:"עכשיו או אחר כך?", ro:"Now or later?", pron:"נַאוּ אוֹר לֵייטֶר?", emoji:"⏰", unit:9, theme:"time", words:[{ro:"Now",he:"עכשיו",pron:"נַאוּ"},{ro:"later",he:"אחר כך",pron:"לֵייטֶר"}]},
   // -- Unit 9 expansion to 60 --
-  { he:"אני שמחה היום, באמת", ro:"I'm really happy today", pron:"אַים ריאלי הֵפִּי טוּדֵיי", emoji:"😄", unit:9, theme:"feelings", words:[{ro:"really",he:"באמת",pron:"ריאלי"}]},
+  { he:"אני שמחה היום, באמת", ro:"I'm really happy today", pron:"אַים רִיאֶלִי הֵפִּי טוּדֵיי", emoji:"😄", unit:9, theme:"feelings", words:[{ro:"really",he:"באמת",pron:"רִיאֶלִי"}]},
   { he:"היא קצת עצובה", ro:"She is a little sad", pron:"שִי איז אֶ ליטל סָאד", emoji:"😢", unit:9, theme:"feelings", words:[{ro:"a little",he:"קצת",pron:"אֶ ליטל"}]},
   { he:"אבא כועס מאוד", ro:"Dad is very angry", pron:"דֵד איז וֶרי אֵנְגְרִי", emoji:"😡", unit:9, theme:"feelings", words:[]},
   { he:"הילדים עייפים מאוד", ro:"The kids are very tired", pron:"דה קִידְז אר וֶרי טַאיֶרְד", emoji:"😴", unit:9, theme:"feelings", words:[]},
@@ -2799,7 +2806,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"אני גאה בעצמי", ro:"I am proud of myself", pron:"אַי אֵם פְּרַאוּד אוף מַאיסֶלף", emoji:"💪", unit:9, theme:"feelings", words:[{ro:"myself",he:"עצמי",pron:"מַאיסֶלף"}]},
   { he:"בוקר של חורף", ro:"A winter morning", pron:"אֶ ווינטֶר מוֹרְנִינְג", emoji:"❄️", unit:9, theme:"time", words:[]},
   { he:"צהריים בקיץ", ro:"Summer noon", pron:"סָאמֶר נוּן", emoji:"☀️", unit:9, theme:"time", words:[]},
-  { he:"ערב יפה ושקט", ro:"A nice quiet evening", pron:"אֶ נאיס קווָאיֶט אִיבְנִינְג", emoji:"🌆", unit:9, theme:"time", words:[]},
+  { he:"ערב יפה ושקט", ro:"A nice quiet evening", pron:"אֶ נַאיס קווָאיֶט אִיבְנִינְג", emoji:"🌆", unit:9, theme:"time", words:[]},
   { he:"לילה ארוך", ro:"A long night", pron:"אֶ לוֹנְג נַאִיט", emoji:"🌙", unit:9, theme:"time", words:[]},
   { he:"היום יום שמש", ro:"Today is a sunny day", pron:"טוּדֵיי איז אֶ סָאני דֵיי", emoji:"☀️", unit:9, theme:"time", words:[]},
   { he:"מחר יום חמישי", ro:"Tomorrow is Thursday", pron:"טוּמוֹרוֹאוּ איז ת'ֶרסדֵיי", emoji:"📅", unit:9, theme:"time", words:[{ro:"Thursday",he:"יום חמישי",pron:"ת'ֶרסדֵיי"}]},
@@ -2827,7 +2834,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"השנה הבאה", ro:"Next year", pron:"נֶקסט יִיר", emoji:"➡️", unit:9, theme:"time", words:[{ro:"Next",he:"הבאה",pron:"נֶקסט"}]},
   { he:"השנה שעברה", ro:"Last year", pron:"לָאסט יִיר", emoji:"⬅️", unit:9, theme:"time", words:[{ro:"Last",he:"שעברה",pron:"לָאסט"}]},
   { he:"השבוע הזה", ro:"This week", pron:"דִיס ווִיק", emoji:"📅", unit:9, theme:"time", words:[]},
-  { he:"חודש שמח", ro:"A happy month", pron:"אֶ הֵפִּי מאנת'", emoji:"📅", unit:9, theme:"time", words:[{ro:"month",he:"חודש",pron:"מאנת'"}]},
+  { he:"חודש שמח", ro:"A happy month", pron:"אֶ הֵפִּי מָאנְת'", emoji:"📅", unit:9, theme:"time", words:[{ro:"month",he:"חודש",pron:"מָאנְת'"}]},
   { he:"שאשפיע על הזמן שלי", ro:"To use my time well", pron:"טוּ יוּז מַאי טאַים ווֶל", emoji:"⏰", unit:9, theme:"time", words:[{ro:"use",he:"להשתמש",pron:"יוּז"}]},
 
   // ========= Unit 10: Everyday verbs (20) =========
@@ -2842,19 +2849,19 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שתי מים", ro:"Drink water", pron:"דְרִינְק ווֹטֶר", emoji:"💧", unit:10, theme:"verbs", words:[{ro:"Drink",he:"שתי",pron:"דְרִינְק"},{ro:"water",he:"מים",pron:"ווֹטֶר"}]},
   { he:"אני רואה אותך", ro:"I see you", pron:"אַי סִי יוּ", emoji:"👀", unit:10, theme:"verbs", words:[{ro:"see",he:"רואה",pron:"סִי"}]},
   { he:"תקשיבי בזהירות", ro:"Listen carefully", pron:"ליסֶן קֵרפוּלי", emoji:"👂", unit:10, theme:"verbs", words:[{ro:"Listen",he:"תקשיבי",pron:"ליסֶן"},{ro:"carefully",he:"בזהירות",pron:"קֵרפוּלי"}]},
-  { he:"דברי באנגלית", ro:"Speak English", pron:"סְפִּיק אינגליש", emoji:"💬", unit:10, theme:"verbs", words:[{ro:"Speak",he:"דברי",pron:"סְפִּיק"},{ro:"English",he:"אנגלית",pron:"אינגליש"}]},
+  { he:"דברי באנגלית", ro:"Speak English", pron:"סְפִּיק אִינְגלִיש", emoji:"💬", unit:10, theme:"verbs", words:[{ro:"Speak",he:"דברי",pron:"סְפִּיק"},{ro:"English",he:"אנגלית",pron:"אִינְגלִיש"}]},
   { he:"אני אוהבת אותך", ro:"I love you", pron:"אַי לָאוו יוּ", emoji:"❤️", unit:10, theme:"verbs", words:[{ro:"love",he:"אוהבת",pron:"לָאוו"}]},
-  { he:"תני לי את הספר", ro:"Give me the book", pron:"גִיב מי דה בּוּק", emoji:"📖", unit:10, theme:"verbs", words:[{ro:"Give",he:"תני",pron:"גִיב"},{ro:"book",he:"ספר",pron:"בּוּק"}]},
+  { he:"תני לי את הספר", ro:"Give me the book", pron:"גִיב מִי דה בּוּק", emoji:"📖", unit:10, theme:"verbs", words:[{ro:"Give",he:"תני",pron:"גִיב"},{ro:"book",he:"ספר",pron:"בּוּק"}]},
   { he:"קחי את זה", ro:"Take this", pron:"טֵייק דִיס", emoji:"✊", unit:10, theme:"verbs", words:[{ro:"Take",he:"קחי",pron:"טֵייק"}]},
   { he:"פתחי את הקופסה", ro:"Open the box", pron:"אוֹפֶּן דה בּוֹקס", emoji:"📦", unit:10, theme:"verbs", words:[{ro:"Open",he:"פתחי",pron:"אוֹפֶּן"},{ro:"box",he:"קופסה",pron:"בּוֹקס"}]},
   { he:"סגרי את הדלת", ro:"Close the door", pron:"קְלוֹאוּז דה דוֹר", emoji:"🚪", unit:10, theme:"verbs", words:[{ro:"Close",he:"סגרי",pron:"קְלוֹאוּז"},{ro:"door",he:"דלת",pron:"דוֹר"}]},
   { he:"בואי נשחק!", ro:"Let's play!", pron:"לֶטס פְּלֵיי!", emoji:"🎮", unit:10, theme:"verbs", words:[{ro:"play",he:"לשחק",pron:"פְּלֵיי"}]},
-  { he:"בבקשה תעזרי לי", ro:"Help me please", pron:"הֶלְפּ מי פְּלִיז", emoji:"🤝", unit:10, theme:"verbs", words:[{ro:"Help",he:"תעזרי",pron:"הֶלְפּ"},{ro:"please",he:"בבקשה",pron:"פְּלִיז"}]},
+  { he:"בבקשה תעזרי לי", ro:"Help me please", pron:"הֶלְפּ מִי פְּלִיז", emoji:"🤝", unit:10, theme:"verbs", words:[{ro:"Help",he:"תעזרי",pron:"הֶלְפּ"},{ro:"please",he:"בבקשה",pron:"פְּלִיז"}]},
   { he:"עבדי קשה", ro:"Work hard", pron:"וורְק הָארד", emoji:"💼", unit:10, theme:"verbs", words:[{ro:"Work",he:"עבדי",pron:"וורְק"},{ro:"hard",he:"קשה",pron:"הָארְד"}]},
   // -- Unit 10 expansion to 60 --
   { he:"אני הולכת לבית הספר", ro:"I go to school", pron:"אַי גוֹאוּ טוּ סְקוּל", emoji:"🚶", unit:10, theme:"verbs", words:[]},
-  { he:"אבא בא לאסוף אותי", ro:"Dad comes to pick me up", pron:"דֵד קָאמז טוּ פּיק מי אָפּ", emoji:"➡️", unit:10, theme:"verbs", words:[{ro:"pick up",he:"לאסוף",pron:"פּיק אָפּ"}]},
-  { he:"החתול רץ מהר", ro:"The cat runs fast", pron:"דה קֶט ראנז פֵסט", emoji:"🐱", unit:10, theme:"verbs", words:[]},
+  { he:"אבא בא לאסוף אותי", ro:"Dad comes to pick me up", pron:"דֵד קָאמז טוּ פּיק מִי אָפּ", emoji:"➡️", unit:10, theme:"verbs", words:[{ro:"pick up",he:"לאסוף",pron:"פּיק אָפּ"}]},
+  { he:"החתול רץ מהר", ro:"The cat runs fast", pron:"דה קֶט רַאנְז פֵסט", emoji:"🐱", unit:10, theme:"verbs", words:[]},
   { he:"הצפרדע קופצת רחוק", ro:"The frog jumps far", pron:"דה פְרוֹג ג'ָאמְפּּס פָאר", emoji:"🐸", unit:10, theme:"verbs", words:[{ro:"far",he:"רחוק",pron:"פָאר"}]},
   { he:"כולם רוקדים בחתונה", ro:"Everyone dances at the wedding", pron:"אֶבריוָואן דָאנְסֶז אֶט דה וֶדינג", emoji:"💃", unit:10, theme:"verbs", words:[{ro:"wedding",he:"חתונה",pron:"וֶדינג"}]},
   { he:"היא שרה במקהלה", ro:"She sings in the choir", pron:"שִי סִינגז אין דה קווָייֶר", emoji:"🎤", unit:10, theme:"verbs", words:[{ro:"choir",he:"מקהלה",pron:"קווָייֶר"}]},
@@ -2865,7 +2872,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"שומעת את הציפורים", ro:"I hear the birds", pron:"אַי הִיר דה בֶּרְדז", emoji:"🐦", unit:10, theme:"verbs", words:[]},
   { he:"היא מדברת מהר", ro:"She speaks fast", pron:"שִי סְפִּיקס פֵסט", emoji:"💬", unit:10, theme:"verbs", words:[]},
   { he:"אני אוהבת את אמא", ro:"I love mom", pron:"אַי לָאוו מוֹם", emoji:"💖", unit:10, theme:"verbs", words:[]},
-  { he:"תני לי את היד", ro:"Give me your hand", pron:"גִיב מי יוֹר הֶנְד", emoji:"🤝", unit:10, theme:"verbs", words:[]},
+  { he:"תני לי את היד", ro:"Give me your hand", pron:"גִיב מִי יוֹר הֶנְד", emoji:"🤝", unit:10, theme:"verbs", words:[]},
   { he:"קחי את הצעצוע", ro:"Take the toy", pron:"טֵייק דה טוֹי", emoji:"🧸", unit:10, theme:"verbs", words:[]},
   { he:"פתחי את הספר", ro:"Open the book", pron:"אוֹפֶּן דה בּוּק", emoji:"📖", unit:10, theme:"verbs", words:[]},
   { he:"סגרי את הקופסה", ro:"Close the box", pron:"קְלוֹאוּז דה בּוֹקס", emoji:"📦", unit:10, theme:"verbs", words:[]},
@@ -2875,10 +2882,10 @@ const BUILTIN_SENTENCES_EN = [
   { he:"אמא מבשלת בבית", ro:"Mom cooks at home", pron:"מוֹם קוּקס אֶט הוֹם", emoji:"🍳", unit:10, theme:"verbs", words:[{ro:"cooks",he:"מבשלת",pron:"קוּקס"}]},
   { he:"אני קוראת ספרים", ro:"I read books", pron:"אַי רִיד בּוּקס", emoji:"📚", unit:10, theme:"verbs", words:[]},
   { he:"אני כותבת בעיפרון", ro:"I write with a pencil", pron:"אַי רַאִיט ווִיד' אֶ פֶּנְסְל", emoji:"✏️", unit:10, theme:"verbs", words:[]},
-  { he:"אני לומדת אנגלית בכיף", ro:"I learn English with fun", pron:"אַי לֶרְן אינגליש ווִיד' פָאן", emoji:"📚", unit:10, theme:"verbs", words:[]},
+  { he:"אני לומדת אנגלית בכיף", ro:"I learn English with fun", pron:"אַי לֶרְן אִינְגלִיש ווִיד' פָאן", emoji:"📚", unit:10, theme:"verbs", words:[]},
   { he:"אני יודעת לרקוד", ro:"I know how to dance", pron:"אַי נוֹאוּ הַאוּ טוּ דָאנְס", emoji:"💃", unit:10, theme:"verbs", words:[]},
   { he:"אני יודעת לשיר", ro:"I know how to sing", pron:"אַי נוֹאוּ הַאוּ טוּ סִינג", emoji:"🎤", unit:10, theme:"verbs", words:[]},
-  { he:"חבקי אותי בבקשה", ro:"Hug me please", pron:"הָאג מי פְּלִיז", emoji:"🤗", unit:10, theme:"verbs", words:[{ro:"Hug",he:"חבקי",pron:"הָאג"}]},
+  { he:"חבקי אותי בבקשה", ro:"Hug me please", pron:"הָאג מִי פְּלִיז", emoji:"🤗", unit:10, theme:"verbs", words:[{ro:"Hug",he:"חבקי",pron:"הָאג"}]},
   { he:"חבקי לאמא", ro:"Hug mom", pron:"הָאג מוֹם", emoji:"🤗", unit:10, theme:"verbs", words:[]},
   { he:"חבקי לאבא", ro:"Hug dad", pron:"הָאג דֵד", emoji:"🤗", unit:10, theme:"verbs", words:[]},
   { he:"לרוץ ולקפוץ", ro:"Run and jump", pron:"רָאן אֶנְד ג'ָאמְפּּ", emoji:"🏃", unit:10, theme:"verbs", words:[]},
@@ -2888,7 +2895,7 @@ const BUILTIN_SENTENCES_EN = [
   { he:"לתת ולקבל", ro:"Give and receive", pron:"גִיב אֶנְד ריסִיב", emoji:"🤝", unit:10, theme:"verbs", words:[{ro:"receive",he:"לקבל",pron:"ריסִיב"}]},
   { he:"לפתוח ולסגור", ro:"Open and close", pron:"אוֹפֶּן אֶנְד קְלוֹאוּז", emoji:"🚪", unit:10, theme:"verbs", words:[]},
   { he:"לעזור ולעבוד", ro:"Help and work", pron:"הֶלְפּ אֶנְד וורְק", emoji:"💼", unit:10, theme:"verbs", words:[]},
-  { he:"לאהוב את החיים", ro:"Love life", pron:"לָאוו לאיף", emoji:"💖", unit:10, theme:"verbs", words:[{ro:"life",he:"חיים",pron:"לאיף"}]},
+  { he:"לאהוב את החיים", ro:"Love life", pron:"לָאוו לַאיף", emoji:"💖", unit:10, theme:"verbs", words:[{ro:"life",he:"חיים",pron:"לַאיף"}]},
   { he:"לשחק כל היום", ro:"Play all day", pron:"פְּלֵיי אוֹל דֵיי", emoji:"🎮", unit:10, theme:"verbs", words:[]},
   { he:"ללכת לישון מוקדם", ro:"Go to sleep early", pron:"גוֹאוּ טוּ סְלִיפּ אֶרלי", emoji:"😴", unit:10, theme:"verbs", words:[{ro:"early",he:"מוקדם",pron:"אֶרלי"}]},
   { he:"לקום בבוקר", ro:"Wake up in the morning", pron:"ווֵייק אָפּ אין דה מוֹרְנִינְג", emoji:"🌅", unit:10, theme:"verbs", words:[{ro:"Wake up",he:"לקום",pron:"ווֵייק אָפּ"}]},
@@ -3016,7 +3023,15 @@ let state = {
   manageDraft: null,
   // user / admin
   adminUnlocked: false,
+  // TTS playback rate (one of SPEECH_RATES). Persisted in localStorage.
+  speechRate: 0.85,
 };
+
+const SPEECH_RATES = [1.0, 0.9, 0.75, 0.5];
+try {
+  const saved = parseFloat(localStorage.getItem('ro-kids-speech-rate'));
+  if (SPEECH_RATES.includes(saved)) state.speechRate = saved;
+} catch (e) {}
 
 // ====== Helpers ======
 function shuffle(arr) {
@@ -3053,7 +3068,7 @@ function speak(text) {
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = ttsLang();
-  u.rate = 0.85;
+  u.rate = state.speechRate;
   // Try to find a voice matching the active language
   const voices = speechSynthesis.getVoices();
   const prefix = state.language === 'en' ? 'en' : 'ro';
@@ -3219,6 +3234,7 @@ function renderQuiz() {
     </div>
     <div class="feedback" id="fb"></div>
     <div class="nav-row" id="nextRow" style="display:none">
+      <button class="btn speak" id="qSpeak">🔊 שמעי שוב</button>
       <button class="btn" id="nextQ">המשך ➡️</button>
     </div>
   `;
@@ -3258,6 +3274,8 @@ function attachQuizEvents() {
   });
   const nextBtn = document.getElementById("nextQ");
   if (nextBtn) nextBtn.onclick = () => { newQuiz(); render(); };
+  const speakBtn = document.getElementById("qSpeak");
+  if (speakBtn) speakBtn.onclick = (e) => { e.stopPropagation(); speak(state.quizCurrent.ro); };
 }
 
 // ====== Render: listen (hear ro -> pick he) ======
@@ -4551,20 +4569,22 @@ function renderAuthBar() {
   if (!bar) return;
   bar.hidden = false;
   const langPill = `<span class="lang-pill" id="lang-pill">${state.language === 'en' ? '🇬🇧 English' : '🇷🇴 רומנית'}</span>`;
+  const speedPill = `<span class="speed-pill" id="speed-pill" title="מהירות דיבור">🐢 ${speedLabel(state.speechRate)}</span>`;
   if (!auth.client) {
-    bar.innerHTML = `${langPill}<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit} · ${escapeHtml(unitOf(state.currentUnit).name)}</span>
+    bar.innerHTML = `${langPill}${speedPill}<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit} · ${escapeHtml(unitOf(state.currentUnit).name)}</span>
       <span style="color:#888; font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:#7e57c2;">SETUP.md</a></span>`;
-    wireUnitPill(); wireLangPill();
+    wireUnitPill(); wireLangPill(); wireSpeedPill();
     return;
   }
   const profSpan = auth.currentProfile ? `<span class="ab-greet">${auth.currentProfile.emoji || '🌟'} ${escapeHtml(auth.currentProfile.name)}</span>` : '';
   const unitPill = `<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}</span>`;
   if (!auth.session) {
-    bar.innerHTML = `${langPill}${unitPill}<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
+    bar.innerHTML = `${langPill}${speedPill}${unitPill}<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
     document.getElementById('ab-signin').onclick = () => { auth.view = 'signing_in'; renderAuthOverlay(); };
   } else {
     bar.innerHTML = `
       ${langPill}
+      ${speedPill}
       ${unitPill}
       ${profSpan}
       ${auth.currentProfile ? `<button class="ab-btn" id="ab-switch">🔄 החלפת פרופיל</button>` : ''}
@@ -4576,11 +4596,27 @@ function renderAuthBar() {
   }
   wireUnitPill();
   wireLangPill();
+  wireSpeedPill();
+}
+
+function speedLabel(rate) {
+  return rate === 1.0 ? '×1' : `×${rate}`;
 }
 
 function wireLangPill() {
   const pill = document.getElementById('lang-pill');
   if (pill) pill.onclick = () => switchLanguage(state.language === 'en' ? 'ro' : 'en');
+}
+
+function wireSpeedPill() {
+  const pill = document.getElementById('speed-pill');
+  if (!pill) return;
+  pill.onclick = () => {
+    const idx = SPEECH_RATES.indexOf(state.speechRate);
+    state.speechRate = SPEECH_RATES[(idx + 1) % SPEECH_RATES.length];
+    try { localStorage.setItem('ro-kids-speech-rate', String(state.speechRate)); } catch (e) {}
+    pill.innerHTML = `🐢 ${speedLabel(state.speechRate)}`;
+  };
 }
 
 async function switchLanguage(newLang) {
