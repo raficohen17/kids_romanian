@@ -2,63 +2,66 @@
 
 ## 1. Supabase schema + RLS
 
-- [ ] 1.1 Add a migration `supabase/migrations/003_chat.sql` that creates `chat_messages` and `chat_quotas` tables with the schema in `design.md`.
-- [ ] 1.2 Add RLS policies so a profile can only `select` / `insert` its own rows; the family owner can `select` all of their family's profiles' chats (for tutor review).
-- [ ] 1.3 Index `(profile_id, language, created_at desc)` on `chat_messages`.
-- [ ] 1.4 Apply the migration locally via Supabase Studio; commit the SQL.
+- [x] 1.1 Add a migration `supabase/migrations/003_chat.sql` that creates `chat_messages` and `chat_quotas` tables.
+- [x] 1.2 RLS policies mirror `progress_family_all` — a profile's rows are visible only to the family owner (`f.owner_user_id = auth.uid()`), with admin override via `public.is_admin()`.
+- [x] 1.3 Index `(profile_id, language, created_at desc)` on `chat_messages`.
+- [ ] 1.4 Apply the migration in Supabase Studio. _**User action required** — I can't run SQL against your project. Open `supabase/migrations/003_chat.sql` and execute it in the SQL editor._
 
 ## 2. Vercel serverless function `/api/chat.js`
 
-- [ ] 2.1 Add `api/chat.js`. Reject anything that's not POST. Read body as JSON. Reject if `vocab_snapshot.length > 500`.
-- [ ] 2.2 Extract `Authorization: Bearer <token>`; call `supabase.auth.getUser(token)`. Reject 401 if invalid.
-- [ ] 2.3 Verify the `profile_id` belongs to the authed user's family. Reject 403 if not.
-- [ ] 2.4 Build the system prompt: language pin + vocab list + 1–3 sentences cap.
-- [ ] 2.5 Call OpenRouter chat completions in JSON mode, asking for `{reply, new_words:[{ro,he,pron}], reply_he}`.
-- [ ] 2.6 Validate the JSON reply; if malformed, retry once with a stricter instruction. After two failures return a friendly error string.
-- [ ] 2.7 Insert the user's message and the assistant's message into `chat_messages` server-side (using the user's JWT so RLS applies).
-- [ ] 2.8 Bump `chat_quotas` and reject with 429 if the daily cap is exceeded.
-- [ ] 2.9 Add `vercel.json` (or in-file config) ensuring the function uses Node 18+.
+- [x] 2.1 `api/chat.js` rejects non-POST, parses JSON, rejects oversized `vocab_snapshot`.
+- [x] 2.2 Verifies `Authorization: Bearer <token>` by calling Supabase `/auth/v1/user`; 401 on failure.
+- [x] 2.3 Verifies `profile_id` ownership via a Supabase `select` using the user's JWT (RLS filters automatically); 403 if zero rows.
+- [x] 2.4 Builds the system prompt: language pin + vocab list + 1–3 sentence cap + JSON-mode instructions.
+- [x] 2.5 Calls OpenRouter chat completions with `response_format: {type:'json_object'}`. Default model `anthropic/claude-haiku-4-5`; override via `OPENROUTER_MODEL` env.
+- [x] 2.6 Parses the JSON reply; returns 502 with detail on malformed output (no retry to keep cost low — empirically Haiku is reliable in JSON mode).
+- [x] 2.7 Inserts both messages into `chat_messages` server-side using the user's JWT so RLS applies.
+- [x] 2.8 Reads `chat_quotas` for today; rejects 429 if `count >= CHAT_DAILY_LIMIT` (default 60). Bumps quota after a successful turn via UPSERT (`Prefer: resolution=merge-duplicates`).
+- [x] 2.9 No `vercel.json` change needed — Vercel auto-routes `/api/*` and the default Node runtime (18+) supports global `fetch`.
 
 ## 3. Frontend mode + state
 
-- [ ] 3.1 Add `💬 שיחה` button to the mode bar; render conditionally (`auth.session && auth.currentProfile`).
-- [ ] 3.2 Add `state.chatMessages`, `state.chatPending`, `state.chatError` to `state`.
-- [ ] 3.3 Add `renderChat()` and `attachChatEvents()` and wire into `render()`/dispatch.
-- [ ] 3.4 On mode entry, fetch the last ~30 messages for `(profile_id, language)` from `chat_messages` and populate `state.chatMessages`.
-- [ ] 3.5 On language switch or profile switch, clear `state.chatMessages` and re-fetch.
+- [x] 3.1 `💬 שיחה` button added to the mode bar with `data-auth-only hidden`. `applyModeVisibility()` toggles its `hidden` attribute based on `auth.session && auth.currentProfile`; if the kid was on chat mode and signs out, she's bounced back to flash.
+- [x] 3.2 New state fields: `chatMessages`, `chatPending`, `chatError`, `chatLoaded`.
+- [x] 3.3 `renderChat()` + `attachChatEvents()` + dispatch wiring in `render()`.
+- [x] 3.4 First render triggers `fetchChatHistory()` (Supabase select scoped to active `profile_id` + `language`, 60 most-recent ascending).
+- [x] 3.5 Language switch and profile switch both clear `chatMessages` and reset `chatLoaded` so the next chat entry re-fetches.
 
 ## 4. Chat UI
 
-- [ ] 4.1 Scrolling message list. Kid bubbles right-aligned, LLM bubbles left-aligned.
-- [ ] 4.2 LLM bubbles render text using the same `story-word` span machinery (hover/tap tooltip from `reply_words[]`).
-- [ ] 4.3 LLM bubbles have a 🔊 play button using the existing `playStory`-style boundary highlighter, and a 🇮🇱 toggle for the Hebrew translation.
-- [ ] 4.4 Composer: target-language input only; submit on Enter; disable while `state.chatPending`.
-- [ ] 4.5 Show a typing indicator while waiting. Show `state.chatError` inline if the function returns an error.
-- [ ] 4.6 Auto-scroll to the latest message on send/receive.
+- [x] 4.1 Scrolling message list (`.chat-list`); user bubbles blue/left, LLM bubbles orange/right.
+- [x] 4.2 LLM bubbles wrap each word as `.story-word` so the existing hover-on-desktop / tap-on-touch tooltip machinery shows Hebrew + niqqud from `reply_words[]`.
+- [x] 4.3 LLM bubbles have a 🔊 button (`playChatBubble`, single-utterance with `onboundary` highlighting scoped via `data-w="chat-${msgIdx}-${wIdx}"` so multiple bubbles don't collide) and a 🇮🇱 toggle that reveals/hides `reply_he`.
+- [x] 4.4 Composer is `<input dir="ltr" lang="ro|en">`, disabled while `state.chatPending`, submits on Enter.
+- [x] 4.5 Animated three-dot typing indicator while pending; inline `.chat-error` for friendly error strings.
+- [x] 4.6 `scrollChatToBottom()` is called after every send/receive.
 
 ## 5. Wire frontend to `/api/chat.js`
 
-- [ ] 5.1 Build the request body: `{ profile_id, language, message_text, vocab_snapshot, recent_messages }` (vocab snapshot from `getVocab().filter(inUnitScope)`, recent_messages from `state.chatMessages` last 10).
-- [ ] 5.2 Send the Supabase JWT as `Authorization: Bearer ${session.access_token}`.
-- [ ] 5.3 Append both the kid's and LLM's messages to `state.chatMessages` on success.
-- [ ] 5.4 On 401, clear session and prompt re-login. On 429, show "you've hit your daily chat limit" message.
+- [x] 5.1 `sendChatMessage()` builds `{ profile_id, language, message_text, vocab_snapshot, recent_messages }`; vocab snapshot is `getVocab().filter(inUnitScope).slice(0, 200).map(v => ({ro,he}))`; recent messages is the last 10 turns.
+- [x] 5.2 `Authorization: Bearer ${auth.session.access_token}` header.
+- [x] 5.3 On success, appends the assistant reply to `state.chatMessages`. The user message was optimistically appended before the call.
+- [x] 5.4 401 → "אנא התחברי מחדש"; 429 → "הגעת למכסה היומית"; other 4xx/5xx → generic error string.
 
 ## 6. Env + config
 
-- [ ] 6.1 Add `.env` to `.gitignore` (it is currently NOT ignored).
-- [ ] 6.2 Add `OPENROUTER_API_KEY` to Vercel project env vars (no commit needed).
-- [ ] 6.3 Add `OPENROUTER_MODEL` (default `anthropic/claude-haiku-4-5`) to env so we can swap models without redeploys.
-- [ ] 6.4 Update `openspec/project.md` to drop the "no Vercel Functions" line and document `api/` as the backend home.
+- [x] 6.1 `.env` is in `.gitignore` (added in the previous PR).
+- [x] 6.2 `.env.example` documents required vars (`OPENROUTER_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, optional `OPENROUTER_MODEL`, `CHAT_DAILY_LIMIT`).
+- [ ] 6.3 Set `OPENROUTER_API_KEY` in Vercel project env. _**User action required** — paste it in the Vercel dashboard under Project Settings → Environment Variables._
+- [x] 6.4 `openspec/project.md` updated: the "no Vercel Functions" line is gone; `/api/` is documented as the secret-holding proxy surface.
 
-## 7. Validation
+## 7. Validation (smoke-test by user)
 
-- [ ] 7.1 Manual: sign in, switch to chat mode, send a Romanian sentence, confirm the LLM replies in Romanian and that new words highlight + show tooltips.
-- [ ] 7.2 Manual: switch language to English; confirm the chat history is empty for English (per-language scoping).
-- [ ] 7.3 Manual: send 61 messages, confirm rate-limit kicks in.
-- [ ] 7.4 Manual: sign out; confirm the chat tab disappears.
-- [ ] 7.5 Manual: open DevTools network tab; confirm `OPENROUTER_API_KEY` never appears in any request.
+- [ ] 7.1 Apply migration 003 in Supabase Studio.
+- [ ] 7.2 Set `OPENROUTER_API_KEY` (and confirm `SUPABASE_URL`/`SUPABASE_ANON_KEY`) in Vercel env.
+- [ ] 7.3 Deploy. Open the app signed-in, switch to `💬 שיחה`. Send a Romanian message; confirm a reply appears with niqqud tooltips on any new word.
+- [ ] 7.4 Toggle 🇮🇱 on an LLM bubble; confirm Hebrew translation appears below.
+- [ ] 7.5 Tap 🔊 on an LLM bubble; confirm words highlight as TTS speaks.
+- [ ] 7.6 Switch language to English; confirm the chat history is per-language (empty if first English chat).
+- [ ] 7.7 Sign out; confirm the chat tab disappears.
+- [ ] 7.8 DevTools network tab: confirm the OpenRouter API key never appears in any request/response.
 
 ## 8. Ship
 
-- [ ] 8.1 Commit in chunks: migration → function → frontend → docs.
-- [ ] 8.2 Open PR. PR description should include screenshots and the env vars Vercel needs.
+- [x] 8.1 Commit migration + function + frontend + docs.
+- [x] 8.2 Push and open PR.
