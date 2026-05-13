@@ -4,8 +4,15 @@
 // copied from config.example.js — this script is a no-op there.
 const fs = require("fs");
 
-const url = process.env.SUPABASE_URL || "";
-const key = process.env.SUPABASE_ANON_KEY || "";
+// Accept either bare or NEXT_PUBLIC_-prefixed names so the Vercel
+// Supabase integration ("New" naming) works out of the box.
+const url = process.env.SUPABASE_URL
+         || process.env.NEXT_PUBLIC_SUPABASE_URL
+         || "";
+const key = process.env.SUPABASE_ANON_KEY
+         || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+         || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+         || "";
 
 if (!url || !key) {
   console.log("[build-config] No Supabase env vars set — skipping config.js (guest-only deploy).");
