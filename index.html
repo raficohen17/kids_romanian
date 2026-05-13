@@ -416,6 +416,16 @@
     max-width: 720px; margin: 0 auto;
     display: flex; flex-direction: column; gap: 10px;
   }
+  .chat-toolbar {
+    display: flex; justify-content: flex-end;
+  }
+  .chat-reset {
+    background: white; border: 2px solid #ef9a9a; border-radius: 12px;
+    color: #c62828; padding: 6px 12px; cursor: pointer;
+    font-family: inherit; font-weight: bold; font-size: 0.9rem;
+  }
+  .chat-reset:hover:not(:disabled) { background: #ffebee; }
+  .chat-reset:disabled { opacity: 0.4; cursor: not-allowed; }
   .chat-list {
     background: rgba(255,255,255,0.6); border-radius: 16px;
     padding: 14px; min-height: 280px; max-height: 60vh;
@@ -4575,10 +4585,14 @@ function renderChat() {
   const placeholder = state.language === 'en'
     ? 'Type in English…'
     : 'Scrie în română…';
+  const hasMessages = state.chatMessages.length > 0;
   return `
     <div class="chat-wrap">
+      <div class="chat-toolbar">
+        <button class="chat-reset" id="chatReset" ${state.chatPending || !hasMessages ? 'disabled' : ''} title="נקי את כל השיחה ותתחילי מחדש">🗑️ שיחה חדשה</button>
+      </div>
       <div class="chat-list" id="chatList">
-        ${state.chatMessages.length ? messagesHtml : `<p class="hint" style="text-align:center; color:#888; padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
+        ${hasMessages ? messagesHtml : `<p class="hint" style="text-align:center; color:#888; padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
         ${pendingHtml}
       </div>
       ${errHtml}
@@ -4737,6 +4751,34 @@ async function sendChatMessage(text) {
   }
 }
 
+async function resetChat() {
+  if (state.chatPending) return;
+  if (!auth.session || !auth.currentProfile) return;
+  const ok = window.confirm('למחוק את כל השיחה ולהתחיל מחדש?');
+  if (!ok) return;
+  state.chatError = null;
+  state.chatPending = true;
+  render();
+  try {
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    const { error } = await auth.client
+      .from('chat_messages')
+      .delete()
+      .eq('profile_id', auth.currentProfile.id)
+      .eq('language', state.language);
+    if (error) throw error;
+    state.chatMessages = [];
+  } catch (e) {
+    state.chatError = 'לא הצלחתי לאפס: ' + (e.message || e);
+  } finally {
+    state.chatPending = false;
+    render();
+  }
+  // After a successful reset, immediately request a new opener so the
+  // empty state never sits there blankly.
+  if (!state.chatError) requestOpener();
+}
+
 function attachChatEvents() {
   const form = document.getElementById('chatForm');
   if (form) {
@@ -4748,6 +4790,8 @@ function attachChatEvents() {
       sendChatMessage(text);
     };
   }
+  const resetBtn = document.getElementById('chatReset');
+  if (resetBtn) resetBtn.onclick = resetChat;
   // Per-word interactions (same model as Stories).
   const isHoverDevice = matchMedia('(hover:hover)').matches;
   document.querySelectorAll('.chat-llm .story-word').forEach(el => {
