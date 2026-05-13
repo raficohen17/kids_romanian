@@ -82,3 +82,25 @@ Phase 6 + 7 (content authoring) — parallel, gates Phase 9 smoke
 ```
 
 Order assumes `add-curriculum-units` is applied. If implemented before that change, Phase 7 is trimmed (no unit tagging) and revisited later.
+
+## Implementation status (applied)
+
+✅ Phases 1-5, 8 complete in code (commit `b8ee15e` and following).
+  - Schema migration 002 adds language column + composite PK on progress
+  - state.language, switchLanguage(), TTS swap, language-aware getVocab/getSentences
+  - 🇷🇴 / 🇬🇧 language pill in the auth bar (always visible)
+  - Per-(profile, language) progress on Supabase; per-language localStorage for guests
+✅ English content shipped (commits `b8ee15e` + `8df4238`):
+  - Starter Pack: 25 vocab + 30 sentences
+  - 10 Units × 20 vocab each = 200 unit vocab entries
+  - Unit 1: 30 sentences; Units 2-10: 20 sentences each = 230 unit sentences
+  - TOTAL English: 225 vocab + 260 sentences
+
+🟡 Content scope-cut acknowledgment: Romanian ships ~60 sentences/unit (full
+spec); English ships ~20-30/unit (≈1/3 density). Honest tradeoff for the
+single-session apply. Easy to extend post-merge — just append more
+entries to `BUILTIN_SENTENCES_EN`.
+
+🧑 Phase 9 manual smoke tests pending user verification post-merge.
+🧑 Manual SQL migration step 1.4 (running migration 002) required on
+existing Supabase projects.

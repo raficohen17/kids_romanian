@@ -80,3 +80,13 @@ Two clearly distinct work streams: **content authoring** (the 200 words + 600 se
 ```
 
 Content authoring (Phase 3 + 4) is the longest tail and is fully parallel to schema/UI work.
+
+## Implementation status (applied)
+
+✅ Phases 1-8 complete in code (commit `cd1265f` and following).
+✅ Romanian content complete:
+  - Unit 1: 40 vocab (numbers 1-20 + basics) + 60 sentences
+  - Units 2-10: 20 vocab each + 58-60 sentences each
+  - TOTAL: 220 Romanian vocab + ~594 Romanian sentences
+✅ openspec validate add-curriculum-units --strict passes.
+🧑 Phase 9 manual smoke tests pending user verification post-merge.
