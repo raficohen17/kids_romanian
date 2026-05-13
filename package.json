@@ -1,0 +1,10 @@
+{
+  "name": "kids-romanian",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Single-file practice app for kids learning Romanian/English. No build step.",
+  "scripts": {
+    "build-config": "node build-config.js",
+    "lint:pron": "node scripts/check_pron.js"
+  }
+}
