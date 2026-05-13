@@ -2129,6 +2129,7 @@ const auth = {
   profiles: [], currentProfile: null,
   isAdmin: false,
   view: 'guest',                  // 'guest' | 'signing_in' | 'check_email' | 'picker' | 'pin' | 'app'
+  signinMode: 'signin',           // 'signin' | 'signup'
   pendingPinProfile: null,
   realtimeChannel: null,
   unreadRequests: 0,
@@ -2253,7 +2254,20 @@ async function loadFamilyData() {
   state.sentenceOrder = shuffle(getSentences().map((_, i) => i));
 }
 
-async function signIn(email) {
+async function signInWithPassword(email, password) {
+  if (!auth.client) { alert('Supabase לא מוגדר — ראה SETUP.md'); return { error: { message: 'no client' } }; }
+  return auth.client.auth.signInWithPassword({ email, password });
+}
+
+async function signUpWithPassword(email, password) {
+  if (!auth.client) { alert('Supabase לא מוגדר — ראה SETUP.md'); return { error: { message: 'no client' } }; }
+  return auth.client.auth.signUp({
+    email, password,
+    options: { emailRedirectTo: window.location.href },
+  });
+}
+
+async function signInMagicLink(email) {
   if (!auth.client) { alert('Supabase לא מוגדר — ראה SETUP.md'); return; }
   auth.view = 'signing_in'; renderAuthOverlay();
   const { error } = await auth.client.auth.signInWithOtp({
@@ -2375,16 +2389,24 @@ function renderAuthOverlay() {
 }
 
 function renderSignInCard() {
+  const isSignup = auth.signinMode === 'signup';
   return `
     <div class="auth-card">
-      <h2>🔓 כניסה למשפחה</h2>
-      <p class="muted">נשלח לך קישור־קסם למייל. בלי סיסמאות.</p>
-      <input type="email" id="signin-email" placeholder="אימייל של ההורה" autocomplete="email">
+      <h2>${isSignup ? '✨ יצירת חשבון' : '🔓 כניסה למשפחה'}</h2>
+      <div class="signin-tabs" style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
+        <button class="ab-btn ${!isSignup ? 'ab-primary' : ''}" id="tab-signin">כניסה</button>
+        <button class="ab-btn ${isSignup ? 'ab-primary' : ''}" id="tab-signup">חשבון חדש</button>
+      </div>
+      <input type="email" id="signin-email" placeholder="אימייל" autocomplete="email"><br><br>
+      <input type="password" id="signin-password" placeholder="סיסמה" autocomplete="${isSignup ? 'new-password' : 'current-password'}">
+      ${isSignup ? `<br><br><input type="password" id="signin-password2" placeholder="אישור סיסמה" autocomplete="new-password">` : ''}
       <div class="row">
-        <button class="btn speak" id="signin-submit">שלחי לי קישור</button>
+        <button class="btn speak" id="signin-submit">${isSignup ? 'הרשמה' : 'כניסה'}</button>
         <button class="btn prev" id="signin-cancel">חזרה</button>
       </div>
+      <div id="signin-feedback" style="color:#c62828; font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
       <p class="muted" style="margin-top:14px; font-size:0.85rem;">
+        ${isSignup ? '' : 'או <a href="#" id="signin-magic" style="color:#7e57c2;">קישור־קסם למייל</a> · '}
         אין הזמנה? <a href="#" id="open-contact" style="color:#7e57c2;">בקשי גישה</a>.
       </p>
     </div>`;
@@ -2439,18 +2461,61 @@ function attachOverlayEvents() {
   const cancel = document.getElementById('signin-cancel');
   if (cancel) cancel.onclick = () => { auth.view = auth.session ? 'app' : 'guest'; renderAuthOverlay(); };
 
+  // Sign-in / sign-up tabs
+  const tIn = document.getElementById('tab-signin');
+  if (tIn) tIn.onclick = () => { auth.signinMode = 'signin'; renderAuthOverlay(); };
+  const tUp = document.getElementById('tab-signup');
+  if (tUp) tUp.onclick = () => { auth.signinMode = 'signup'; renderAuthOverlay(); };
+
   const submitBtn = document.getElementById('signin-submit');
   if (submitBtn) {
-    const email = document.getElementById('signin-email');
-    const submit = () => {
-      const v = (email.value || '').trim();
-      if (!/^[^@]+@[^@]+\.[^@]+$/.test(v)) { alert('כתובת לא תקינה'); return; }
-      signIn(v);
+    const emailEl = document.getElementById('signin-email');
+    const passEl  = document.getElementById('signin-password');
+    const pass2El = document.getElementById('signin-password2');
+    const fb      = document.getElementById('signin-feedback');
+    const isSignup = auth.signinMode === 'signup';
+
+    const submit = async () => {
+      const email = (emailEl.value || '').trim();
+      const password = (passEl.value || '');
+      const password2 = pass2El ? (pass2El.value || '') : '';
+      fb.textContent = '';
+      if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) { fb.textContent = 'אימייל לא תקין'; return; }
+      if (password.length < 6) { fb.textContent = 'סיסמה חייבת 6+ תווים'; return; }
+      if (isSignup && password !== password2) { fb.textContent = 'הסיסמאות לא תואמות'; return; }
+
+      submitBtn.disabled = true; submitBtn.textContent = '...';
+      const result = isSignup
+        ? await signUpWithPassword(email, password)
+        : await signInWithPassword(email, password);
+      submitBtn.disabled = false;
+
+      if (result.error) {
+        fb.textContent = result.error.message || 'שגיאה';
+        submitBtn.textContent = isSignup ? 'הרשמה' : 'כניסה';
+        return;
+      }
+      // onAuthStateChange will route the rest
     };
     submitBtn.onclick = submit;
-    email.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
-    setTimeout(() => email.focus(), 50);
+    passEl.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    if (pass2El) pass2El.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    emailEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') passEl.focus();
+    });
+    setTimeout(() => emailEl.focus(), 50);
   }
+
+  const magic = document.getElementById('signin-magic');
+  if (magic) magic.onclick = (e) => {
+    e.preventDefault();
+    const email = (document.getElementById('signin-email').value || '').trim();
+    if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+      document.getElementById('signin-feedback').textContent = 'הזיני אימייל קודם';
+      return;
+    }
+    signInMagicLink(email);
+  };
 
   const oc = document.getElementById('open-contact');
   if (oc) oc.onclick = (e) => { e.preventDefault(); openContactModal(); };
