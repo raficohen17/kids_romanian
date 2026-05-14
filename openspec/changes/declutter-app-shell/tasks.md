@@ -1,45 +1,55 @@
 # Tasks: declutter-app-shell
 
-## 1. Modes bar — practice icons + ⋯ menu
+## 1. Modes bar — pill tabs with labels
 
-- [x] 1.1 Practice modes are icon-only `<button class="mode-tab" aria-label="..." title="...">` elements.
-- [x] 1.2 `aria-label` and `title` carry the Hebrew name.
-- [x] 1.3 `.mode-tab` is 52×52px with active fill on `var(--accent)`.
-- [x] 1.4 `⋯` trigger builds a `.shell-popover` listing units/guide/manage/user (and requests when admin).
-- [x] 1.5 `applyModeVisibility()` no longer appends a tab; it refreshes the popover and toggles a `.has-badge` dot on ⋯.
-- [x] 1.6 Row click activates the mode and closes the popover.
+- [x] 1.1 Practice modes are icon-only `<button class="mode-tab" aria-label="..." title="...">` elements. *(pass 1)*
+- [ ] 1.2 **Revision**: practice tabs become pill-shaped with `emoji + Hebrew label` (`🎴 כרטיסיות`, etc.). Active fills `--accent`; inactive is white + `--line` border.
+- [ ] 1.3 Pill padding `10px 14px`, `border-radius: 999px`, min-height `44px`. At viewport `<= 560px` the label hides via CSS — icons only as a fallback.
+- [ ] 1.4 The `⋯` trigger becomes `☰ עוד` (icon + Hebrew word). Popover behavior unchanged.
+- [ ] 1.5 `applyModeVisibility()` keeps refreshing the popover and the `has-badge` dot on the `☰ עוד` trigger.
 
-## 2. Auth bar — profile chip + popover
+## 2. Category filter — single popover trigger
 
-- [x] 2.1 The separate `lang-pill` / `speed-pill` / `unit-pill` rendering paths are gone; CSS for those classes was removed.
-- [x] 2.2 A single `.profile-chip` shows `<emoji> <name> · <flag> · <speed> · <unit>`. Guest sees the same chip without the name plus a `🔓 כניסה` sign-in button.
-- [x] 2.3 Tapping the chip opens a popover with language pills, speed pills, units shortcut, switch-profile, and sign-out.
-- [x] 2.4 Reuses `switchLanguage`, the existing speed-rate setter, `auth.view = 'picker'`, and `signOut`.
-- [x] 2.5 Speed persists in `ro-kids-speech-rate` localStorage as before.
-- [x] 2.6 Tap-outside and `Escape` close the popover.
+- [ ] 2.1 Remove the chip row from `.filter-row`. Replace `#filters` with one `<button class="category-trigger">` showing `<emoji> קטגוריה: <name> ▾`.
+- [ ] 2.2 New `.shell-popover` for categories: rows of `<emoji> <name> <count>`. Selecting a row sets `state.category`, closes popover, re-renders.
+- [ ] 2.3 Category trigger only renders when the active mode uses category filtering (existing `["guide","manage","sentences","user","units","requests"]` blocklist applies).
+- [ ] 2.4 Trigger updates its own label when category changes (no full re-render needed).
 
-## 3. Shared shell-popover primitive
+## 3. Category emoji coverage
 
-- [x] 3.1 Single `.shell-popover` CSS class with 150ms fade + 4px slide.
-- [x] 3.2 Single global outside-click handler closes whichever popover is open.
-- [x] 3.3 `Escape` closes; trigger `aria-expanded` toggled by open/close logic.
+- [ ] 3.1 Extend `BUILTIN_CAT_EMOJI` to include every category appearing in built-in RO and EN vocab.
+- [ ] 3.2 `getCategoryEmoji()` falls back to `unitOf(state.currentUnit).emoji` for unknown categories — never `🏷️`.
+- [ ] 3.3 Verify the guide page (`<details>` per category) renders with the new emoji set.
 
-## 4. Clean up
+## 4. Profile chip slim-down
 
-- [x] 4.1 `.lang-pill` / `.speed-pill` / `.unit-pill` CSS rules removed.
-- [x] 4.2 `wireLangPill` and `wireSpeedPill` deleted; `wireUnitPill` removed; `updateUnitPill` kept as a small re-render shim for legacy callers.
-- [x] 4.3 `renderAuthBar()` rebuilds the chip on every auth state change.
+- [x] 4.1 Profile chip rendered with `<emoji> <name> · <flag> · <speed> · <unit>`. *(pass 1)*
+- [ ] 4.2 Remove the speed segment from the chip face; speed still lives in the popover.
 
-## 5. Verify (user smoke-test)
+## 5. Shared shell-popover primitive
 
-- [ ] 5.1 Guest: modes bar shows practice tabs + ⋯; auth bar shows chip + sign-in.
-- [ ] 5.2 Signed-in profile: chat tab appears; chip shows identity + context.
-- [ ] 5.3 Chip popover: language / speed / units / switch profile / sign-out all work.
-- [ ] 5.4 ⋯ popover: units / guide / manage / user reachable and close after selection.
-- [ ] 5.5 Admin sees 📥 בקשות in ⋯ and the badge dot when there are pending requests.
-- [ ] 5.6 Keyboard tab order works; Escape closes popovers.
-- [ ] 5.7 Reload preserves language, speed, profile.
+- [x] 5.1 Single `.shell-popover` CSS class with 150ms fade + 4px slide.
+- [x] 5.2 Single global outside-click handler closes whichever popover is open.
+- [x] 5.3 `Escape` closes; trigger `aria-expanded` toggled by open/close logic.
+- [ ] 5.4 Category popover is wired through the same outside-click + Escape paths.
 
-## 6. Ship
+## 6. Clean up
 
-- [x] 6.1 Branched off main; PR pending.
+- [x] 6.1 `.lang-pill` / `.speed-pill` / `.unit-pill` CSS rules removed.
+- [x] 6.2 `wireLangPill` and `wireSpeedPill` deleted.
+- [ ] 6.3 `.chip` styles can stay (guide page uses them), but `.filter-row` becomes a single-trigger container.
+
+## 7. Verify (user smoke-test)
+
+- [ ] 7.1 Guest on iPad: modes bar shows seven pill tabs with Hebrew labels; auth bar shows chip + sign-in.
+- [ ] 7.2 Signed-in profile: chat tab appears; chip shows identity + flag + unit.
+- [ ] 7.3 Chip popover: language / speed / units / switch profile / sign-out all work.
+- [ ] 7.4 `☰ עוד` popover: units / guide / manage / user reachable; admin sees 📥 בקשות + badge dot.
+- [ ] 7.5 Category trigger: opens popover with every category showing a real emoji; selecting one updates the trigger label and filters; no `🏷️` anywhere on screen.
+- [ ] 7.6 Default screen state: only one chrome row (the modes pills) above the practice card — no chip-wall.
+- [ ] 7.7 Keyboard tab order works; Escape closes popovers.
+- [ ] 7.8 Reload preserves language, speed, profile, category.
+
+## 8. Ship
+
+- [x] 8.1 Branched off main. Revision committed on top of pass-1 commit.

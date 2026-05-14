@@ -2,94 +2,114 @@
 
 ## Context
 
-The current top-of-page region has organic growth pains:
+First decluttering pass shipped: auth bar collapsed to a profile chip, secondary modes hid in `⋯`. The kid and tutor pushed back on two things:
 
-- The auth bar accreted a pill for every new setting (language, speed, unit) plus profile + sign-out + switch.
-- The modes bar accreted a button for every new mode (chat being the most recent), and admin adds another at runtime.
-- All controls share equal visual weight even though usage frequency varies by 100× (Flashcards every session vs. Manage maybe once a month).
+- **The labels are gone.** On iPad there is no hover, so `title` is dead. The practice row reads as seven decorative emojis. A 9-year-old can memorize them, but for a tutor opening the app the first time, nothing announces what each tab does.
+- **The screen is still cluttered.** Below the modes bar, the category filter renders ~26 chips on 4-5 wrapped rows, most of them displaying the same default `🏷️` tag emoji because only a handful of categories are in the emoji map. The eye sees a wall of identical tag icons.
 
-The kid lives inside one practice card at a time. Everything around that card competes for attention. The goal is to make the practice card the protagonist and let chrome recede.
+The goal of this revision is **visible labels** and **fewer always-on chips on screen**, without losing one-tap access to the daily modes.
 
 ## Goals / Non-Goals
 
 **Goals**
-- Cut the always-visible interactive element count roughly in half (~17 → ~9).
-- Preserve every existing capability — nothing is removed, just relocated.
-- Keep one-tap access to the 7 daily practice modes.
-- Settings (language, speed, unit shortcut) live behind a single chip menu so they don't take screen real estate when not in use.
-- Touch targets stay generous for a 9-year-old.
+- Every primary control reads correctly without hover.
+- Default screen state shows ≤ 1 row of chrome (modes pills) above the practice card.
+- All categories reachable in ≤ 2 taps with no scrolling wall.
+- Every category has its own emoji; nothing falls back to a generic tag.
 
 **Non-Goals**
-- No changes to mode internals (Stories rendering, Chat composer, etc.).
-- No changes to data models, RLS, or backend functions.
-- No mobile-specific code paths; flex wrapping is enough.
-- No removal of features.
+- No data migration.
+- No new mode types.
+- No mobile-specific code paths; tabs stay flex-wrapped.
+- No per-profile or per-role hiding beyond existing admin/auth gates.
 
 ## Decisions
 
-### Decision 1: Practice modes stay icon-only; secondary modes hide in `⋯`
+### Decision 1: Practice tabs are pill-shaped, emoji + label
 
-We keep the practice modes as primary tabs because they are the kid's daily flow. Removing labels from those tabs is the chrome-shrink:
-
-- The kid memorizes the 7 emojis fast (already does — flashcards/stories/chat are the regulars).
-- `aria-label` + `title` keep accessibility and discoverability for new users / tutors.
-- Active state uses a filled accent rounded rectangle so the current mode is obvious without color-coding each tab.
-
-Secondary modes (units, guide, manage, user, requests) go behind `⋯` because:
-
-- They're invoked weekly or less.
-- They include actions tutors do (Manage) and the kid never does — putting them in a menu hides them from her without locking her out.
-
-**Alternative considered**: keep all modes visible but smaller. Rejected — even at 80% size the bar wraps on iPad, and the kid's eye still has to scan 11 items.
-
-### Decision 2: Auth bar collapses into one chip + popover
-
-The four pills today (`lang`, `speed`, `unit`, profile) each cost real estate, but only `profile` and (rarely) `lang` are tapped during a session. The other two are set-once-per-week.
-
-The chip pattern (Material 3 / iOS) collapses identity + active-context into a single tap target. Tapping opens a popover with the same controls organized into:
+Reverses the icon-only choice from pass 1. Reason: on touch the label was effectively hidden, which the user explicitly called out. Pill tabs with `emoji + Hebrew word` are bigger, but seven of them still wrap to at most two rows and the kid can read them.
 
 ```
-┌─────────────────────────┐
-│  שפה:    🇷🇴   🇬🇧       │
-│  מהירות:  ×1  ×0.9 ×0.75 ×0.5 │
-│  ─────────────             │
-│  → 📚 יחידות              │
-│  ─────────────             │
-│  🔄 החלפת פרופיל         │
-│  🚪 יציאה                │
-└─────────────────────────┘
+🎴 כרטיסיות   🎯 חידון   🔊 הקשבה   🧩 התאמה
+🗣️ משפטים    📕 סיפורים  💬 שיחה   ☰ עוד
 ```
 
-Speed becomes a row of small buttons (not the cycling pill it is today). Cycling is fewer pixels but worse discoverability; in a popover where space is free we list all four.
+Active state: filled `--accent`, white text. Inactive: white surface, `--line` border. Hover/focus: border becomes `--accent`. Pressed: `scale(0.96)`.
 
-**Trade-off**: changing speed now costs one extra tap (open chip, pick value). Acceptable — kids set speed once and forget. The popover stays open until tap-outside.
+**Alternative considered**: keep icon-only but add a permanent label strip below the row. Rejected — adds height, doesn't read as one component.
 
-### Decision 3: Popover ≠ modal
+### Decision 2: `⋯` becomes `☰ עוד`
 
-The popover is a light overlay anchored to the chip, dismissed by tap-outside or `Escape`. It's not a modal — the rest of the screen stays scrollable and visible. This matches kids' apps better than a full-screen sheet for what is essentially a settings dropdown.
+Three dots are convention but ambiguous (drag handle? more? loading?). The hamburger icon plus the Hebrew word "עוד" reads as "more". Same popover behavior, same width, same admin red-dot.
 
-### Decision 4: `⋯` is also a popover, not a separate page
+### Decision 3: Category filter becomes a single trigger + popover
 
-Same UX language as the profile popover. Two tiny popovers in the shell. They share a `.shell-popover` class for one transition / one outside-click handler.
+The chip-row pattern works for 5 categories; at ~26 it's a wall. The category trigger is one button:
 
-### Decision 5: No new state fields
+```
+🌈 קטגוריה: הכול ▾
+```
 
-The popover open/close lives in a local DOM variable, not `state`. Persisting "popover is open" through a re-render is unnecessary; popovers close on any action. `state` already holds language and speedRate; nothing new to add.
+Tapping opens a `.shell-popover` (the same primitive used for the profile and `☰ עוד` menus) listing every category as a row:
 
-### Decision 6: Admin entry stays runtime-added
+```
+┌────────────────────────────────────┐
+│ 🌈  הכול                    264   │
+│ ────────────                       │
+│ 👋  ברכות                     8   │
+│ 👨‍👩‍👧  אנשים                   12   │
+│ 🎨  צבעים                    11   │
+│ 🍽️  אוכל                      14   │
+│ 🔢  מספרים                   10   │
+│ 🏠  בית                       9   │
+│   …                                │
+└────────────────────────────────────┘
+```
 
-The `applyModeVisibility()` function currently injects a `[data-mode="requests"]` button when `auth.isAdmin`. With the new design that injection happens inside the `⋯` popover instead of in the modes bar. Same pattern, smaller footprint. Notification dot stays.
+Selecting a category sets `state.category`, closes the popover, and updates the trigger label to show the chosen category's emoji + name. Tap-outside / `Escape` close like the other shell popovers.
+
+**Counts**: shown in the right column. Lightweight — single pass over the active language's vocab on popover open.
+
+**Alternative considered**: keep the chip row but require the user to swipe horizontally. Rejected — discoverability bad on iPad, breaks two-handed scanning. Categories deserve a real menu now that there are this many.
+
+### Decision 4: Every category gets an emoji; no `🏷️` fallback
+
+The `BUILTIN_CAT_EMOJI` map is extended to cover every category in the built-in RO and EN vocab. Mapping is hand-picked:
+
+```
+ברכות 👋   אנשים 👨‍👩‍👧   צבעים 🎨   אוכל 🍽️   שונות ✨
+מספרים 🔢   כינויים 👥   מילות קישור 🔗   משפחה 👨‍👩‍👧‍👦   מקום 📍   זמן ⏰
+נימוסים 🙏   בית 🏠   תיאורים 🔍   צורות 🔷   גדלים 📏   חיות 🐾   גוף 💪
+בית ספר 🎒   חוץ 🌳   מזג אוויר 🌦️   טבע 🌿   בריאות 🩺   רגשות 😊   פעלים 🏃
+בסיס 🌱
+```
+
+Custom user-added categories fall back to the **current unit's emoji** rather than `🏷️`. That is still distinctive and matches the curriculum context the kid is in.
+
+### Decision 5: Profile chip slims by one piece
+
+The chip currently shows `<emoji> <name> · <flag> · <speed> · <unit>`. Four pieces is reading-heavy and the speed is rarely glanceable. Drop speed from the face; it remains inside the popover where it lives anyway. New face:
+
+```
+🌟 איילה · 🇷🇴 · 🎨 יחידה 3
+```
+
+Guest sees `🇷🇴 · יחידה 1` + sign-in button.
+
+### Decision 6: No new state fields
+
+Category-popover open/close lives in DOM only (same pattern as profile/more popovers). `state.category` already exists. The category trigger reads from `state.category` and `getCategoryEmoji(state.category)`.
 
 ## Risks / Trade-offs
 
-- **Discoverability of `⋯`**: a tutor reading "how do I add a word?" might not realize Manage is behind it. Mitigation: title="עוד" and the menu rows have explicit Hebrew labels.
-- **Tap-target regression** if practice tabs shrink too much. Mitigation: explicit `min-width: 48px; min-height: 48px;` per tab.
-- **Speed-pill loyalty**: the cycling speed pill is fast for adults but the popover lists all values which is friendlier for a 9-year-old. Mild change.
-- **Animation budget**: two popovers + the existing modes bar = small animation surface. Keep transitions cheap (`transform` + `opacity`, no layout).
+- **Pill tabs may wrap to two rows on narrow iPads.** Acceptable — they did before, just with less information. At < 560px width the labels hide via CSS and we fall back to icons (with `title` for desktop hover).
+- **One extra tap to change category.** Previously a chip was one tap; now it's open popover, tap row. The category control was visually heaviest part of the page; trading one tap for that is a clear win.
+- **Custom category fallback to unit emoji could collide visually with the unit indicator.** Mild; the unit indicator is in the chip and the category emoji is in a different surface. Custom categories are also rare in this app.
+- **Hand-picked emoji map can drift if new categories appear.** Mitigated by the unit-emoji fallback — drift never produces the generic tag again.
 
 ## Migration / Compatibility
 
-- No data migration.
-- `localStorage` keys (`ro-kids-language`, `ro-kids-speech-rate`) keep working — the new popover reads and writes the same keys.
-- No URL changes; modes are still hash-less and `state.mode` driven.
-- Tutor instructions ("tap Manage to add a word") need updating: now "tap the ⋯ menu, then Manage".
+- No data migration. `state.category` semantics unchanged.
+- `localStorage` keys unchanged.
+- Tutor instructions: "tap קטגוריה to filter" (single trigger) instead of "scroll through chips".
+- The `.chip` class can stay for any non-filter usage (guide page, etc.); the filter row stops using it.

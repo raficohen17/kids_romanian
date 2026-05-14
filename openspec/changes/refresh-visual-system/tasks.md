@@ -2,60 +2,64 @@
 
 ## 1. Tokens
 
-- [x] 1.1 `:root` declares `--canvas`, `--surface`, `--accent`, `--accent-2`, `--reward`, `--ink`, `--muted`, `--line`, `--danger`, radii (`sm/md/lg`), shadows (`sm/md`), `--transition`.
-- [ ] 1.2 Hex literals across the file were touched on the high-impact rules (gradients, button base, card base, body); a full sweep of every remaining hex into `var(--*)` is left as a follow-up — most of those are kid-facing accent colors that should be reviewed visually before changing.
-- [x] 1.3 All `linear-gradient(...)` removed from the stylesheet and from inline style attributes.
+- [x] 1.1 `:root` declares `--canvas`, `--surface`, `--accent`, `--accent-2`, `--reward`, `--ink`, `--muted`, `--line`, `--danger`, radii, shadows, `--transition`.
+- [ ] 1.2 **Revision**: token values changed — `--accent` → indigo `#6750a4`, `--reward` → coral `#ff7a59`, add `--accent-soft #ede7f6`, `--reward-soft #ffe7df`, `--success #2e9c63`; `--line` warmed to `#e7e3dc`; canvas warmed to `#fbf6ee`.
+- [x] 1.3 All `linear-gradient(...)` removed from the stylesheet.
 
 ## 2. Typography
 
-- [x] 2.1 `<head>` adds the Google Fonts link for Heebo + Nunito with `display=swap`.
-- [x] 2.2 Body font stack updated to `"Heebo", "Nunito", ...`.
-- [ ] 2.3 A full type-scale variable set wasn't introduced; body sizes were normalized to 1.05rem and existing per-element sizes left intact for now.
-- [x] 2.4 Removed font-style italic where it appeared on buttons (the chrome ones; content `font-style:italic` on a couple of hint texts remains and was intentionally kept).
-- [x] 2.5 Body `line-height: 1.5`.
+- [x] 2.1 Google Fonts link present for Heebo + Nunito with `display=swap`.
+- [x] 2.2 Body font stack `"Heebo", "Nunito", ...`.
+- [x] 2.3 Body `line-height: 1.5`.
 
 ## 3. Body & layout shell
 
-- [x] 3.1 Body background is now `var(--canvas)`.
-- [x] 3.2 Title block reads on the new canvas; no further tweak needed.
-- [x] 3.3 Cards keep `--surface`; per-mode tint backgrounds replaced with the same surface plus the accent stripe.
+- [x] 3.1 Body background `var(--canvas)`.
+- [ ] 3.2 `h1` color → `var(--accent)`.
+- [ ] 3.3 `.panel` shadow softened (`var(--shadow-md)`); border-radius unified.
 
-## 4. Button system
+## 4. Stat cards
 
-- [x] 4.1 `.btn` is the primary (accent fill); `.btn-secondary` and `.btn-danger` defined.
-- [x] 4.2 Legacy `.btn.speak`, `.btn.prev`, `.btn.shuffle` remapped to the new tokens.
-- [x] 4.3 12px / 18px padding and `var(--radius-md)` applied across the system.
-- [x] 4.4 `:active { transform: scale(0.96); }` on `.btn`, `.btn-secondary`, `.btn-danger`.
-- [x] 4.5 Disabled state defined (40% opacity, no transform).
+- [ ] 4.1 `.stat.score` → `var(--accent)` bg, white text.
+- [ ] 4.2 `.stat.streak` → `var(--reward)` bg, white text.
+- [ ] 4.3 `.stat.total` → `var(--accent-soft)` bg, `var(--ink)` text.
 
-## 5. Card / surface treatment
+## 5. Button & chip / pill sweep
 
-- [x] 5.1 `.card` uses `--surface`, `--shadow-md`, `--radius-lg`, and a thin `--line` border.
-- [x] 5.2 4px `--accent` stripe via `::before` at the top of every `.card`.
-- [ ] 5.3 Dividers/borders across the rest of the file weren't all unified to `--line` — leaving as a polish follow-up.
+- [ ] 5.1 `.btn` hover → `var(--accent-2)`; primary fill `var(--accent)` (already).
+- [ ] 5.2 `.mode-tab:hover` border → `var(--accent)`; `:hover` removes the purple `#ba68c8`.
+- [ ] 5.3 `.mode-more`, `.profile-chip`, `.shell-popover-pill`, `.shell-popover-row` all swap purple/pink for tokens.
+- [ ] 5.4 `.chip.active` → `var(--accent-soft)` bg, `var(--accent)` border (used by guide page only after the declutter revision).
+- [ ] 5.5 `.btn-secondary:hover` and `.btn-danger:hover` already use accent/danger tokens — verify no leftover hex.
 
-## 6. Icon system
+## 6. Card / flashcard text
 
-- [x] 6.1 Inline SVG sprite added with `refresh-cw`, `log-out`, `users`, `x`, `send`, `settings` Lucide icons.
-- [x] 6.2 `.icon`, `.icon-sm`, `.icon-lg` CSS classes defined.
-- [x] 6.3 Chrome locations swapped: chat reset (now refresh-cw), profile-popover sign-out (log-out), profile-popover switch-profile (users). Remaining chrome (overlay close, send button, more settings entry points) left with their emoji — easy follow-up.
-- [x] 6.4 Content emoji preserved everywhere (modes, vocab, cards, stories, chat bubbles).
+- [ ] 6.1 `.card .he` → `var(--ink)`.
+- [ ] 6.2 `.card .ro` → `var(--accent)`.
+- [ ] 6.3 `.card .pron` → `var(--muted)`.
+- [ ] 6.4 `.card .note` → `var(--muted)` (italic preserved).
+- [ ] 6.5 `.card::before` stripe → `var(--accent)` (already).
 
-## 7. Motion
+## 7. Profile + auth + units + emoji-picker
 
-- [x] 7.1 Standard transitions use `var(--transition)` where buttons / chips / popovers transition.
-- [ ] 7.2 Confetti softening (particle count, palette) — not touched this pass; current confetti still works, palette tuning is a polish follow-up.
-- [x] 7.3 Card-enter inherits the existing 0.25s transform; no spring/bounce introduced.
-- [ ] 7.4 `+10 ⭐` callout animation — uses existing styling; new reward-palette pop is a follow-up.
+- [ ] 7.1 `.profile-chip:hover` border → `var(--accent)`; expanded bg → `var(--accent-soft)`.
+- [ ] 7.2 `.pin-card` border → `var(--line)`; `.pin-card h3` color → `var(--accent)`.
+- [ ] 7.3 `.unit-tile.current` border → `var(--reward)`, bg → `var(--reward-soft)`; `.unit-tile.unlocked:hover` border → `var(--accent)`.
+- [ ] 7.4 `.emoji-tile:hover` border → `var(--accent)`; `.emoji-tile.selected` bg → `var(--accent-soft)`, border → `var(--accent)`.
+- [ ] 7.5 `.auth-bar .ab-btn:hover` border → `var(--accent)`; `.ab-primary` already uses `var(--accent)`.
 
-## 8. Verify (user smoke-test)
+## 8. Confetti / motion
 
-- [ ] 8.1 Visual pass on every mode (flashcards, quiz, listen, match, sentences, stories, chat).
-- [ ] 8.2 Confetti still triggers on correct answers.
-- [ ] 8.3 Lucide icons render correctly in the RTL document.
-- [ ] 8.4 Nunito loads via Google Fonts; fallback works during swap window.
-- [ ] 8.5 Keyboard tab order + focus rings still work (visible focus state TBD if missing).
+- [ ] 8.1 Confetti palette JS swapped from green/saffron to coral/emerald (`--reward` + `--success`).
+- [x] 8.2 Standard transitions use `var(--transition)`.
+- [x] 8.3 Buttons `:active { transform: scale(0.96) }`.
 
-## 9. Ship
+## 9. Sweep verification
 
-- [x] 9.1 Committed alongside `declutter-app-shell` apply.
+- [ ] 9.1 Grep for the legacy purple/pink hex list; only matches inside the favicon SVG `data:` URL are allowed.
+- [ ] 9.2 Visual pass on every mode: flashcards, quiz, listen, match, sentences, stories, chat, guide, manage, user, units, requests.
+- [ ] 9.3 Confetti still triggers on correct answers and uses the new palette.
+
+## 10. Ship
+
+- [ ] 10.1 Committed alongside the declutter-app-shell revision.

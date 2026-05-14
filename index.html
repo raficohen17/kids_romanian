@@ -10,15 +10,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --canvas:  #fbf7f2;
-    --surface: #ffffff;
-    --accent:  #2e7d32;
-    --accent-2:#1b5e20;
-    --reward:  #f9a825;
-    --ink:     #1f1f1f;
-    --muted:   #6b6b6b;
-    --line:    #ececea;
-    --danger:  #c62828;
+    --canvas:      #fbf6ee;
+    --surface:     #ffffff;
+    --accent:      #6750a4;
+    --accent-2:    #574293;
+    --accent-soft: #ede7f6;
+    --reward:      #ff7a59;
+    --reward-soft: #ffe7df;
+    --success:     #2e9c63;
+    --ink:         #1f1f1f;
+    --muted:       #6b6b6b;
+    --line:        #e7e3dc;
+    --danger:      #c62828;
     --radius-sm: 8px;
     --radius-md: 14px;
     --radius-lg: 22px;
@@ -42,15 +45,15 @@
     text-align: center;
     margin-bottom: 24px;
   }
-  h1 { font-size: 2.2rem; color: #d81b60; }
+  h1 { font-size: 2.2rem; color: var(--accent); }
   h1 .flag { font-size: 1.8rem; }
-  .subtitle { color: #555; margin-top: 4px; font-size: 1.05rem; }
+  .subtitle { color: var(--muted); margin-top: 4px; font-size: 1.05rem; }
 
   .panel {
-    background: white;
+    background: var(--surface);
     border-radius: 24px;
     padding: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-md);
     max-width: 720px;
     margin: 0 auto 16px;
   }
@@ -62,7 +65,6 @@
     flex-wrap: wrap;
   }
   .stat {
-    background: #fde7f2;
     border-radius: 16px;
     padding: 10px 16px;
     text-align: center;
@@ -72,11 +74,12 @@
   }
   .stat .num { font-size: 1.6rem; display: block; }
   .stat .lbl { font-size: 0.85rem; opacity: 0.95; }
-  .stat.streak { background: var(--reward); }
   .stat.score  { background: var(--accent); }
-  .stat.total  { background: #3949ab; }
+  .stat.streak { background: var(--reward); }
+  .stat.total  { background: var(--accent-soft); color: var(--ink); }
+  .stat.total .lbl { opacity: 0.75; }
 
-  /* mode tabs */
+  /* mode tabs — pill shape with emoji + label */
   .modes {
     display: flex;
     gap: 8px;
@@ -89,48 +92,61 @@
     font-family: inherit;
   }
   .mode-tab {
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 14px;
-    width: 52px; height: 52px;
-    padding: 0;
-    font-size: 1.5rem;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
     line-height: 1;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
   }
-  .mode-tab:hover { border-color: #ba68c8; transform: translateY(-2px); }
+  .mode-tab .tab-emoji { font-size: 1.2rem; line-height: 1; }
+  .mode-tab:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .mode-tab:active { transform: scale(0.96); }
   .mode-tab.active {
     background: var(--accent);
     color: white;
     border-color: transparent;
-    box-shadow: 0 4px 12px rgba(126,87,194,0.25);
+    box-shadow: 0 4px 12px rgba(103,80,164,0.25);
   }
   .mode-more {
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 14px;
-    width: 52px; height: 52px;
-    padding: 0;
-    font-size: 1.4rem;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
     line-height: 1;
-    transition: all 0.15s;
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
   }
-  .mode-more:hover { border-color: #ba68c8; transform: translateY(-2px); }
-  .mode-more[aria-expanded="true"] { background: #f3e5f5; border-color: #ba68c8; }
+  .mode-more .tab-emoji { font-size: 1.2rem; line-height: 1; }
+  .mode-more:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .mode-more:active { transform: scale(0.96); }
+  .mode-more[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
   .mode-more.has-badge::after {
-    content: ''; position: absolute; top: 4px; right: 4px;
-    width: 10px; height: 10px; background: #e53935; border-radius: 50%;
-    border: 2px solid white;
+    content: ''; position: absolute; top: 4px; left: 4px;
+    width: 10px; height: 10px; background: var(--danger); border-radius: 50%;
+    border: 2px solid var(--surface);
   }
-  .mode-more { position: relative; }
+  @media (max-width: 560px) {
+    .mode-tab .tab-label, .mode-more .tab-label { display: none; }
+    .mode-tab, .mode-more { padding: 10px 14px; }
+  }
 
   .shell-popover {
     position: absolute; z-index: 90;
-    background: white; border: 1.5px solid #ececea;
+    background: var(--surface); border: 1.5px solid var(--line);
     border-radius: 16px; padding: 8px;
     box-shadow: 0 8px 28px rgba(0,0,0,0.15);
-    min-width: 240px; max-width: 320px;
+    min-width: 240px; max-width: 360px;
     opacity: 0; transform: translateY(-4px);
     transition: opacity 150ms ease, transform 150ms ease;
     pointer-events: none;
@@ -139,29 +155,34 @@
   .shell-popover-row {
     display: flex; align-items: center; gap: 10px;
     width: 100%; padding: 10px 12px;
-    background: white; border: none; border-radius: 10px;
-    font-family: inherit; font-size: 1rem; font-weight: bold;
-    color: #4a148c; cursor: pointer; text-align: right;
+    background: var(--surface); border: none; border-radius: 10px;
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    color: var(--ink); cursor: pointer; text-align: right;
+    transition: background var(--transition);
   }
-  .shell-popover-row:hover { background: #f3e5f5; }
+  .shell-popover-row:hover { background: var(--accent-soft); }
+  .shell-popover-row.active { background: var(--accent-soft); color: var(--accent); }
   .shell-popover-row .row-emoji { font-size: 1.2rem; }
-  .shell-popover-row .badge-dot { margin-inline-start: auto; width: 10px; height: 10px; background: #e53935; border-radius: 50%; }
-  .shell-popover-divider { height: 1px; background: #ececea; margin: 4px 0; }
+  .shell-popover-row .row-count { margin-inline-start: auto; color: var(--muted); font-weight: 400; font-size: 0.9rem; }
+  .shell-popover-row .badge-dot { margin-inline-start: auto; width: 10px; height: 10px; background: var(--danger); border-radius: 50%; }
+  .shell-popover-divider { height: 1px; background: var(--line); margin: 4px 0; }
   .shell-popover-section {
-    padding: 6px 12px; font-size: 0.85rem; color: #888;
+    padding: 6px 12px; font-size: 0.85rem; color: var(--muted);
   }
   .shell-popover-pillrow { display: flex; gap: 6px; padding: 6px 12px 10px; flex-wrap: wrap; }
   .shell-popover-pill {
-    background: white; border: 1.5px solid #e0e0e0; border-radius: 12px;
-    padding: 6px 12px; font-family: inherit; font-weight: bold; font-size: 0.95rem;
-    color: #4a148c; cursor: pointer;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 6px 12px; font-family: inherit; font-weight: 700; font-size: 0.95rem;
+    color: var(--ink); cursor: pointer;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .shell-popover-pill:hover { border-color: #ba68c8; }
+  .shell-popover-pill:hover { border-color: var(--accent); }
   .shell-popover-pill.active {
     background: var(--accent); color: white; border-color: transparent;
   }
+  .shell-popover-scroll { max-height: 56vh; overflow-y: auto; }
 
-  /* category filter */
+  /* category filter — single trigger + popover */
   .filter-row {
     display: flex;
     gap: 8px;
@@ -169,19 +190,42 @@
     justify-content: center;
     margin-bottom: 12px;
   }
+  .filter-row:empty { display: none; margin: 0; }
+  .category-trigger {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  }
+  .category-trigger .cat-emoji { font-size: 1.1rem; }
+  .category-trigger .cat-caret { color: var(--muted); margin-inline-start: 2px; }
+  .category-trigger:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .category-trigger:active { transform: scale(0.96); }
+  .category-trigger[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  /* legacy chip class — still used by the guide page */
   .chip {
-    background: #fff;
-    border: 2px solid #e0e0e0;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
     border-radius: 999px;
     padding: 6px 14px;
     font-size: 0.95rem;
+    color: var(--ink);
     cursor: pointer;
     font-family: inherit;
+    transition: border-color var(--transition), background var(--transition);
   }
+  .chip:hover { border-color: var(--accent); }
   .chip.active {
-    background: #fff59d;
-    border-color: #fbc02d;
-    font-weight: bold;
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    font-weight: 700;
   }
 
   /* flashcard */
@@ -211,11 +255,11 @@
     height: 4px; background: var(--accent);
   }
   .card .emoji { font-size: 4rem; margin-bottom: 12px; }
-  .card .he { font-size: 2.4rem; font-weight: bold; color: #4527a0; }
-  .card .ro { font-size: 2.2rem; font-weight: bold; color: #c2185b; margin-bottom: 8px; }
-  .card .pron { font-size: 1.3rem; color: #555; margin-bottom: 12px; }
-  .card .note { font-size: 0.95rem; color: #888; font-style: italic; max-width: 380px; }
-  .card .hint { color: #999; margin-top: 14px; font-size: 0.9rem; }
+  .card .he { font-size: 2.4rem; font-weight: 700; color: var(--ink); }
+  .card .ro { font-size: 2.2rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+  .card .pron { font-size: 1.3rem; color: var(--muted); margin-bottom: 12px; }
+  .card .note { font-size: 0.95rem; color: var(--muted); font-style: italic; max-width: 380px; }
+  .card .hint { color: var(--muted); margin-top: 14px; font-size: 0.9rem; opacity: 0.75; }
 
   .nav-row {
     display: flex;
@@ -285,12 +329,12 @@
   .quiz-q {
     text-align: center;
     font-size: 2rem;
-    font-weight: bold;
-    color: #4527a0;
+    font-weight: 700;
+    color: var(--accent);
     margin: 12px 0 4px;
   }
   .quiz-q .emoji { font-size: 2.2rem; display: block; margin-bottom: 4px; }
-  .quiz-q .prompt { font-size: 1rem; color: #777; font-weight: normal; margin-top: 4px;}
+  .quiz-q .prompt { font-size: 1rem; color: var(--muted); font-weight: normal; margin-top: 4px;}
   .options {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -301,29 +345,29 @@
     .options { grid-template-columns: 1fr; }
   }
   .opt {
-    background: white;
-    border: 3px solid #e1bee7;
+    background: var(--surface);
+    border: 2px solid var(--line);
     border-radius: 18px;
     padding: 16px;
     font-size: 1.3rem;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     text-align: center;
     font-family: inherit;
-    color: #4a148c;
-    transition: all 0.12s;
+    color: var(--ink);
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
   }
-  .opt:hover { background: #f3e5f5; transform: translateY(-2px); }
+  .opt:hover { background: var(--accent-soft); border-color: var(--accent); transform: translateY(-2px); }
   .opt.correct {
-    background: var(--accent);
+    background: var(--success);
     color: white;
-    border-color: #2e7d32;
+    border-color: transparent;
     animation: pop 0.4s;
   }
   .opt.wrong {
-    background: #ef5350;
+    background: var(--danger);
     color: white;
-    border-color: #c62828;
+    border-color: transparent;
     animation: shake 0.4s;
   }
   .opt:disabled { cursor: default; }
@@ -345,8 +389,8 @@
     font-weight: bold;
     min-height: 1.6rem;
   }
-  .feedback.good { color: #2e7d32; }
-  .feedback.bad  { color: #c62828; }
+  .feedback.good { color: var(--success); }
+  .feedback.bad  { color: var(--danger); }
 
   /* match game */
   .match-grid {
@@ -360,14 +404,14 @@
     min-height: 56px;
   }
   .match-grid .opt.selected {
-    background: #fff8e1;
-    border-color: #fbc02d;
+    background: var(--reward-soft);
+    border-color: var(--reward);
   }
   .match-grid .opt.matched {
-    background: var(--accent);
-    border-color: #689f38;
-    color: #33691e;
-    opacity: 0.6;
+    background: var(--success);
+    border-color: transparent;
+    color: white;
+    opacity: 0.55;
     pointer-events: none;
   }
 
@@ -376,17 +420,17 @@
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 8px 16px;
-    background: #fff8e1;
+    background: var(--accent-soft);
     border-radius: 16px;
     padding: 16px 20px;
     margin-top: 8px;
   }
   .guide .letter {
-    font-weight: bold;
-    color: #c2185b;
+    font-weight: 700;
+    color: var(--accent);
     font-size: 1.2rem;
   }
-  .guide .desc { color: #555; }
+  .guide .desc { color: var(--ink); }
 
   /* confetti */
   .confetti {
@@ -405,7 +449,7 @@
     padding: 24px;
   }
   .end-screen .big { font-size: 5rem; }
-  .end-screen h2 { color: #d81b60; margin: 12px 0; }
+  .end-screen h2 { color: var(--accent); margin: 12px 0; }
 
   /* listen mode */
   .listen-area {
@@ -420,7 +464,7 @@
     height: 140px;
     font-size: 4rem;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(67, 160, 71, 0.4);
+    box-shadow: 0 8px 24px rgba(103,80,164,0.35);
     margin: 20px auto;
     display: block;
     transition: transform 0.15s;
@@ -431,13 +475,13 @@
   /* sentences */
   .sentence-card { padding: 28px 20px; }
   .words-breakdown {
-    background: #fff8e1;
+    background: var(--accent-soft);
     border-radius: 20px;
     padding: 16px 18px;
     margin-top: 18px;
     text-align: right;
   }
-  .words-breakdown h3 { color: #c2185b; margin-bottom: 6px; }
+  .words-breakdown h3 { color: var(--accent); margin-bottom: 6px; }
   .word-list {
     display: flex;
     flex-wrap: wrap;
@@ -445,8 +489,8 @@
     margin-top: 8px;
   }
   .word-chip {
-    background: white;
-    border: 2px solid #e0e0e0;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
     border-radius: 14px;
     padding: 8px 12px;
     font-family: inherit;
@@ -456,36 +500,37 @@
     flex: 1 1 calc(50% - 8px);
     min-width: 180px;
   }
-  .word-chip.known { border-color: #aed581; background: #f1f8e9; }
-  .word-chip.new   { border-color: #ffb74d; background: #fff3e0; }
-  .word-chip b { color: #c2185b; }
-  .word-pron { display:block; color: #777; font-size: 0.9rem; margin-top: 2px; }
+  .word-chip.known { border-color: var(--success); background: rgba(46,156,99,0.08); }
+  .word-chip.new   { border-color: var(--reward); background: var(--reward-soft); }
+  .word-chip b { color: var(--accent); }
+  .word-pron { display:block; color: var(--muted); font-size: 0.9rem; margin-top: 2px; }
   .legend {
     display:flex; gap:14px; justify-content:center; margin-top:12px;
-    font-size:0.9rem; color:#555;
+    font-size:0.9rem; color:var(--muted);
   }
   .legend .dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-left:4px; vertical-align:middle; }
-  .legend .dot.known { background:#aed581; }
-  .legend .dot.new   { background:#ffb74d; }
+  .legend .dot.known { background:var(--success); }
+  .legend .dot.new   { background:var(--reward); }
 
   /* stories */
   .story-card {
-    background: white; border: 4px solid #ce93d8; border-radius: 24px;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 24px;
     padding: 22px 18px; margin-top: 12px; text-align: center;
   }
-  .story-title { color:#6a1b9a; font-size: 1.4rem; font-weight: bold; margin-bottom: 12px; }
+  .story-title { color:var(--accent); font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
   .story-text {
-    direction: ltr; font-size: 1.7rem; line-height: 2.2; color:#333;
+    direction: ltr; font-size: 1.7rem; line-height: 2.2; color:var(--ink);
     text-align: center; padding: 8px 0;
   }
   .story-sentence { display:block; margin: 8px 0; position: relative; }
   .story-sentence-play {
-    background: #e8f5e9;
-    border: 2px solid #66bb6a; border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--accent); color: var(--accent);
+    border-radius: 50%;
     width: 34px; height: 34px; padding: 0;
     margin-inline-end: 8px; cursor: pointer; font-size: 1rem;
     vertical-align: middle;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     transition: transform 0.1s;
   }
   .story-sentence-play:hover { transform: scale(1.08); }
@@ -497,16 +542,17 @@
   }
   .story-word.active {
     background: var(--reward);
-    border-color: #fbc02d; box-shadow: 0 2px 6px rgba(251,192,45,0.4);
+    border-color: transparent; color: white;
+    box-shadow: 0 2px 6px rgba(255,122,89,0.4);
   }
-  .story-word.tap-open { background:#fff3e0; border-color:#ffb74d; }
+  .story-word.tap-open { background:var(--reward-soft); border-color:var(--reward); }
   @media (hover:hover) {
-    .story-word:hover { background:#f3e5f5; border-color:#ba68c8; }
+    .story-word:hover { background:var(--accent-soft); border-color:var(--accent); }
   }
   .story-tooltip {
     position: absolute; bottom: calc(100% + 6px); left: 50%;
     transform: translateX(-50%);
-    background: #4a148c; color: white;
+    background: var(--ink); color: white;
     padding: 8px 14px; border-radius: 12px;
     font-size: 1rem; line-height: 1.3; white-space: nowrap;
     direction: rtl; text-align: center;
@@ -515,24 +561,24 @@
     z-index: 50;
   }
   .story-tooltip .tt-pron {
-    display:block; font-size: 0.9rem; color:#e1bee7; margin-top:2px;
+    display:block; font-size: 0.9rem; color:rgba(255,255,255,0.7); margin-top:2px;
   }
   .story-tooltip::after {
     content: ''; position: absolute; top: 100%; left: 50%;
     transform: translateX(-50%);
-    border: 6px solid transparent; border-top-color: #4a148c;
+    border: 6px solid transparent; border-top-color: var(--ink);
   }
   @media (hover:hover) {
     .story-word:hover .story-tooltip { opacity: 1; }
   }
   .story-word.tap-open .story-tooltip { opacity: 1; }
   .story-pron {
-    direction: rtl; font-size: 1.1rem; color:#666;
+    direction: rtl; font-size: 1.1rem; color:var(--muted);
     margin-top: 12px; line-height: 1.6;
   }
   .story-pron-line { display:block; }
   .story-he {
-    color:#c2185b; font-size: 1.15rem; margin-top: 14px;
+    color:var(--ink); font-size: 1.15rem; margin-top: 14px;
     line-height: 1.6; direction: rtl;
   }
   .story-he-line { display:block; }
@@ -546,11 +592,12 @@
     display: flex; justify-content: flex-end;
   }
   .chat-reset {
-    background: white; border: 2px solid #ef9a9a; border-radius: 12px;
-    color: #c62828; padding: 6px 12px; cursor: pointer;
-    font-family: inherit; font-weight: bold; font-size: 0.9rem;
+    background: var(--surface); border: 1.5px solid var(--danger); border-radius: 12px;
+    color: var(--danger); padding: 6px 12px; cursor: pointer;
+    font-family: inherit; font-weight: 700; font-size: 0.9rem;
+    transition: background var(--transition), color var(--transition);
   }
-  .chat-reset:hover:not(:disabled) { background: #ffebee; }
+  .chat-reset:hover:not(:disabled) { background: var(--danger); color: white; }
   .chat-reset:disabled { opacity: 0.4; cursor: not-allowed; }
   .chat-list {
     background: rgba(255,255,255,0.6); border-radius: 16px;
@@ -563,14 +610,14 @@
     position: relative;
   }
   .chat-user {
-    background: #e1f5fe;
-    color: #01579b; align-self: flex-start;
+    background: var(--accent-soft);
+    color: var(--accent); align-self: flex-start;
     border-bottom-left-radius: 6px;
     direction: ltr; text-align: left;
   }
   .chat-llm {
-    background: #fff7e6;
-    color: #4a148c; align-self: flex-end;
+    background: var(--reward-soft);
+    color: var(--ink); align-self: flex-end;
     border-bottom-right-radius: 6px;
     padding-top: 32px;
   }
@@ -580,17 +627,18 @@
     display: flex; gap: 4px;
   }
   .chat-tx {
-    background: white; border: 1px solid #ce93d8;
+    background: var(--surface); border: 1px solid var(--line);
     border-radius: 50%; width: 26px; height: 26px;
     padding: 0; cursor: pointer; font-size: 0.85rem;
     line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color var(--transition), background var(--transition);
   }
-  .chat-tx:hover { background: #f3e5f5; }
+  .chat-tx:hover { background: var(--accent-soft); border-color: var(--accent); }
   .chat-bubble-he {
     margin-top: 8px; padding-top: 8px;
-    border-top: 1px dashed #ba68c8;
+    border-top: 1px dashed var(--line);
     direction: rtl; text-align: right;
-    color: #6a1b9a; font-size: 1rem;
+    color: var(--ink); font-size: 1rem;
   }
   .chat-pending {
     display: inline-flex; gap: 6px; align-items: center;
@@ -598,7 +646,7 @@
   }
   .chat-pending .dot {
     width: 8px; height: 8px; border-radius: 50%;
-    background: #ba68c8; animation: chatBounce 1.2s infinite ease-in-out;
+    background: var(--accent); animation: chatBounce 1.2s infinite ease-in-out;
   }
   .chat-pending .dot:nth-child(2) { animation-delay: 0.2s; }
   .chat-pending .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -611,13 +659,15 @@
   }
   .chat-composer input[type="text"] {
     flex: 1; padding: 10px 14px; font-size: 1.05rem;
-    border: 2px solid #ba68c8; border-radius: 16px;
+    border: 1.5px solid var(--line); border-radius: 16px;
     direction: ltr; font-family: inherit;
+    transition: border-color var(--transition);
   }
+  .chat-composer input[type="text"]:focus { border-color: var(--accent); outline: none; }
   .chat-composer input[type="text"]:disabled { opacity: 0.6; }
   .chat-error {
-    background: #ffebee; color: #c62828;
-    border: 2px solid #ef9a9a; border-radius: 14px;
+    background: rgba(198,40,40,0.08); color: var(--danger);
+    border: 1.5px solid var(--danger); border-radius: 14px;
     padding: 8px 12px; font-size: 0.95rem; text-align: center;
   }
 
@@ -626,42 +676,46 @@
     display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap;
   }
   .m-tab {
-    background:white; border:3px solid #e0e0e0; border-radius:14px;
-    padding:8px 16px; font-weight:bold; cursor:pointer; font-family:inherit; font-size:1rem;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+    padding:8px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:1rem;
+    color: var(--ink);
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .m-tab.active { background:var(--reward); color:white; border-color:transparent; }
-  .m-heading { color:#4527a0; margin:18px 0 10px; }
+  .m-tab:hover { border-color: var(--accent); }
+  .m-tab.active { background:var(--accent); color:white; border-color:transparent; }
+  .m-heading { color:var(--accent); margin:18px 0 10px; }
   .form-grid {
     display:grid; grid-template-columns: 1fr 1fr; gap:10px;
   }
   @media (max-width:520px) { .form-grid { grid-template-columns: 1fr; } }
   .form-grid label {
-    display:flex; flex-direction:column; font-weight:bold; color:#555; font-size:0.95rem; gap:4px;
+    display:flex; flex-direction:column; font-weight:700; color:var(--muted); font-size:0.95rem; gap:4px;
   }
   .form-grid input, .words-textarea {
-    border:2px solid #e0e0e0; border-radius:12px; padding:10px 12px; font-size:1.05rem;
-    font-family:inherit; outline:none; transition: border-color 0.15s;
+    border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; font-size:1.05rem;
+    font-family:inherit; outline:none; transition: border-color var(--transition);
   }
-  .form-grid input:focus, .words-textarea:focus { border-color:#ba68c8; }
+  .form-grid input:focus, .words-textarea:focus { border-color:var(--accent); }
   .words-textarea { width:100%; min-height:120px; margin-top:8px; resize:vertical; direction:ltr; }
-  .req { color:#e53935; }
+  .req { color:var(--danger); }
   .m-table {
-    width:100%; border-collapse:collapse; margin-top:8px; background:white; border-radius:12px; overflow:hidden;
+    width:100%; border-collapse:collapse; margin-top:8px; background:var(--surface); border-radius:12px; overflow:hidden;
   }
-  .m-table th { background:#f3e5f5; color:#4a148c; padding:8px 6px; font-size:0.9rem; text-align:right; }
-  .m-table td { padding:8px 6px; border-bottom:1px solid #f0f0f0; font-size:0.95rem; }
+  .m-table th { background:var(--accent-soft); color:var(--accent); padding:8px 6px; font-size:0.9rem; text-align:right; }
+  .m-table td { padding:8px 6px; border-bottom:1px solid var(--line); font-size:0.95rem; }
   .row-actions { display:flex; gap:4px; justify-content:flex-end; }
   .mini {
-    background:white; border:2px solid #e0e0e0; border-radius:10px; padding:4px 8px;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:10px; padding:4px 8px;
     cursor:pointer; font-size:0.95rem; font-family:inherit;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .mini:hover { border-color:#ba68c8; }
-  .mini.danger:hover { border-color:#e53935; background:#ffebee; }
-  .empty-note { color:#888; text-align:center; padding:16px; background:#fafafa; border-radius:12px; }
+  .mini:hover { border-color:var(--accent); }
+  .mini.danger:hover { border-color:var(--danger); color:var(--danger); background:rgba(198,40,40,0.06); }
+  .empty-note { color:var(--muted); text-align:center; padding:16px; background:var(--canvas); border-radius:12px; }
   .io-row { display:flex; gap:8px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
-  .builtin-list { margin-top:16px; background:#fafafa; border-radius:12px; padding:8px 14px; }
-  .builtin-list summary { cursor:pointer; font-weight:bold; color:#555; }
-  code { background:#f3e5f5; padding:2px 6px; border-radius:6px; font-size:0.9rem; }
+  .builtin-list { margin-top:16px; background:var(--canvas); border-radius:12px; padding:8px 14px; }
+  .builtin-list summary { cursor:pointer; font-weight:700; color:var(--muted); }
+  code { background:var(--accent-soft); color:var(--accent); padding:2px 6px; border-radius:6px; font-size:0.9rem; }
 
   /* user / admin tab */
   .user-stats {
@@ -669,93 +723,95 @@
     gap:10px; margin-bottom:20px;
   }
   .ustat {
-    background: #fde7f2;
+    background: var(--accent-soft);
     border-radius:16px; padding:14px 8px; text-align:center;
-    color:#4a148c; font-weight:bold;
+    color:var(--accent); font-weight:700;
   }
-  .ustat .big { font-size:1.8rem; color:#d81b60; }
+  .ustat .big { font-size:1.8rem; color:var(--accent); }
 
   .admin-box {
-    background: #fafafa;
-    border: 2px dashed #ce93d8;
+    background: var(--canvas);
+    border: 2px dashed var(--line);
     border-radius:18px; padding:14px 18px;
   }
   .admin-box > summary {
-    cursor:pointer; font-weight:bold; color:#6a1b9a; font-size:1.1rem;
+    cursor:pointer; font-weight:700; color:var(--accent); font-size:1.1rem;
     padding:4px 0;
   }
   .admin-body { padding-top:8px; }
   .ext-row { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
   .ext-textarea {
     width:100%; min-height:180px; padding:12px 14px; border-radius:14px;
-    border:2px solid #e0e0e0; font-family: "SF Mono", Menlo, Consolas, monospace;
+    border:1.5px solid var(--line); font-family: "SF Mono", Menlo, Consolas, monospace;
     font-size:0.95rem; outline:none; resize:vertical;
+    transition: border-color var(--transition);
   }
-  .ext-textarea:focus { border-color:#ba68c8; }
+  .ext-textarea:focus { border-color:var(--accent); }
   .preview-box {
-    background:#fff8e1; border-radius:16px; padding:14px 16px; margin-top:14px;
-    border:2px solid #ffd54f;
+    background:var(--reward-soft); border-radius:16px; padding:14px 16px; margin-top:14px;
+    border:1.5px solid var(--reward);
   }
-  .preview-box h4 { color:#e65100; margin-bottom:6px; }
+  .preview-box h4 { color:var(--ink); margin-bottom:6px; }
 
   .pin-card {
-    background:#fff; border:2px solid #e1bee7; border-radius:18px;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:18px;
     padding:18px 20px; margin-top:8px;
   }
-  .pin-card h3 { color:#6a1b9a; margin-bottom:8px; }
+  .pin-card h3 { color:var(--accent); margin-bottom:8px; }
   .pin-row {
     display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;
   }
   .pin-row input {
-    border:2px solid #e0e0e0; border-radius:12px; padding:10px 14px;
+    border:1.5px solid var(--line); border-radius:12px; padding:10px 14px;
     font-size:1.4rem; font-family:inherit; outline:none;
     width:140px; text-align:center; letter-spacing:0.4em; direction:ltr;
+    transition: border-color var(--transition);
   }
-  .pin-row input:focus { border-color:#ba68c8; }
-  .pin-error { color:#c62828; font-weight:bold; margin-top:8px; min-height:1.2em; }
+  .pin-row input:focus { border-color:var(--accent); }
+  .pin-error { color:var(--danger); font-weight:700; margin-top:8px; min-height:1.2em; }
 
   /* profile chip (replaces lang/speed/unit pills + greet + buttons) */
   .profile-chip {
-    background: white;
-    border: 1.5px solid #ececea;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
     border-radius: 18px;
     padding: 6px 14px;
     font-family: inherit;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 0.95rem;
-    color: #1f1f1f;
+    color: var(--ink);
     cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    transition: border-color 0.15s, transform 0.15s;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
   }
-  .profile-chip:hover { border-color: #ba68c8; transform: translateY(-1px); }
-  .profile-chip[aria-expanded="true"] { background: #f3e5f5; border-color: #ba68c8; }
+  .profile-chip:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .profile-chip[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
   .profile-chip .chip-emoji { font-size: 1.1rem; }
-  .profile-chip .chip-dot { color: #b5b5b5; margin: 0 2px; }
+  .profile-chip .chip-dot { color: var(--line); margin: 0 2px; }
   .units-grid {
     display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap:12px; max-width:720px; margin:0 auto;
   }
   .unit-tile {
-    background:white; border:3px solid #e0e0e0; border-radius:18px;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:18px;
     padding:14px 12px; text-align:right; cursor:pointer; font-family:inherit;
-    transition:transform 0.15s, border-color 0.15s;
+    transition:transform 0.15s, border-color 0.15s, background var(--transition);
   }
-  .unit-tile.unlocked:hover { transform:translateY(-2px); border-color:#ba68c8; }
-  .unit-tile.locked { opacity:0.5; cursor:not-allowed; background:#fafafa; }
-  .unit-tile.current { border-color:#fbc02d; background:#fff7e6; }
-  .unit-tile .unit-num   { font-size:1.05rem; font-weight:bold; color:#4527a0; }
-  .unit-tile .unit-name  { font-size:1.2rem; font-weight:bold; color:#c2185b; margin-top:4px; }
-  .unit-tile .unit-meta  { font-size:0.85rem; color:#666; margin-top:4px; }
-  .unit-tile .unit-hint  { font-size:0.85rem; color:#888; margin-top:4px; font-style:italic; }
-  .unit-tile.current .unit-hint { color:#e65100; font-weight:bold; font-style:normal; }
+  .unit-tile.unlocked:hover { transform:translateY(-2px); border-color:var(--accent); }
+  .unit-tile.locked { opacity:0.5; cursor:not-allowed; background:var(--canvas); }
+  .unit-tile.current { border-color:var(--reward); background:var(--reward-soft); }
+  .unit-tile .unit-num   { font-size:1.05rem; font-weight:700; color:var(--muted); }
+  .unit-tile .unit-name  { font-size:1.2rem; font-weight:700; color:var(--ink); margin-top:4px; }
+  .unit-tile .unit-meta  { font-size:0.85rem; color:var(--muted); margin-top:4px; }
+  .unit-tile .unit-hint  { font-size:0.85rem; color:var(--muted); margin-top:4px; font-style:italic; }
+  .unit-tile.current .unit-hint { color:var(--reward); font-weight:700; font-style:normal; }
 
   .unit-unlock-toast {
     position:fixed; left:50%; top:30%; transform:translateX(-50%);
     background:var(--reward);
     color:white; padding:18px 28px; border-radius:18px;
-    font-size:1.3rem; font-weight:bold; text-align:center;
-    box-shadow:0 12px 40px rgba(255,112,67,0.4);
+    font-size:1.3rem; font-weight:700; text-align:center;
+    box-shadow:0 12px 40px rgba(255,122,89,0.45);
     z-index:9999; animation: unitPop 0.4s ease-out;
   }
   @keyframes unitPop {
@@ -768,13 +824,14 @@
     display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; margin-top:10px;
   }
   .emoji-tile {
-    background:white; border:2px solid #e0e0e0; border-radius:14px;
-    font-size:2rem; padding:8px; cursor:pointer; transition:transform 0.1s;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+    font-size:2rem; padding:8px; cursor:pointer;
+    transition:transform 0.1s, border-color var(--transition), background var(--transition);
     aspect-ratio: 1;
     display:flex; align-items:center; justify-content:center;
   }
-  .emoji-tile:hover { transform:scale(1.1); border-color:#ba68c8; }
-  .emoji-tile.selected { background:#fde7f2; border-color:#ba68c8; box-shadow:0 0 0 3px rgba(186,104,200,0.3); }
+  .emoji-tile:hover { transform:scale(1.1); border-color:var(--accent); }
+  .emoji-tile.selected { background:var(--accent-soft); border-color:var(--accent); box-shadow:0 0 0 3px rgba(103,80,164,0.25); }
 
   /* auth bar + overlays */
   /* `display: flex` etc. on these elements overrides the [hidden] UA rule,
@@ -785,35 +842,38 @@
     display:flex; justify-content:flex-end; align-items:center; gap:8px;
     max-width:720px; margin:0 auto 12px; flex-wrap:wrap;
   }
-  .auth-bar .ab-greet { color:#555; font-weight:bold; }
+  .auth-bar .ab-greet { color:var(--muted); font-weight:700; }
   .auth-bar .ab-btn {
-    background:white; border:2px solid #e0e0e0; border-radius:14px;
-    padding:6px 14px; cursor:pointer; font-family:inherit; font-weight:bold;
-    color:#4a148c; font-size:0.95rem;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+    padding:6px 14px; cursor:pointer; font-family:inherit; font-weight:700;
+    color:var(--ink); font-size:0.95rem;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .auth-bar .ab-btn:hover { border-color:#ba68c8; }
+  .auth-bar .ab-btn:hover { border-color:var(--accent); }
   .auth-bar .ab-primary {
     background:var(--accent); color:white; border-color:transparent;
   }
+  .auth-bar .ab-primary:hover { background:var(--accent-2); }
 
   .auth-overlay {
     position:fixed; inset:0; z-index:1000;
-    background: rgba(251,247,242,0.97);
+    background: rgba(251,246,238,0.97);
     display:flex; align-items:center; justify-content:center; padding:16px; overflow-y:auto;
   }
   .auth-card {
-    background:white; border-radius:24px; padding:24px 28px;
+    background:var(--surface); border-radius:24px; padding:24px 28px;
     max-width:560px; width:100%;
     box-shadow:0 20px 60px rgba(0,0,0,0.15);
     text-align:center;
   }
-  .auth-card h2 { color:#d81b60; margin-bottom:8px; }
-  .auth-card p.muted { color:#666; margin-bottom:14px; }
+  .auth-card h2 { color:var(--accent); margin-bottom:8px; }
+  .auth-card p.muted { color:var(--muted); margin-bottom:14px; }
   .auth-card input[type=email], .auth-card input[type=text] {
-    width:100%; padding:12px 14px; border:2px solid #e0e0e0; border-radius:14px;
+    width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:14px;
     font-size:1.05rem; font-family:inherit; outline:none;
+    transition: border-color var(--transition);
   }
-  .auth-card input:focus { border-color:#ba68c8; }
+  .auth-card input:focus { border-color:var(--accent); }
   .auth-card .row { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
 
   .picker-grid {
@@ -822,14 +882,14 @@
   }
   .picker-tile {
     background:var(--surface);
-    border:3px solid #ce93d8; border-radius:20px;
+    border:1.5px solid var(--line); border-radius:20px;
     padding:18px 12px; text-align:center; cursor:pointer; font-family:inherit;
-    transition:transform 0.15s;
+    transition:transform 0.15s, border-color var(--transition);
   }
-  .picker-tile:hover { transform:translateY(-2px); }
+  .picker-tile:hover { transform:translateY(-2px); border-color:var(--accent); }
   .picker-tile .pt-emoji { font-size:3rem; display:block; }
-  .picker-tile .pt-name  { font-weight:bold; color:#4527a0; margin-top:4px; }
-  .picker-tile .pt-lock  { font-size:0.85rem; color:#888; margin-top:2px; }
+  .picker-tile .pt-name  { font-weight:700; color:var(--ink); margin-top:4px; }
+  .picker-tile .pt-lock  { font-size:0.85rem; color:var(--muted); margin-top:2px; }
   .picker-tile.add { border-style:dashed; }
 
   .contact-modal {
@@ -839,31 +899,32 @@
   }
   .contact-modal .auth-card { text-align:right; }
   .contact-modal textarea {
-    width:100%; min-height:80px; padding:10px 12px; border:2px solid #e0e0e0;
+    width:100%; min-height:80px; padding:10px 12px; border:1.5px solid var(--line);
     border-radius:12px; font-family:inherit; font-size:1rem; outline:none; resize:vertical;
+    transition: border-color var(--transition);
   }
-  .contact-modal textarea:focus { border-color:#ba68c8; }
+  .contact-modal textarea:focus { border-color:var(--accent); }
   .honeypot {
     position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0;
   }
 
   .request-row {
-    background:white; border:1px solid #eee; border-radius:14px;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
     padding:10px 14px; margin-bottom:8px;
   }
-  .request-row.pending { border-right:6px solid #ffb74d; }
-  .request-row.approved { border-right:6px solid #aed581; opacity:0.7; }
-  .request-row.rejected { border-right:6px solid #ef9a9a; opacity:0.5; }
-  .request-meta { color:#888; font-size:0.85rem; }
+  .request-row.pending { border-right:6px solid var(--reward); }
+  .request-row.approved { border-right:6px solid var(--success); opacity:0.7; }
+  .request-row.rejected { border-right:6px solid var(--danger); opacity:0.5; }
+  .request-meta { color:var(--muted); font-size:0.85rem; }
   .req-dot {
     display:inline-block; width:10px; height:10px; border-radius:50%;
-    background:#e53935; vertical-align:middle; margin-right:6px;
-    box-shadow:0 0 0 3px rgba(229,57,53,0.25);
+    background:var(--danger); vertical-align:middle; margin-right:6px;
+    box-shadow:0 0 0 3px rgba(198,40,40,0.25);
   }
 
   footer {
     text-align: center;
-    color: #888;
+    color: var(--muted);
     font-size: 0.85rem;
     margin-top: 24px;
   }
@@ -934,14 +995,14 @@
 
 <div class="panel">
   <div class="modes" id="modesBar">
-    <button data-mode="flash" class="mode-tab active" aria-label="כרטיסיות" title="כרטיסיות">🎴</button>
-    <button data-mode="quiz" class="mode-tab" aria-label="חידון" title="חידון">🎯</button>
-    <button data-mode="listen" class="mode-tab" aria-label="הקשבה" title="הקשבה">🔊</button>
-    <button data-mode="match" class="mode-tab" aria-label="התאמה" title="התאמה">🧩</button>
-    <button data-mode="sentences" class="mode-tab" aria-label="משפטים" title="משפטים">🗣️</button>
-    <button data-mode="stories" class="mode-tab" aria-label="סיפורים" title="סיפורים">📕</button>
-    <button data-mode="chat" class="mode-tab" data-auth-only hidden aria-label="שיחה" title="שיחה">💬</button>
-    <button class="mode-more" id="modesMoreBtn" aria-haspopup="true" aria-expanded="false" aria-label="עוד" title="עוד">⋯</button>
+    <button data-mode="flash" class="mode-tab active" aria-label="כרטיסיות" title="כרטיסיות"><span class="tab-emoji" aria-hidden="true">🎴</span><span class="tab-label">כרטיסיות</span></button>
+    <button data-mode="quiz" class="mode-tab" aria-label="חידון" title="חידון"><span class="tab-emoji" aria-hidden="true">🎯</span><span class="tab-label">חידון</span></button>
+    <button data-mode="listen" class="mode-tab" aria-label="הקשבה" title="הקשבה"><span class="tab-emoji" aria-hidden="true">🔊</span><span class="tab-label">הקשבה</span></button>
+    <button data-mode="match" class="mode-tab" aria-label="התאמה" title="התאמה"><span class="tab-emoji" aria-hidden="true">🧩</span><span class="tab-label">התאמה</span></button>
+    <button data-mode="sentences" class="mode-tab" aria-label="משפטים" title="משפטים"><span class="tab-emoji" aria-hidden="true">🗣️</span><span class="tab-label">משפטים</span></button>
+    <button data-mode="stories" class="mode-tab" aria-label="סיפורים" title="סיפורים"><span class="tab-emoji" aria-hidden="true">📕</span><span class="tab-label">סיפורים</span></button>
+    <button data-mode="chat" class="mode-tab" data-auth-only hidden aria-label="שיחה" title="שיחה"><span class="tab-emoji" aria-hidden="true">💬</span><span class="tab-label">שיחה</span></button>
+    <button class="mode-more" id="modesMoreBtn" aria-haspopup="true" aria-expanded="false" aria-label="עוד" title="עוד"><span class="tab-emoji" aria-hidden="true">☰</span><span class="tab-label">עוד</span></button>
   </div>
 
   <div class="filter-row" id="filters"></div>
@@ -951,7 +1012,7 @@
 
 <footer>
   נבנה באהבה ❤️ • לחיצה על המילה הזרה = שמיעת ההגייה<br>
-  <a href="#" id="contact-link" style="color:#7e57c2;">רוצה את זה למשפחה שלך? בקשי גישה</a>
+  <a href="#" id="contact-link" style="color:var(--accent);">רוצה את זה למשפחה שלך? בקשי גישה</a>
 </footer>
 
 <div id="auth-overlay" class="auth-overlay" hidden></div>
@@ -3787,7 +3848,21 @@ function getStories() {
 function getStoriesInScope() { return getStories().filter(inUnitScope); }
 
 const BUILTIN_VOCAB = VOCAB;  // alias — practice modes always use the merged list via getVocab()
-const BUILTIN_CAT_EMOJI = { "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨" };
+const BUILTIN_CAT_EMOJI = {
+  // Original five
+  "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨",
+  // Numbers / language tools
+  "מספרים": "🔢", "כינויים": "👥", "מילות קישור": "🔗", "בסיס": "🌱",
+  // Family / home / place / time
+  "משפחה": "👨‍👩‍👧‍👦", "בית": "🏠", "מקום": "📍", "זמן": "⏰", "נימוסים": "🙏",
+  // Descriptors / shapes / sizes
+  "תיאורים": "🔍", "צורות": "🔷", "גדלים": "📏",
+  // Nature / animals / body / school / outdoors / weather
+  "חיות": "🐾", "גוף": "💪", "בית ספר": "🎒", "חוץ": "🌳", "מזג אוויר": "🌦️",
+  "טבע": "🌿", "בריאות": "🩺",
+  // Emotions / verbs
+  "רגשות": "😊", "פעלים": "🏃",
+};
 const USER_VOCAB_KEY = "ro-kids-user-vocab-v1";
 
 // User-added words, persisted to localStorage. Shape: { id, he, ro, pron, cat, emoji, note }
@@ -3813,7 +3888,10 @@ function getCategories() {
 }
 function getCategoryEmoji(cat) {
   if (cat === "הכול") return "🌈";
-  return BUILTIN_CAT_EMOJI[cat] || "🏷️";
+  if (BUILTIN_CAT_EMOJI[cat]) return BUILTIN_CAT_EMOJI[cat];
+  // Custom user categories fall back to the current unit's emoji — never a generic tag.
+  try { return unitOf(state.currentUnit).emoji || "🌱"; }
+  catch (_) { return "🌱"; }
 }
 
 // ====== Curriculum units ======
@@ -3988,16 +4066,59 @@ function pickFeedback(good) {
 }
 
 // ====== Render: filters ======
+// Single trigger button that opens a popover listing every category.
 function renderFilters() {
   const wrap = document.getElementById("filters");
   if (["guide", "manage", "sentences", "user", "units", "requests"].includes(state.mode)) { wrap.innerHTML = ""; return; }
+  const cat = state.category || "הכול";
+  wrap.innerHTML = `
+    <button class="category-trigger" id="categoryTrigger" aria-haspopup="true" aria-expanded="false">
+      <span class="cat-emoji" aria-hidden="true">${getCategoryEmoji(cat)}</span>
+      <span>קטגוריה: ${escapeHtml(cat)}</span>
+      <span class="cat-caret" aria-hidden="true">▾</span>
+    </button>
+  `;
+  const trigger = document.getElementById("categoryTrigger");
+  if (trigger) trigger.onclick = (e) => { e.stopPropagation(); toggleCategoryPopover(); };
+}
+
+function toggleCategoryPopover() {
+  let pop = document.getElementById('categoryPopover');
+  const trigger = document.getElementById('categoryTrigger');
+  if (!trigger) return;
+  const wasOpen = pop && pop.getAttribute('data-open') === 'true';
+  closeShellPopovers();
+  if (wasOpen) return;
+  if (!pop) {
+    pop = document.createElement('div');
+    pop.id = 'categoryPopover';
+    pop.className = 'shell-popover';
+    pop.dataset.trigger = 'categoryTrigger';
+    pop.setAttribute('role', 'menu');
+    document.body.appendChild(pop);
+  }
+  refreshCategoryPopover(pop);
+  positionPopoverBelow(pop, trigger);
+  pop.setAttribute('data-open', 'true');
+  trigger.setAttribute('aria-expanded', 'true');
+}
+
+function refreshCategoryPopover(pop) {
   const cats = getCategories();
-  wrap.innerHTML = cats.map(c =>
-    `<button class="chip ${state.category === c ? "active" : ""}" data-cat="${c}">${getCategoryEmoji(c)} ${c}</button>`
-  ).join("");
-  wrap.querySelectorAll(".chip").forEach(b => {
+  const all = getVocab();
+  const countFor = (c) => c === "הכול" ? all.length : all.filter(w => w.cat === c).length;
+  const rows = cats.map(c => `
+    <button class="shell-popover-row ${state.category === c ? 'active' : ''}" data-cat="${escapeHtml(c)}" role="menuitem">
+      <span class="row-emoji" aria-hidden="true">${getCategoryEmoji(c)}</span>
+      <span>${escapeHtml(c)}</span>
+      <span class="row-count">${countFor(c)}</span>
+    </button>
+  `).join("");
+  pop.innerHTML = `<div class="shell-popover-scroll">${rows}</div>`;
+  pop.querySelectorAll('[data-cat]').forEach(b => {
     b.onclick = () => {
       state.category = b.dataset.cat;
+      closeShellPopovers();
       resetModeState();
       render();
     };
@@ -4032,7 +4153,7 @@ function renderFlash() {
 
   return `
     <div class="flashcard-area">
-      <p style="color:#888; font-size:0.95rem;">כרטיסייה ${state.flashIdx + 1} מתוך ${list.length} ${state.category !== "הכול" ? "(" + state.category + ")" : ""}</p>
+      <p style="color:var(--muted); font-size:0.95rem;">כרטיסייה ${state.flashIdx + 1} מתוך ${list.length} ${state.category !== "הכול" ? "(" + state.category + ")" : ""}</p>
       <div class="card" id="card">
         <div class="emoji">${word.emoji}</div>
         ${flipped ? `
@@ -4171,9 +4292,9 @@ function renderListen() {
   if (!state.listenCurrent) newListen();
   return `
     <div class="listen-area">
-      <p style="font-size:1.1rem; color:#555;">לחצי על הרמקול ונסי לזהות את המילה 👂</p>
+      <p style="font-size:1.1rem; color:var(--muted);">לחצי על הרמקול ונסי לזהות את המילה 👂</p>
       <button class="listen-btn" id="playRo">🔊</button>
-      <p style="color:#999; font-size:0.95rem;">אפשר ללחוץ שוב כמה פעמים</p>
+      <p style="color:var(--muted); font-size:0.95rem;">אפשר ללחוץ שוב כמה פעמים</p>
       <div class="options" id="opts" style="max-width:520px; margin:16px auto 0;">
         ${state.listenOptions.map((o, i) => `<button class="opt" data-i="${i}">${o.emoji} ${o.he}</button>`).join("")}
       </div>
@@ -4245,7 +4366,7 @@ function renderMatch() {
   const matched = state.matchMatched;
   const allDone = matched.size === picks.length;
   return `
-    <p style="text-align:center; color:#555;">לחצי על מילה בעברית ואז על המילה המתאימה ב${targetLangNameHe()} 🧩</p>
+    <p style="text-align:center; color:var(--muted);">לחצי על מילה בעברית ואז על המילה המתאימה ב${targetLangNameHe()} 🧩</p>
     <div class="match-grid" id="matchGrid" style="margin-top:12px;">
       ${left.map(item => `
         <button class="opt ${state.matchSelected && state.matchSelected.side === "he" && state.matchSelected.id === item.id ? "selected" : ""} ${matched.has("he-" + item.id) ? "matched" : ""}" data-side="he" data-id="${item.id}">${item.label}</button>
@@ -4338,7 +4459,7 @@ function renderSentences() {
   }).join("");
   return `
     <div style="text-align:center;">
-      <p style="color:#888;">משפט ${state.sentenceIdx + 1} מתוך ${list.length} ${s.theme ? "· " + s.theme : ""}</p>
+      <p style="color:var(--muted);">משפט ${state.sentenceIdx + 1} מתוך ${list.length} ${s.theme ? "· " + s.theme : ""}</p>
       <div class="card sentence-card" id="sentenceCard">
         <div class="emoji">${s.emoji || "💬"}</div>
         <div class="he" style="font-size:2rem;">${s.he}</div>
@@ -4505,7 +4626,7 @@ function renderStories() {
 
   return `
     <div style="text-align:center;">
-      <p style="color:#888;">סיפור ${state.storyIdx + 1} מתוך ${list.length} ${story.theme ? '· ' + story.theme : ''}</p>
+      <p style="color:var(--muted);">סיפור ${state.storyIdx + 1} מתוך ${list.length} ${story.theme ? '· ' + story.theme : ''}</p>
       <div class="card story-card">
         <div class="emoji">${story.emoji || '📕'}</div>
         <div class="story-title">${escapeHtml(story.titleHe || '')}</div>
@@ -4519,7 +4640,7 @@ function renderStories() {
         <button class="btn" id="storyNext">הבא ➡️</button>
         <button class="btn shuffle" id="storyShuffle">🔀 ערבבי</button>
       </div>
-      <p class="hint" style="margin-top:10px; color:#888; font-size:0.92rem;">
+      <p class="hint" style="margin-top:10px; color:var(--muted); font-size:0.92rem;">
         💡 ${matchMedia('(hover:hover)').matches ? 'ריחפי עם העכבר על מילה כדי לראות את המשמעות' : 'הקישי על מילה כדי לראות את המשמעות'}
       </p>
     </div>
@@ -4736,7 +4857,7 @@ function renderChat() {
         <button class="chat-reset" id="chatReset" ${state.chatPending || !hasMessages ? 'disabled' : ''} title="נקי את כל השיחה ותתחילי מחדש"><svg class="icon icon-sm"><use href="#icon-refresh-cw"/></svg> שיחה חדשה</button>
       </div>
       <div class="chat-list" id="chatList">
-        ${hasMessages ? messagesHtml : `<p class="hint" style="text-align:center; color:#888; padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
+        ${hasMessages ? messagesHtml : `<p class="hint" style="text-align:center; color:var(--muted); padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
         ${pendingHtml}
       </div>
       ${errHtml}
@@ -4744,7 +4865,7 @@ function renderChat() {
         <input type="text" id="chatInput" placeholder="${placeholder}" dir="ltr" lang="${state.language === 'en' ? 'en' : 'ro'}" ${state.chatPending ? 'disabled' : ''} maxlength="500">
         <button type="submit" id="chatSend" class="btn speak" ${state.chatPending ? 'disabled' : ''}>שלחי ➤</button>
       </form>
-      <p class="hint" style="margin-top:8px; color:#888; font-size:0.9rem; text-align:center;">
+      <p class="hint" style="margin-top:8px; color:var(--muted); font-size:0.9rem; text-align:center;">
         💡 ${matchMedia('(hover:hover)').matches ? 'ריחפי על מילה כדי לראות תרגום' : 'הקישי על מילה כדי לראות תרגום'} · 🔊 משמיעה את התשובה · 🇮🇱 מציגה תרגום
       </p>
     </div>
@@ -5025,7 +5146,7 @@ function renderManage() {
     <div class="io-row">
       <button class="btn" id="exportBtn">⬇️ ייצוא גיבוי</button>
       <button class="btn shuffle" id="importBtn">⬆️ ייבוא גיבוי</button>
-      <button class="btn" style="background:#757575" id="resetBtn">🗑️ אפסי הכול</button>
+      <button class="btn" style="background:var(--muted)" id="resetBtn">🗑️ אפסי הכול</button>
     </div>
   `;
 }
@@ -5404,7 +5525,7 @@ function renderUser() {
       <div class="admin-body">
         <div class="ext-row" style="justify-content:flex-end;">
           <button class="btn prev" id="pinLockBtn">🔒 נעל</button>
-          <button class="btn" style="background:#757575" id="pinChangeBtn">🔑 שינוי קוד</button>
+          <button class="btn" style="background:var(--muted)" id="pinChangeBtn">🔑 שינוי קוד</button>
         </div>
 
         <h3 class="m-heading">📥 העלאת מילון הרחבה</h3>
@@ -5433,17 +5554,17 @@ ${state.language === 'en' ? '|         | סוס  | Horse | הוֹרס | |' : '| 
           <button class="btn shuffle" id="uImport">⬆️ ייבא קובץ גיבוי</button>
         </div>
 
-        <h3 class="m-heading" style="margin-top:24px; color:#c62828;">⚠️ פעולות הרסניות</h3>
+        <h3 class="m-heading" style="margin-top:24px; color:var(--danger);">⚠️ פעולות הרסניות</h3>
         <div class="ext-row">
-          <button class="btn" style="background:#ef5350" id="uResetVocab">🗑️ אפס מילון מורחב</button>
-          <button class="btn" style="background:#ef5350" id="uResetProgress">📉 אפס התקדמות (נקודות/רצף)</button>
+          <button class="btn" style="background:var(--danger)" id="uResetVocab">🗑️ אפס מילון מורחב</button>
+          <button class="btn" style="background:var(--danger)" id="uResetProgress">📉 אפס התקדמות (נקודות/רצף)</button>
         </div>
       </div>
     `;
   }
 
   return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">👤 הפרופיל שלי</h2>
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:12px;">👤 הפרופיל שלי</h2>
     ${statsHtml}
     <details class="admin-box" open>
       <summary>🔐 אזור אדמין — להורה</summary>
@@ -5459,7 +5580,7 @@ function renderPreview(preview) {
   return `
     <div class="preview-box">
       <h4>תצוגה מקדימה (${type === "json" ? "JSON" : "Markdown"})</h4>
-      <p style="color:#555;">זוהו <b>${words.length}</b> מילים ו-<b>${sentences.length}</b> משפטים.</p>
+      <p style="color:var(--muted);">זוהו <b>${words.length}</b> מילים ו-<b>${sentences.length}</b> משפטים.</p>
       ${words.length ? `
         <table class="m-table">
           <tr><th>אימוג'י</th><th>עברית</th><th>${targetLangNameHe()}</th><th>הגייה</th><th>קטגוריה</th></tr>
@@ -5468,7 +5589,7 @@ function renderPreview(preview) {
             <td dir="ltr"><b>${escapeHtml(w.ro)}</b></td>
             <td>${escapeHtml(w.pron)}</td><td>${escapeHtml(w.cat)}</td>
           </tr>`).join("")}
-          ${words.length > wPreview.length ? `<tr><td colspan="5" style="text-align:center; color:#888;">...ועוד ${words.length - wPreview.length} מילים</td></tr>` : ""}
+          ${words.length > wPreview.length ? `<tr><td colspan="5" style="text-align:center; color:var(--muted);">...ועוד ${words.length - wPreview.length} מילים</td></tr>` : ""}
         </table>
       ` : ""}
       ${sentences.length ? `
@@ -5478,7 +5599,7 @@ function renderPreview(preview) {
             <td>${s.emoji}</td><td>${escapeHtml(s.he)}</td>
             <td dir="ltr"><b>${escapeHtml(s.ro)}</b></td>
           </tr>`).join("")}
-          ${sentences.length > sPreview.length ? `<tr><td colspan="3" style="text-align:center; color:#888;">...ועוד ${sentences.length - sPreview.length} משפטים</td></tr>` : ""}
+          ${sentences.length > sPreview.length ? `<tr><td colspan="3" style="text-align:center; color:var(--muted);">...ועוד ${sentences.length - sPreview.length} משפטים</td></tr>` : ""}
         </table>
       ` : ""}
       <div class="ext-row" style="margin-top:14px;">
@@ -5684,7 +5805,7 @@ function renderUnits() {
       </button>`;
   }).join('');
   return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:6px;">📚 יחידות לימוד</h2>
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:6px;">📚 יחידות לימוד</h2>
     <p class="hint" style="text-align:center; margin-bottom:14px;">
       התרגול ביחידה N כולל את כל המילים והמשפטים מהמילון הבסיסי, הוספות שלך, ויחידות 1 עד N.
     </p>
@@ -5756,23 +5877,23 @@ function renderGuide() {
       <div class="letter">i סופית</div><div class="desc">בדרך כלל מרככת את העיצור שלפניה ולא נשמעת כהברה מלאה</div>
   `;
   return `
-    <h2 style="color:#d81b60; text-align:center; margin-bottom:12px;">📖 איך לקרוא ב${targetLangNameHe()}</h2>
+    <h2 style="color:var(--accent); text-align:center; margin-bottom:12px;">📖 איך לקרוא ב${targetLangNameHe()}</h2>
     <div class="guide">${guideRows}</div>
 
-    <h3 style="margin-top:20px; color:#4527a0;">🌟 כל המילים שלך:</h3>
+    <h3 style="margin-top:20px; color:var(--accent);">🌟 כל המילים שלך:</h3>
     <div style="margin-top:8px;">
       ${getCategories().filter(c => c !== "הכול").map(cat => {
         const words = getVocab().filter(v => v.cat === cat);
         return `
-          <details style="margin-bottom:10px; background:#fff; border-radius:14px; padding:8px 14px;">
-            <summary style="font-weight:bold; color:#c2185b; font-size:1.1rem; cursor:pointer;">${getCategoryEmoji(cat)} ${cat} (${words.length})</summary>
+          <details style="margin-bottom:10px; background:var(--surface); border-radius:14px; padding:8px 14px;">
+            <summary style="font-weight:bold; color:var(--accent); font-size:1.1rem; cursor:pointer;">${getCategoryEmoji(cat)} ${cat} (${words.length})</summary>
             <table style="width:100%; border-collapse:collapse; margin-top:8px;">
               ${words.map(w => `
-                <tr style="border-bottom:1px solid #f0f0f0;">
+                <tr style="border-bottom:1px solid var(--line);">
                   <td style="padding:6px 4px;">${w.emoji}</td>
                   <td style="padding:6px 4px; font-weight:bold;">${w.he}</td>
-                  <td style="padding:6px 4px; color:#c2185b; font-weight:bold;">${w.ro}</td>
-                  <td style="padding:6px 4px; color:#666;">${w.pron || ''}</td>
+                  <td style="padding:6px 4px; color:var(--accent); font-weight:bold;">${w.ro}</td>
+                  <td style="padding:6px 4px; color:var(--muted);">${w.pron || ''}</td>
                   <td style="padding:6px 4px;"><button class="btn speak" style="padding:4px 10px; font-size:0.9rem;" data-ro="${w.ro}">🔊</button></td>
                 </tr>
               `).join("")}
@@ -6081,9 +6202,9 @@ function renderAuthBar() {
   if (!auth.client) {
     bar.innerHTML = `
       <button class="profile-chip" id="profileChip" aria-haspopup="true" aria-expanded="false">
-        ${langFlag(state.language)} · ${speedLabel(state.speechRate)} · ${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}
+        ${langFlag(state.language)} <span class="chip-dot">·</span> ${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}
       </button>
-      <span style="color:#888; font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:#7e57c2;">SETUP.md</a></span>
+      <span style="color:var(--muted); font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:var(--accent);">SETUP.md</a></span>
     `;
     wireProfileChip();
     return;
@@ -6091,7 +6212,7 @@ function renderAuthBar() {
   if (!auth.session) {
     bar.innerHTML = `
       <button class="profile-chip" id="profileChip" aria-haspopup="true" aria-expanded="false">
-        ${langFlag(state.language)} · ${speedLabel(state.speechRate)} · ${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}
+        ${langFlag(state.language)} <span class="chip-dot">·</span> ${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}
       </button>
       <button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>
     `;
@@ -6099,7 +6220,7 @@ function renderAuthBar() {
     wireProfileChip();
     return;
   }
-  // Signed-in: single chip carrying identity + active context.
+  // Signed-in: single chip — emoji, name, language flag, current unit. Speed lives in the popover.
   const prof = auth.currentProfile;
   const emoji = prof ? (prof.emoji || '🌟') : '🌟';
   const name = prof ? escapeHtml(prof.name) : '';
@@ -6108,7 +6229,6 @@ function renderAuthBar() {
     <button class="profile-chip" id="profileChip" aria-haspopup="true" aria-expanded="false">
       <span class="chip-emoji">${emoji}</span><span class="chip-name">${chipName}</span>
       <span class="chip-dot">·</span><span>${langFlag(state.language)}</span>
-      <span class="chip-dot">·</span><span>${speedLabel(state.speechRate)}</span>
       <span class="chip-dot">·</span><span>${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}</span>
     </button>
   `;
@@ -6292,10 +6412,10 @@ function renderSignInCard() {
         <button class="btn speak" id="signin-submit">${isSignup ? 'הרשמה' : 'כניסה'}</button>
         <button class="btn prev" id="signin-cancel">חזרה</button>
       </div>
-      <div id="signin-feedback" style="color:#c62828; font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
+      <div id="signin-feedback" style="color:var(--danger); font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
       <p class="muted" style="margin-top:14px; font-size:0.85rem;">
-        ${isSignup ? '' : 'או <a href="#" id="signin-magic" style="color:#7e57c2;">קישור־קסם למייל</a> · '}
-        אין הזמנה? <a href="#" id="open-contact" style="color:#7e57c2;">בקשי גישה</a>.
+        ${isSignup ? '' : 'או <a href="#" id="signin-magic" style="color:var(--accent);">קישור־קסם למייל</a> · '}
+        אין הזמנה? <a href="#" id="open-contact" style="color:var(--accent);">בקשי גישה</a>.
       </p>
     </div>`;
 }
@@ -6341,7 +6461,7 @@ function renderPinCard() {
         <button class="btn speak" id="pin-submit">פתחי</button>
         <button class="btn prev" id="pin-back">חזרה</button>
       </div>
-      <div id="pin-err" style="color:#c62828; font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
+      <div id="pin-err" style="color:var(--danger); font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
     </div>`;
 }
 
@@ -6556,15 +6676,15 @@ function openContactModal() {
     const hp    = (document.getElementById('cr-honeypot').value || '').trim();
     const fb    = document.getElementById('cr-feedback');
     if (hp || (Date.now() - _contactRenderedAt) < 3000) {
-      fb.style.color = '#43a047'; fb.textContent = '✨ נשלח! נחזור אליך.';
+      fb.style.color = 'var(--success)'; fb.textContent = '✨ נשלח! נחזור אליך.';
       setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 1200);
       return;
     }
-    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { fb.style.color = '#c62828'; fb.textContent = 'אימייל לא תקין'; return; }
-    if (!auth.client) { fb.style.color = '#c62828'; fb.textContent = 'Supabase לא מוגדר — ראה SETUP.md'; return; }
+    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { fb.style.color = 'var(--danger)'; fb.textContent = 'אימייל לא תקין'; return; }
+    if (!auth.client) { fb.style.color = 'var(--danger)'; fb.textContent = 'Supabase לא מוגדר — ראה SETUP.md'; return; }
     const { error } = await auth.client.from('access_requests').insert({ email, name: name || null, message: msg || null });
-    if (error) { fb.style.color = '#c62828'; fb.textContent = 'שגיאה: ' + error.message; return; }
-    fb.style.color = '#43a047'; fb.textContent = '✨ נשלח! נחזור אליך.';
+    if (error) { fb.style.color = 'var(--danger)'; fb.textContent = 'שגיאה: ' + error.message; return; }
+    fb.style.color = 'var(--success)'; fb.textContent = '✨ נשלח! נחזור אליך.';
     setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 1500);
   };
 }
@@ -6610,7 +6730,7 @@ function activateMode(btn) {
 
 function renderRequests() {
   return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">📥 בקשות גישה</h2>
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:12px;">📥 בקשות גישה</h2>
     <div id="req-list" style="margin-top:10px;">טוען...</div>
   `;
 }
