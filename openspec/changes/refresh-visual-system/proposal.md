@@ -2,102 +2,97 @@
 
 ## Why
 
-The current visual system reads as "kids' app circa 2014":
+Pass 1 introduced a token system (`--accent: forest-green`, `--reward: saffron`, `--canvas: warm-off-white`) and removed gradients on cards and the body. The user pushback:
 
-- The body has a three-color rainbow gradient (`#fce4ec → #e3f2fd → #fff9c4`).
-- Almost every button uses its own `linear-gradient(135deg, ...)` — a different gradient per mode.
-- Cards stack on gradients which stack on gradients; the eye has no anchor.
-- Five-plus saturated colors compete in every screen.
+- **It's not pleasing to the eye.** Forest green as the primary accent reads institutional next to a kid's app full of emoji; saffron yellow against warm cream goes muddy; the canvas is so beige the page loses contrast.
+- **The refresh is half-done.** The `<h1>` is still `#d81b60` pink, stat cards still use `#fde7f2` pink and `#3949ab` indigo, the flashcard's `.he` text is `#4527a0` purple and `.ro` text is `#c2185b` pink, every hover border is `#ba68c8` purple. The new green accent fights every leftover color.
+- **The accent doubles as "correct".** A green-fill active tab and a green confetti burst on a correct answer use the same color, so success doesn't *feel* like a reward — it feels like the UI moved.
 
-The goal is something that reads as **slick + modern but still feels playful for a 9-year-old**: one calm canvas, one strong accent, deliberate use of color for rewards/state, and chrome that doesn't shout. Reference points are current Duolingo, Khan Academy Kids, and Toca/Sago kids' apps — playful but disciplined.
+Goal of this revision: a coherent, warm, playful palette that **reads as a kid's app without feeling like a 2014 kid's app**, applied to every surface (not just the few touched in pass 1), with the active state and the reward state visually distinct.
 
 ## What Changes
 
-### Palette
+### Palette — indigo + coral, not green + saffron
 
-Replace the current rainbow with a small palette:
+```
+--canvas:    #fbf6ee     warm cream (slightly warmer than pass 1)
+--surface:   #ffffff     card / popover background
+--accent:    #6750a4     indigo-violet — primary action / active tab
+--accent-2:  #574293     darker indigo for hover
+--accent-soft: #ede7f6   light wash for hovers, active row tint
+--reward:    #ff7a59     warm coral — earned points, streaks, confetti
+--reward-soft: #ffe7df   light coral wash for streak badges
+--success:   #2e9c63     emerald — used ONLY in "correct!" toasts and confetti accents
+--ink:       #1f1f1f     body text
+--muted:     #6b6b6b     secondary text
+--line:      #e7e3dc     dividers / subtle borders (warm grey, not cold)
+--danger:    #c62828     reset / sign-out hints
+```
 
-- `--canvas: #fbf7f2`      — warm off-white background
-- `--surface: #ffffff`     — card / popover surface
-- `--accent: #2e7d32`      — primary action / active state (forest green)
-- `--reward: #f9a825`      — earned points, confetti, "good job" moments (saffron)
-- `--ink: #1f1f1f`         — body text
-- `--muted: #6b6b6b`       — secondary text
-- `--line:  #ececea`       — dividers, subtle borders
-- `--danger: #c62828`      — reset / sign-out hints (rare)
+The accent and the reward and success colors are the only saturated tones. **Each plays a distinct role**:
+- **Accent** = "this is the active control / primary action". Tab fill, primary buttons, popover-row hover.
+- **Reward** = "you earned something". Streak badge, score pop, confetti.
+- **Success** = "your answer was correct". Correct-answer toast border / icon. Never appears on chrome.
 
-The accent + reward colors are the only saturated tones in the system. Every other surface is canvas-tint or pure white.
+### Sweep every leftover hex literal
 
-### No gradients on UI elements
+Pass 1 left the header, stat cards, card text, popover hover borders, and many ad-hoc borders using the old purple/pink palette. This pass replaces them. Specific targets:
 
-Remove `linear-gradient(...)` from every button, pill, chip, card, and the `body` background. Solid colors only.
+- `h1` color → `--accent`
+- `.stat.score` background → `--accent`
+- `.stat.streak` background → `--reward`
+- `.stat.total` background → `--accent-soft` with `--ink` text (no more competing indigo `#3949ab`)
+- `.card .he` color → `--ink` (let the Hebrew read as plain body text — emphasis comes from size)
+- `.card .ro` color → `--accent` (the foreign word is the focal point)
+- `.card .pron` color → `--muted`
+- `.mode-tab:hover` border → `--accent`
+- `.profile-chip:hover` border → `--accent`
+- `.shell-popover-row:hover` background → `--accent-soft`
+- `.shell-popover-pill.active` background → `--accent`
+- `.unit-tile.current` border → `--reward`, background → `--reward-soft`
+- `.emoji-tile.selected` border → `--accent`, background → `--accent-soft`
+- `.chip.active` background → `--accent-soft`, border → `--accent`
+- `.pin-card` border → `--line`; `.pin-card h3` color → `--accent`
+- `.auth-bar .ab-primary` → already `--accent`, keep
+- All `box-shadow` glow colors using `rgba(126, 87, 194, ...)` → `rgba(103, 80, 164, ...)` (the new accent in transparent form)
 
-The `body` is `var(--canvas)`. Active states use solid accent. Confetti and the kid's bubbles can use the reward color.
+### Typography stays
 
-### Typography
+`Heebo` + `Nunito`, weights 400/700, `font-display: swap`, line-height 1.5. No change.
 
-- Hebrew: keep **Heebo** (already in stack).
-- Latin (Romanian + English): adopt **Nunito** for friendly rounded sans-serif. Loaded from Google Fonts via CDN (no build step).
-- Sizing scale: `0.9rem` (caption) → `1rem` (body) → `1.15rem` (default content) → `1.4rem` (titles) → `2rem` (card headlines).
-- Weights: 400 and 700 only. No italics.
-- Line-height: 1.5 for body, 1.3 for headlines.
+### Button system stays
 
-### Button system
+`.btn` / `.btn-secondary` / `.btn-danger` from pass 1 keep their shapes. Only their colors update via the token sweep.
 
-A single button shape:
+### Motion stays
 
-- Solid background, 16px radius, 12px vertical padding, 18px horizontal.
-- Primary = `--accent` fill, white text.
-- Secondary = white fill, `--ink` text, 1.5px `--line` border.
-- Destructive = white fill, `--danger` text, 1.5px `--danger` border.
-- Pressed: `transform: scale(0.96)` for 150ms.
-- Disabled: 40% opacity, no transform.
+150ms ease, `scale(0.96)` on active. Confetti palette now `--reward` + `--success` (was `--accent` + `--reward`) so the green stays meaningful as "correct".
 
-No more gradient buttons.
+### Mode-active stripe stays accent
 
-### Motion
+4px `--accent` stripe at the top of the active card. With the new indigo, the stripe is warmer and reads as a brand mark, not a "go" signal.
 
-- Standard transition: `150ms ease`. Apply to color, background, border, transform.
-- Tap feedback: `scale(0.96)` for 100ms on `:active`.
-- Confetti: keep the burst on correct answers, but soften — fewer particles, faster fade, palette limited to `--accent` and `--reward`.
-- A small `pop` animation on "+10 ⭐" callouts using `--reward`.
+### Icon system stays
 
-### Icon system
-
-- **Content stays emoji** (modes, vocab, words, cards). Kids recognize emoji, they're RTL-safe, and they require no extra dependency.
-- **Chrome moves to Lucide** line icons inlined as SVG. Use cases:
-  - Back / close (`x`, `arrow-left`)
-  - Settings (`settings-2`)
-  - Reset (`refresh-cw`)
-  - Send (`send`)
-  - Sign-out (`log-out`)
-  - Switch (`users`)
-  - Play / pause (where 🔊 emoji isn't ideal — TBD)
-- Icons SHALL be inlined SVG (no external font, no build step). Stroke width 2, current color, 20×20 base.
-
-### Mode color hint
-
-When a practice mode is active, the **card** for that mode (not the tab) carries a 4px accent stripe at the top edge. The accent stripe SHALL use `--accent` for all modes — we are not assigning a unique brand color per mode in this pass.
+Lucide line icons for chrome (`refresh-cw`, `log-out`, `users`, `x`, `send`, `settings`), emoji for content. Inlined SVG, `currentColor`, 20×20.
 
 ## Out of Scope (future)
 
-- **Layout / information architecture** (the modes bar collapse, profile chip) — covered by the separate `declutter-app-shell` proposal so the two can ship independently.
-- **Dark mode**. The kid uses this on iPad in well-lit rooms; defer until requested.
-- **Per-mode brand color** (e.g., Stories = cobalt, Chat = lemon). Tempting but adds complexity for little daily benefit.
-- **Removing emoji from content**. Emoji is the visual language of the app's *content* and stays.
-- **Sound effects / haptics**. Separate concern.
-- **A full mascot / illustrations**. Out of scope; the rainbow favicon is enough personality for now.
+- **Dark mode.**
+- **Per-mode brand colors.** Active state still single-accent indigo.
+- **Replacing emoji with icons in content.** Stays.
+- **Animated mascot / illustrations.** Out of scope.
+- **Sound / haptics.** Separate concern.
 
 ## Impact
 
-- **Modified**: `index.html` — `<style>` block rewritten around CSS custom properties; gradients removed from all selectors; button system collapsed into a small set of classes; new Google Fonts `<link>` in `<head>` for Nunito; Lucide icons inlined where chrome actions live.
-- **No JS logic changes** beyond replacing `🔊` / `⚙️` / `🚪` glyphs with `<svg>` icons in chrome locations.
+- **Modified**: `index.html` — `:root` token block updated; every selector that used a hard-coded pink/purple/forest-green hex remapped to a token; confetti palette JS swapped from green/saffron to coral/emerald; favicon untouched.
+- **No JS logic changes** beyond the confetti palette.
 - **No data, auth, backend, or schema changes.**
-- **One new external dependency**: a Google Fonts stylesheet link (Nunito). Heebo already loaded by the system font stack. No npm package, no bundler change.
+- **No new external dependencies.** Google Fonts links unchanged.
 
 ## Risks
 
-- **Font load shift**: Nunito loads after first paint. Mitigate with `font-display: swap` and a system fallback (`sans-serif`).
-- **Inline SVGs grow the file**: ~6 icons × ~200 bytes each = ~1.2KB. Acceptable next to the existing ~6000-line file.
-- **Accent green could read as "correct" everywhere**, which clashes with using it for primary actions. Mitigate by reserving the very saturated `--reward` saffron for actual success states (confetti, "+10 ⭐"), and using accent green only for active-tab and primary-CTA.
-- **Tutor / parent muscle memory**: the rainbow is what the family has been looking at. Worth previewing once before merging.
+- **Indigo + coral may feel less "playful" to a kid than rainbow.** Mitigated by keeping emoji-heavy content, warm cream canvas, and the coral reward color popping on confetti.
+- **Tutor / parent muscle memory.** Less of a problem than pass 1's rainbow→green jump because indigo is closer to the old purple muscle-memory.
+- **Sweeping hex literals risks missing one.** Mitigated by a single explicit grep pass at the end and visiting every mode in the verify step.

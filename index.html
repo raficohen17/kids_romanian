@@ -5,14 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>לתרגל שפות עם חיוך 🌈</title>
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><radialGradient id="bg" cx="50%25" cy="35%25" r="65%25"><stop offset="0%25" stop-color="%23fff9c4"/><stop offset="60%25" stop-color="%23fce4ec"/><stop offset="100%25" stop-color="%23e3f2fd"/></radialGradient></defs><circle cx="32" cy="32" r="30" fill="url(%23bg)" stroke="%23ba68c8" stroke-width="3"/><path d="M14 38a18 18 0 0 1 36 0" fill="none" stroke="%23e53935" stroke-width="3.5" stroke-linecap="round"/><path d="M18 38a14 14 0 0 1 28 0" fill="none" stroke="%23fbc02d" stroke-width="3.5" stroke-linecap="round"/><path d="M22 38a10 10 0 0 1 20 0" fill="none" stroke="%2343a047" stroke-width="3.5" stroke-linecap="round"/><path d="M26 38a6 6 0 0 1 12 0" fill="none" stroke="%231e88e5" stroke-width="3.5" stroke-linecap="round"/><circle cx="24" cy="46" r="2.2" fill="%234a148c"/><circle cx="40" cy="46" r="2.2" fill="%234a148c"/><path d="M24 51c3 3 13 3 16 0" fill="none" stroke="%234a148c" stroke-width="2.5" stroke-linecap="round"/></svg>'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --canvas:      #fbf6ee;
+    --surface:     #ffffff;
+    --accent:      #6750a4;
+    --accent-2:    #574293;
+    --accent-soft: #ede7f6;
+    --reward:      #ff7a59;
+    --reward-soft: #ffe7df;
+    --success:     #2e9c63;
+    --ink:         #1f1f1f;
+    --muted:       #6b6b6b;
+    --line:        #e7e3dc;
+    --danger:      #c62828;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+    --transition: 150ms ease;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Heebo", "Arial Hebrew", Arial, sans-serif;
+    font-family: "Heebo", "Nunito", "Arial Hebrew", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #fce4ec 0%, #e3f2fd 50%, #fff9c4 100%);
-    color: #333;
+    background: var(--canvas);
+    color: var(--ink);
     direction: rtl;
+    font-size: 1.05rem;
+    line-height: 1.5;
   }
   body { padding: 16px; padding-bottom: 80px; }
 
@@ -20,15 +45,15 @@
     text-align: center;
     margin-bottom: 24px;
   }
-  h1 { font-size: 2.2rem; color: #d81b60; }
+  h1 { font-size: 2.2rem; color: var(--accent); }
   h1 .flag { font-size: 1.8rem; }
-  .subtitle { color: #555; margin-top: 4px; font-size: 1.05rem; }
+  .subtitle { color: var(--muted); margin-top: 4px; font-size: 1.05rem; }
 
   .panel {
-    background: white;
+    background: var(--surface);
     border-radius: 24px;
     padding: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    box-shadow: var(--shadow-md);
     max-width: 720px;
     margin: 0 auto 16px;
   }
@@ -40,7 +65,6 @@
     flex-wrap: wrap;
   }
   .stat {
-    background: linear-gradient(135deg, #f8bbd0, #ce93d8);
     border-radius: 16px;
     padding: 10px 16px;
     text-align: center;
@@ -50,11 +74,12 @@
   }
   .stat .num { font-size: 1.6rem; display: block; }
   .stat .lbl { font-size: 0.85rem; opacity: 0.95; }
-  .stat.streak { background: linear-gradient(135deg, #ff7043, #ffa726); }
-  .stat.score  { background: linear-gradient(135deg, #66bb6a, #26c6da); }
-  .stat.total  { background: linear-gradient(135deg, #5c6bc0, #42a5f5); }
+  .stat.score  { background: var(--accent); }
+  .stat.streak { background: var(--reward); }
+  .stat.total  { background: var(--accent-soft); color: var(--ink); }
+  .stat.total .lbl { opacity: 0.75; }
 
-  /* mode tabs */
+  /* mode tabs — pill shape with emoji + label */
   .modes {
     display: flex;
     gap: 8px;
@@ -63,24 +88,101 @@
     margin-bottom: 16px;
   }
   .modes button {
-    background: white;
-    border: 3px solid #e0e0e0;
-    border-radius: 18px;
-    padding: 10px 18px;
-    font-size: 1.05rem;
-    font-weight: bold;
     cursor: pointer;
-    transition: all 0.15s;
     font-family: inherit;
   }
-  .modes button:hover { border-color: #ba68c8; transform: translateY(-2px); }
-  .modes button.active {
-    background: linear-gradient(135deg, #ba68c8, #7e57c2);
+  .mode-tab {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
+  }
+  .mode-tab .tab-emoji { font-size: 1.2rem; line-height: 1; }
+  .mode-tab:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .mode-tab:active { transform: scale(0.96); }
+  .mode-tab.active {
+    background: var(--accent);
     color: white;
     border-color: transparent;
+    box-shadow: 0 4px 12px rgba(103,80,164,0.25);
+  }
+  .mode-more {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  }
+  .mode-more .tab-emoji { font-size: 1.2rem; line-height: 1; }
+  .mode-more:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .mode-more:active { transform: scale(0.96); }
+  .mode-more[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  .mode-more.has-badge::after {
+    content: ''; position: absolute; top: 4px; left: 4px;
+    width: 10px; height: 10px; background: var(--danger); border-radius: 50%;
+    border: 2px solid var(--surface);
+  }
+  @media (max-width: 560px) {
+    .mode-tab .tab-label, .mode-more .tab-label { display: none; }
+    .mode-tab, .mode-more { padding: 10px 14px; }
   }
 
-  /* category filter */
+  .shell-popover {
+    position: absolute; z-index: 90;
+    background: var(--surface); border: 1.5px solid var(--line);
+    border-radius: 16px; padding: 8px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+    min-width: 240px; max-width: 360px;
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity 150ms ease, transform 150ms ease;
+    pointer-events: none;
+  }
+  .shell-popover[data-open="true"] { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .shell-popover-row {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 10px 12px;
+    background: var(--surface); border: none; border-radius: 10px;
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    color: var(--ink); cursor: pointer; text-align: right;
+    transition: background var(--transition);
+  }
+  .shell-popover-row:hover { background: var(--accent-soft); }
+  .shell-popover-row.active { background: var(--accent-soft); color: var(--accent); }
+  .shell-popover-row .row-emoji { font-size: 1.2rem; }
+  .shell-popover-row .row-count { margin-inline-start: auto; color: var(--muted); font-weight: 400; font-size: 0.9rem; }
+  .shell-popover-row .badge-dot { margin-inline-start: auto; width: 10px; height: 10px; background: var(--danger); border-radius: 50%; }
+  .shell-popover-divider { height: 1px; background: var(--line); margin: 4px 0; }
+  .shell-popover-section {
+    padding: 6px 12px; font-size: 0.85rem; color: var(--muted);
+  }
+  .shell-popover-pillrow { display: flex; gap: 6px; padding: 6px 12px 10px; flex-wrap: wrap; }
+  .shell-popover-pill {
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 6px 12px; font-family: inherit; font-weight: 700; font-size: 0.95rem;
+    color: var(--ink); cursor: pointer;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
+  }
+  .shell-popover-pill:hover { border-color: var(--accent); }
+  .shell-popover-pill.active {
+    background: var(--accent); color: white; border-color: transparent;
+  }
+  .shell-popover-scroll { max-height: 56vh; overflow-y: auto; }
+
+  /* category filter — single trigger + popover */
   .filter-row {
     display: flex;
     gap: 8px;
@@ -88,47 +190,76 @@
     justify-content: center;
     margin-bottom: 12px;
   }
+  .filter-row:empty { display: none; margin: 0; }
+  .category-trigger {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  }
+  .category-trigger .cat-emoji { font-size: 1.1rem; }
+  .category-trigger .cat-caret { color: var(--muted); margin-inline-start: 2px; }
+  .category-trigger:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .category-trigger:active { transform: scale(0.96); }
+  .category-trigger[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  /* legacy chip class — still used by the guide page */
   .chip {
-    background: #fff;
-    border: 2px solid #e0e0e0;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
     border-radius: 999px;
     padding: 6px 14px;
     font-size: 0.95rem;
+    color: var(--ink);
     cursor: pointer;
     font-family: inherit;
+    transition: border-color var(--transition), background var(--transition);
   }
+  .chip:hover { border-color: var(--accent); }
   .chip.active {
-    background: #fff59d;
-    border-color: #fbc02d;
-    font-weight: bold;
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    font-weight: 700;
   }
 
   /* flashcard */
   .flashcard-area { text-align: center; }
   .card {
-    background: linear-gradient(135deg, #fff, #f3e5f5);
-    border-radius: 28px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
     padding: 40px 24px;
     margin: 16px auto;
     max-width: 480px;
     min-height: 260px;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(126, 87, 194, 0.18);
-    border: 4px solid #ce93d8;
+    box-shadow: var(--shadow-md);
+    border: 1.5px solid var(--line);
     transition: transform 0.25s;
     user-select: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
     align-items: center;
   }
   .card:active { transform: scale(0.98); }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 4px; background: var(--accent);
+  }
   .card .emoji { font-size: 4rem; margin-bottom: 12px; }
-  .card .he { font-size: 2.4rem; font-weight: bold; color: #4527a0; }
-  .card .ro { font-size: 2.2rem; font-weight: bold; color: #c2185b; margin-bottom: 8px; }
-  .card .pron { font-size: 1.3rem; color: #555; margin-bottom: 12px; }
-  .card .note { font-size: 0.95rem; color: #888; font-style: italic; max-width: 380px; }
-  .card .hint { color: #999; margin-top: 14px; font-size: 0.9rem; }
+  .card .he { font-size: 2.4rem; font-weight: 700; color: var(--ink); }
+  .card .ro { font-size: 2.2rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+  .card .pron { font-size: 1.3rem; color: var(--muted); margin-bottom: 12px; }
+  .card .note { font-size: 0.95rem; color: var(--muted); font-style: italic; max-width: 380px; }
+  .card .hint { color: var(--muted); margin-top: 14px; font-size: 0.9rem; opacity: 0.75; }
 
   .nav-row {
     display: flex;
@@ -138,33 +269,72 @@
     flex-wrap: wrap;
   }
   .btn {
-    background: linear-gradient(135deg, #42a5f5, #1e88e5);
+    background: var(--accent);
     color: white;
     border: none;
-    border-radius: 16px;
-    padding: 12px 22px;
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
     font-size: 1.05rem;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
     font-family: inherit;
+    transition: background var(--transition), border-color var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+    box-shadow: var(--shadow-sm);
   }
-  .btn:hover { transform: translateY(-2px); }
-  .btn:active { transform: translateY(0); }
-  .btn.speak { background: linear-gradient(135deg, #66bb6a, #43a047); }
-  .btn.prev  { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
-  .btn.shuffle { background: linear-gradient(135deg, #ff7043, #f4511e); }
+  .btn:hover { background: var(--accent-2); }
+  .btn:active { transform: scale(0.96); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  /* Legacy variant classes mapped onto the new system */
+  .btn.speak,
+  .btn.prev    { background: var(--accent); }
+  .btn.shuffle { background: var(--reward); color: var(--ink); }
+
+  /* Secondary + danger button shapes */
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--ink);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: border-color var(--transition), color var(--transition), transform var(--transition);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-secondary:active { transform: scale(0.96); }
+
+  .btn-danger {
+    background: var(--surface);
+    color: var(--danger);
+    border: 1.5px solid var(--danger);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+  }
+  .btn-danger:hover { background: var(--danger); color: white; }
+  .btn-danger:active { transform: scale(0.96); }
+
+  /* Lucide line icons (chrome only — content uses emoji) */
+  .icon { width: 20px; height: 20px; vertical-align: middle; display: inline-block; }
+  .icon-sm { width: 16px; height: 16px; }
+  .icon-lg { width: 24px; height: 24px; }
 
   /* quiz */
   .quiz-q {
     text-align: center;
     font-size: 2rem;
-    font-weight: bold;
-    color: #4527a0;
+    font-weight: 700;
+    color: var(--accent);
     margin: 12px 0 4px;
   }
   .quiz-q .emoji { font-size: 2.2rem; display: block; margin-bottom: 4px; }
-  .quiz-q .prompt { font-size: 1rem; color: #777; font-weight: normal; margin-top: 4px;}
+  .quiz-q .prompt { font-size: 1rem; color: var(--muted); font-weight: normal; margin-top: 4px;}
   .options {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -175,29 +345,29 @@
     .options { grid-template-columns: 1fr; }
   }
   .opt {
-    background: white;
-    border: 3px solid #e1bee7;
+    background: var(--surface);
+    border: 2px solid var(--line);
     border-radius: 18px;
     padding: 16px;
     font-size: 1.3rem;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     text-align: center;
     font-family: inherit;
-    color: #4a148c;
-    transition: all 0.12s;
+    color: var(--ink);
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
   }
-  .opt:hover { background: #f3e5f5; transform: translateY(-2px); }
+  .opt:hover { background: var(--accent-soft); border-color: var(--accent); transform: translateY(-2px); }
   .opt.correct {
-    background: linear-gradient(135deg, #a5d6a7, #66bb6a);
+    background: var(--success);
     color: white;
-    border-color: #2e7d32;
+    border-color: transparent;
     animation: pop 0.4s;
   }
   .opt.wrong {
-    background: linear-gradient(135deg, #ef9a9a, #e57373);
+    background: var(--danger);
     color: white;
-    border-color: #c62828;
+    border-color: transparent;
     animation: shake 0.4s;
   }
   .opt:disabled { cursor: default; }
@@ -219,8 +389,8 @@
     font-weight: bold;
     min-height: 1.6rem;
   }
-  .feedback.good { color: #2e7d32; }
-  .feedback.bad  { color: #c62828; }
+  .feedback.good { color: var(--success); }
+  .feedback.bad  { color: var(--danger); }
 
   /* match game */
   .match-grid {
@@ -234,14 +404,14 @@
     min-height: 56px;
   }
   .match-grid .opt.selected {
-    background: linear-gradient(135deg, #fff59d, #ffee58);
-    border-color: #fbc02d;
+    background: var(--reward-soft);
+    border-color: var(--reward);
   }
   .match-grid .opt.matched {
-    background: linear-gradient(135deg, #c5e1a5, #aed581);
-    border-color: #689f38;
-    color: #33691e;
-    opacity: 0.6;
+    background: var(--success);
+    border-color: transparent;
+    color: white;
+    opacity: 0.55;
     pointer-events: none;
   }
 
@@ -250,17 +420,17 @@
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 8px 16px;
-    background: #fff8e1;
+    background: var(--accent-soft);
     border-radius: 16px;
     padding: 16px 20px;
     margin-top: 8px;
   }
   .guide .letter {
-    font-weight: bold;
-    color: #c2185b;
+    font-weight: 700;
+    color: var(--accent);
     font-size: 1.2rem;
   }
-  .guide .desc { color: #555; }
+  .guide .desc { color: var(--ink); }
 
   /* confetti */
   .confetti {
@@ -279,14 +449,14 @@
     padding: 24px;
   }
   .end-screen .big { font-size: 5rem; }
-  .end-screen h2 { color: #d81b60; margin: 12px 0; }
+  .end-screen h2 { color: var(--accent); margin: 12px 0; }
 
   /* listen mode */
   .listen-area {
     text-align: center;
   }
   .listen-btn {
-    background: linear-gradient(135deg, #66bb6a, #43a047);
+    background: var(--accent);
     color: white;
     border: none;
     border-radius: 50%;
@@ -294,7 +464,7 @@
     height: 140px;
     font-size: 4rem;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(67, 160, 71, 0.4);
+    box-shadow: 0 8px 24px rgba(103,80,164,0.35);
     margin: 20px auto;
     display: block;
     transition: transform 0.15s;
@@ -305,13 +475,13 @@
   /* sentences */
   .sentence-card { padding: 28px 20px; }
   .words-breakdown {
-    background: #fff8e1;
+    background: var(--accent-soft);
     border-radius: 20px;
     padding: 16px 18px;
     margin-top: 18px;
     text-align: right;
   }
-  .words-breakdown h3 { color: #c2185b; margin-bottom: 6px; }
+  .words-breakdown h3 { color: var(--accent); margin-bottom: 6px; }
   .word-list {
     display: flex;
     flex-wrap: wrap;
@@ -319,8 +489,8 @@
     margin-top: 8px;
   }
   .word-chip {
-    background: white;
-    border: 2px solid #e0e0e0;
+    background: var(--surface);
+    border: 1.5px solid var(--line);
     border-radius: 14px;
     padding: 8px 12px;
     font-family: inherit;
@@ -330,36 +500,37 @@
     flex: 1 1 calc(50% - 8px);
     min-width: 180px;
   }
-  .word-chip.known { border-color: #aed581; background: #f1f8e9; }
-  .word-chip.new   { border-color: #ffb74d; background: #fff3e0; }
-  .word-chip b { color: #c2185b; }
-  .word-pron { display:block; color: #777; font-size: 0.9rem; margin-top: 2px; }
+  .word-chip.known { border-color: var(--success); background: rgba(46,156,99,0.08); }
+  .word-chip.new   { border-color: var(--reward); background: var(--reward-soft); }
+  .word-chip b { color: var(--accent); }
+  .word-pron { display:block; color: var(--muted); font-size: 0.9rem; margin-top: 2px; }
   .legend {
     display:flex; gap:14px; justify-content:center; margin-top:12px;
-    font-size:0.9rem; color:#555;
+    font-size:0.9rem; color:var(--muted);
   }
   .legend .dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-left:4px; vertical-align:middle; }
-  .legend .dot.known { background:#aed581; }
-  .legend .dot.new   { background:#ffb74d; }
+  .legend .dot.known { background:var(--success); }
+  .legend .dot.new   { background:var(--reward); }
 
   /* stories */
   .story-card {
-    background: white; border: 4px solid #ce93d8; border-radius: 24px;
+    background: var(--surface); border: 1.5px solid var(--line); border-radius: 24px;
     padding: 22px 18px; margin-top: 12px; text-align: center;
   }
-  .story-title { color:#6a1b9a; font-size: 1.4rem; font-weight: bold; margin-bottom: 12px; }
+  .story-title { color:var(--accent); font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
   .story-text {
-    direction: ltr; font-size: 1.7rem; line-height: 2.2; color:#333;
+    direction: ltr; font-size: 1.7rem; line-height: 2.2; color:var(--ink);
     text-align: center; padding: 8px 0;
   }
   .story-sentence { display:block; margin: 8px 0; position: relative; }
   .story-sentence-play {
-    background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
-    border: 2px solid #66bb6a; border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--accent); color: var(--accent);
+    border-radius: 50%;
     width: 34px; height: 34px; padding: 0;
     margin-inline-end: 8px; cursor: pointer; font-size: 1rem;
     vertical-align: middle;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     transition: transform 0.1s;
   }
   .story-sentence-play:hover { transform: scale(1.08); }
@@ -370,17 +541,18 @@
     border: 2px solid transparent;
   }
   .story-word.active {
-    background: linear-gradient(135deg, #fff59d, #ffeb3b);
-    border-color: #fbc02d; box-shadow: 0 2px 6px rgba(251,192,45,0.4);
+    background: var(--reward);
+    border-color: transparent; color: white;
+    box-shadow: 0 2px 6px rgba(255,122,89,0.4);
   }
-  .story-word.tap-open { background:#fff3e0; border-color:#ffb74d; }
+  .story-word.tap-open { background:var(--reward-soft); border-color:var(--reward); }
   @media (hover:hover) {
-    .story-word:hover { background:#f3e5f5; border-color:#ba68c8; }
+    .story-word:hover { background:var(--accent-soft); border-color:var(--accent); }
   }
   .story-tooltip {
     position: absolute; bottom: calc(100% + 6px); left: 50%;
     transform: translateX(-50%);
-    background: #4a148c; color: white;
+    background: var(--ink); color: white;
     padding: 8px 14px; border-radius: 12px;
     font-size: 1rem; line-height: 1.3; white-space: nowrap;
     direction: rtl; text-align: center;
@@ -389,24 +561,24 @@
     z-index: 50;
   }
   .story-tooltip .tt-pron {
-    display:block; font-size: 0.9rem; color:#e1bee7; margin-top:2px;
+    display:block; font-size: 0.9rem; color:rgba(255,255,255,0.7); margin-top:2px;
   }
   .story-tooltip::after {
     content: ''; position: absolute; top: 100%; left: 50%;
     transform: translateX(-50%);
-    border: 6px solid transparent; border-top-color: #4a148c;
+    border: 6px solid transparent; border-top-color: var(--ink);
   }
   @media (hover:hover) {
     .story-word:hover .story-tooltip { opacity: 1; }
   }
   .story-word.tap-open .story-tooltip { opacity: 1; }
   .story-pron {
-    direction: rtl; font-size: 1.1rem; color:#666;
+    direction: rtl; font-size: 1.1rem; color:var(--muted);
     margin-top: 12px; line-height: 1.6;
   }
   .story-pron-line { display:block; }
   .story-he {
-    color:#c2185b; font-size: 1.15rem; margin-top: 14px;
+    color:var(--ink); font-size: 1.15rem; margin-top: 14px;
     line-height: 1.6; direction: rtl;
   }
   .story-he-line { display:block; }
@@ -420,11 +592,12 @@
     display: flex; justify-content: flex-end;
   }
   .chat-reset {
-    background: white; border: 2px solid #ef9a9a; border-radius: 12px;
-    color: #c62828; padding: 6px 12px; cursor: pointer;
-    font-family: inherit; font-weight: bold; font-size: 0.9rem;
+    background: var(--surface); border: 1.5px solid var(--danger); border-radius: 12px;
+    color: var(--danger); padding: 6px 12px; cursor: pointer;
+    font-family: inherit; font-weight: 700; font-size: 0.9rem;
+    transition: background var(--transition), color var(--transition);
   }
-  .chat-reset:hover:not(:disabled) { background: #ffebee; }
+  .chat-reset:hover:not(:disabled) { background: var(--danger); color: white; }
   .chat-reset:disabled { opacity: 0.4; cursor: not-allowed; }
   .chat-list {
     background: rgba(255,255,255,0.6); border-radius: 16px;
@@ -437,14 +610,14 @@
     position: relative;
   }
   .chat-user {
-    background: linear-gradient(135deg, #b3e5fc, #81d4fa);
-    color: #01579b; align-self: flex-start;
+    background: var(--accent-soft);
+    color: var(--accent); align-self: flex-start;
     border-bottom-left-radius: 6px;
     direction: ltr; text-align: left;
   }
   .chat-llm {
-    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-    color: #4a148c; align-self: flex-end;
+    background: var(--reward-soft);
+    color: var(--ink); align-self: flex-end;
     border-bottom-right-radius: 6px;
     padding-top: 32px;
   }
@@ -454,17 +627,18 @@
     display: flex; gap: 4px;
   }
   .chat-tx {
-    background: white; border: 1px solid #ce93d8;
+    background: var(--surface); border: 1px solid var(--line);
     border-radius: 50%; width: 26px; height: 26px;
     padding: 0; cursor: pointer; font-size: 0.85rem;
     line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color var(--transition), background var(--transition);
   }
-  .chat-tx:hover { background: #f3e5f5; }
+  .chat-tx:hover { background: var(--accent-soft); border-color: var(--accent); }
   .chat-bubble-he {
     margin-top: 8px; padding-top: 8px;
-    border-top: 1px dashed #ba68c8;
+    border-top: 1px dashed var(--line);
     direction: rtl; text-align: right;
-    color: #6a1b9a; font-size: 1rem;
+    color: var(--ink); font-size: 1rem;
   }
   .chat-pending {
     display: inline-flex; gap: 6px; align-items: center;
@@ -472,7 +646,7 @@
   }
   .chat-pending .dot {
     width: 8px; height: 8px; border-radius: 50%;
-    background: #ba68c8; animation: chatBounce 1.2s infinite ease-in-out;
+    background: var(--accent); animation: chatBounce 1.2s infinite ease-in-out;
   }
   .chat-pending .dot:nth-child(2) { animation-delay: 0.2s; }
   .chat-pending .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -485,13 +659,15 @@
   }
   .chat-composer input[type="text"] {
     flex: 1; padding: 10px 14px; font-size: 1.05rem;
-    border: 2px solid #ba68c8; border-radius: 16px;
+    border: 1.5px solid var(--line); border-radius: 16px;
     direction: ltr; font-family: inherit;
+    transition: border-color var(--transition);
   }
+  .chat-composer input[type="text"]:focus { border-color: var(--accent); outline: none; }
   .chat-composer input[type="text"]:disabled { opacity: 0.6; }
   .chat-error {
-    background: #ffebee; color: #c62828;
-    border: 2px solid #ef9a9a; border-radius: 14px;
+    background: rgba(198,40,40,0.08); color: var(--danger);
+    border: 1.5px solid var(--danger); border-radius: 14px;
     padding: 8px 12px; font-size: 0.95rem; text-align: center;
   }
 
@@ -500,42 +676,46 @@
     display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap;
   }
   .m-tab {
-    background:white; border:3px solid #e0e0e0; border-radius:14px;
-    padding:8px 16px; font-weight:bold; cursor:pointer; font-family:inherit; font-size:1rem;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+    padding:8px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:1rem;
+    color: var(--ink);
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .m-tab.active { background:linear-gradient(135deg,#ffb74d,#fb8c00); color:white; border-color:transparent; }
-  .m-heading { color:#4527a0; margin:18px 0 10px; }
+  .m-tab:hover { border-color: var(--accent); }
+  .m-tab.active { background:var(--accent); color:white; border-color:transparent; }
+  .m-heading { color:var(--accent); margin:18px 0 10px; }
   .form-grid {
     display:grid; grid-template-columns: 1fr 1fr; gap:10px;
   }
   @media (max-width:520px) { .form-grid { grid-template-columns: 1fr; } }
   .form-grid label {
-    display:flex; flex-direction:column; font-weight:bold; color:#555; font-size:0.95rem; gap:4px;
+    display:flex; flex-direction:column; font-weight:700; color:var(--muted); font-size:0.95rem; gap:4px;
   }
   .form-grid input, .words-textarea {
-    border:2px solid #e0e0e0; border-radius:12px; padding:10px 12px; font-size:1.05rem;
-    font-family:inherit; outline:none; transition: border-color 0.15s;
+    border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; font-size:1.05rem;
+    font-family:inherit; outline:none; transition: border-color var(--transition);
   }
-  .form-grid input:focus, .words-textarea:focus { border-color:#ba68c8; }
+  .form-grid input:focus, .words-textarea:focus { border-color:var(--accent); }
   .words-textarea { width:100%; min-height:120px; margin-top:8px; resize:vertical; direction:ltr; }
-  .req { color:#e53935; }
+  .req { color:var(--danger); }
   .m-table {
-    width:100%; border-collapse:collapse; margin-top:8px; background:white; border-radius:12px; overflow:hidden;
+    width:100%; border-collapse:collapse; margin-top:8px; background:var(--surface); border-radius:12px; overflow:hidden;
   }
-  .m-table th { background:#f3e5f5; color:#4a148c; padding:8px 6px; font-size:0.9rem; text-align:right; }
-  .m-table td { padding:8px 6px; border-bottom:1px solid #f0f0f0; font-size:0.95rem; }
+  .m-table th { background:var(--accent-soft); color:var(--accent); padding:8px 6px; font-size:0.9rem; text-align:right; }
+  .m-table td { padding:8px 6px; border-bottom:1px solid var(--line); font-size:0.95rem; }
   .row-actions { display:flex; gap:4px; justify-content:flex-end; }
   .mini {
-    background:white; border:2px solid #e0e0e0; border-radius:10px; padding:4px 8px;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:10px; padding:4px 8px;
     cursor:pointer; font-size:0.95rem; font-family:inherit;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .mini:hover { border-color:#ba68c8; }
-  .mini.danger:hover { border-color:#e53935; background:#ffebee; }
-  .empty-note { color:#888; text-align:center; padding:16px; background:#fafafa; border-radius:12px; }
+  .mini:hover { border-color:var(--accent); }
+  .mini.danger:hover { border-color:var(--danger); color:var(--danger); background:rgba(198,40,40,0.06); }
+  .empty-note { color:var(--muted); text-align:center; padding:16px; background:var(--canvas); border-radius:12px; }
   .io-row { display:flex; gap:8px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
-  .builtin-list { margin-top:16px; background:#fafafa; border-radius:12px; padding:8px 14px; }
-  .builtin-list summary { cursor:pointer; font-weight:bold; color:#555; }
-  code { background:#f3e5f5; padding:2px 6px; border-radius:6px; font-size:0.9rem; }
+  .builtin-list { margin-top:16px; background:var(--canvas); border-radius:12px; padding:8px 14px; }
+  .builtin-list summary { cursor:pointer; font-weight:700; color:var(--muted); }
+  code { background:var(--accent-soft); color:var(--accent); padding:2px 6px; border-radius:6px; font-size:0.9rem; }
 
   /* user / admin tab */
   .user-stats {
@@ -543,97 +723,95 @@
     gap:10px; margin-bottom:20px;
   }
   .ustat {
-    background: linear-gradient(135deg, #fce4ec, #e1bee7);
+    background: var(--accent-soft);
     border-radius:16px; padding:14px 8px; text-align:center;
-    color:#4a148c; font-weight:bold;
+    color:var(--accent); font-weight:700;
   }
-  .ustat .big { font-size:1.8rem; color:#d81b60; }
+  .ustat .big { font-size:1.8rem; color:var(--accent); }
 
   .admin-box {
-    background: #fafafa;
-    border: 2px dashed #ce93d8;
+    background: var(--canvas);
+    border: 2px dashed var(--line);
     border-radius:18px; padding:14px 18px;
   }
   .admin-box > summary {
-    cursor:pointer; font-weight:bold; color:#6a1b9a; font-size:1.1rem;
+    cursor:pointer; font-weight:700; color:var(--accent); font-size:1.1rem;
     padding:4px 0;
   }
   .admin-body { padding-top:8px; }
   .ext-row { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0; }
   .ext-textarea {
     width:100%; min-height:180px; padding:12px 14px; border-radius:14px;
-    border:2px solid #e0e0e0; font-family: "SF Mono", Menlo, Consolas, monospace;
+    border:1.5px solid var(--line); font-family: "SF Mono", Menlo, Consolas, monospace;
     font-size:0.95rem; outline:none; resize:vertical;
+    transition: border-color var(--transition);
   }
-  .ext-textarea:focus { border-color:#ba68c8; }
+  .ext-textarea:focus { border-color:var(--accent); }
   .preview-box {
-    background:#fff8e1; border-radius:16px; padding:14px 16px; margin-top:14px;
-    border:2px solid #ffd54f;
+    background:var(--reward-soft); border-radius:16px; padding:14px 16px; margin-top:14px;
+    border:1.5px solid var(--reward);
   }
-  .preview-box h4 { color:#e65100; margin-bottom:6px; }
+  .preview-box h4 { color:var(--ink); margin-bottom:6px; }
 
   .pin-card {
-    background:#fff; border:2px solid #e1bee7; border-radius:18px;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:18px;
     padding:18px 20px; margin-top:8px;
   }
-  .pin-card h3 { color:#6a1b9a; margin-bottom:8px; }
+  .pin-card h3 { color:var(--accent); margin-bottom:8px; }
   .pin-row {
     display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;
   }
   .pin-row input {
-    border:2px solid #e0e0e0; border-radius:12px; padding:10px 14px;
+    border:1.5px solid var(--line); border-radius:12px; padding:10px 14px;
     font-size:1.4rem; font-family:inherit; outline:none;
     width:140px; text-align:center; letter-spacing:0.4em; direction:ltr;
+    transition: border-color var(--transition);
   }
-  .pin-row input:focus { border-color:#ba68c8; }
-  .pin-error { color:#c62828; font-weight:bold; margin-top:8px; min-height:1.2em; }
+  .pin-row input:focus { border-color:var(--accent); }
+  .pin-error { color:var(--danger); font-weight:700; margin-top:8px; min-height:1.2em; }
 
-  /* curriculum units */
-  .unit-pill {
-    background:linear-gradient(135deg,#fff3e0,#ffe0b2);
-    border:2px solid #ffb74d; border-radius:14px;
-    padding:6px 14px; font-weight:bold; color:#e65100;
-    cursor:pointer; font-size:0.95rem;
+  /* profile chip (replaces lang/speed/unit pills + greet + buttons) */
+  .profile-chip {
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 18px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
   }
-  .unit-pill:hover { transform:translateY(-1px); }
-  .lang-pill {
-    background:linear-gradient(135deg,#e3f2fd,#bbdefb);
-    border:2px solid #64b5f6; border-radius:14px;
-    padding:6px 14px; font-weight:bold; color:#1565c0;
-    cursor:pointer; font-size:0.95rem;
-  }
-  .lang-pill:hover { transform:translateY(-1px); }
-  .speed-pill {
-    background:linear-gradient(135deg,#f3e5f5,#e1bee7);
-    border:2px solid #ba68c8; border-radius:14px;
-    padding:6px 14px; font-weight:bold; color:#6a1b9a;
-    cursor:pointer; font-size:0.95rem;
-  }
-  .speed-pill:hover { transform:translateY(-1px); }
+  .profile-chip:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .profile-chip[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+  .profile-chip .chip-emoji { font-size: 1.1rem; }
+  .profile-chip .chip-dot { color: var(--line); margin: 0 2px; }
   .units-grid {
     display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap:12px; max-width:720px; margin:0 auto;
   }
   .unit-tile {
-    background:white; border:3px solid #e0e0e0; border-radius:18px;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:18px;
     padding:14px 12px; text-align:right; cursor:pointer; font-family:inherit;
-    transition:transform 0.15s, border-color 0.15s;
+    transition:transform 0.15s, border-color 0.15s, background var(--transition);
   }
-  .unit-tile.unlocked:hover { transform:translateY(-2px); border-color:#ba68c8; }
-  .unit-tile.locked { opacity:0.5; cursor:not-allowed; background:#fafafa; }
-  .unit-tile.current { border-color:#fbc02d; background:linear-gradient(135deg,#fff8e1,#ffecb3); }
-  .unit-tile .unit-num   { font-size:1.05rem; font-weight:bold; color:#4527a0; }
-  .unit-tile .unit-name  { font-size:1.2rem; font-weight:bold; color:#c2185b; margin-top:4px; }
-  .unit-tile .unit-meta  { font-size:0.85rem; color:#666; margin-top:4px; }
-  .unit-tile .unit-hint  { font-size:0.85rem; color:#888; margin-top:4px; font-style:italic; }
-  .unit-tile.current .unit-hint { color:#e65100; font-weight:bold; font-style:normal; }
+  .unit-tile.unlocked:hover { transform:translateY(-2px); border-color:var(--accent); }
+  .unit-tile.locked { opacity:0.5; cursor:not-allowed; background:var(--canvas); }
+  .unit-tile.current { border-color:var(--reward); background:var(--reward-soft); }
+  .unit-tile .unit-num   { font-size:1.05rem; font-weight:700; color:var(--muted); }
+  .unit-tile .unit-name  { font-size:1.2rem; font-weight:700; color:var(--ink); margin-top:4px; }
+  .unit-tile .unit-meta  { font-size:0.85rem; color:var(--muted); margin-top:4px; }
+  .unit-tile .unit-hint  { font-size:0.85rem; color:var(--muted); margin-top:4px; font-style:italic; }
+  .unit-tile.current .unit-hint { color:var(--reward); font-weight:700; font-style:normal; }
 
   .unit-unlock-toast {
     position:fixed; left:50%; top:30%; transform:translateX(-50%);
-    background:linear-gradient(135deg,#ff7043,#ffb74d);
+    background:var(--reward);
     color:white; padding:18px 28px; border-radius:18px;
-    font-size:1.3rem; font-weight:bold; text-align:center;
-    box-shadow:0 12px 40px rgba(255,112,67,0.4);
+    font-size:1.3rem; font-weight:700; text-align:center;
+    box-shadow:0 12px 40px rgba(255,122,89,0.45);
     z-index:9999; animation: unitPop 0.4s ease-out;
   }
   @keyframes unitPop {
@@ -646,13 +824,14 @@
     display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; margin-top:10px;
   }
   .emoji-tile {
-    background:white; border:2px solid #e0e0e0; border-radius:14px;
-    font-size:2rem; padding:8px; cursor:pointer; transition:transform 0.1s;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+    font-size:2rem; padding:8px; cursor:pointer;
+    transition:transform 0.1s, border-color var(--transition), background var(--transition);
     aspect-ratio: 1;
     display:flex; align-items:center; justify-content:center;
   }
-  .emoji-tile:hover { transform:scale(1.1); border-color:#ba68c8; }
-  .emoji-tile.selected { background:linear-gradient(135deg,#fce4ec,#e1bee7); border-color:#ba68c8; box-shadow:0 0 0 3px rgba(186,104,200,0.3); }
+  .emoji-tile:hover { transform:scale(1.1); border-color:var(--accent); }
+  .emoji-tile.selected { background:var(--accent-soft); border-color:var(--accent); box-shadow:0 0 0 3px rgba(103,80,164,0.25); }
 
   /* auth bar + overlays */
   /* `display: flex` etc. on these elements overrides the [hidden] UA rule,
@@ -663,35 +842,38 @@
     display:flex; justify-content:flex-end; align-items:center; gap:8px;
     max-width:720px; margin:0 auto 12px; flex-wrap:wrap;
   }
-  .auth-bar .ab-greet { color:#555; font-weight:bold; }
+  .auth-bar .ab-greet { color:var(--muted); font-weight:700; }
   .auth-bar .ab-btn {
-    background:white; border:2px solid #e0e0e0; border-radius:14px;
-    padding:6px 14px; cursor:pointer; font-family:inherit; font-weight:bold;
-    color:#4a148c; font-size:0.95rem;
+    background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+    padding:6px 14px; cursor:pointer; font-family:inherit; font-weight:700;
+    color:var(--ink); font-size:0.95rem;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
   }
-  .auth-bar .ab-btn:hover { border-color:#ba68c8; }
+  .auth-bar .ab-btn:hover { border-color:var(--accent); }
   .auth-bar .ab-primary {
-    background:linear-gradient(135deg,#66bb6a,#43a047); color:white; border-color:transparent;
+    background:var(--accent); color:white; border-color:transparent;
   }
+  .auth-bar .ab-primary:hover { background:var(--accent-2); }
 
   .auth-overlay {
     position:fixed; inset:0; z-index:1000;
-    background:linear-gradient(135deg, rgba(252,228,236,0.97), rgba(227,242,253,0.97));
+    background: rgba(251,246,238,0.97);
     display:flex; align-items:center; justify-content:center; padding:16px; overflow-y:auto;
   }
   .auth-card {
-    background:white; border-radius:24px; padding:24px 28px;
+    background:var(--surface); border-radius:24px; padding:24px 28px;
     max-width:560px; width:100%;
     box-shadow:0 20px 60px rgba(0,0,0,0.15);
     text-align:center;
   }
-  .auth-card h2 { color:#d81b60; margin-bottom:8px; }
-  .auth-card p.muted { color:#666; margin-bottom:14px; }
+  .auth-card h2 { color:var(--accent); margin-bottom:8px; }
+  .auth-card p.muted { color:var(--muted); margin-bottom:14px; }
   .auth-card input[type=email], .auth-card input[type=text] {
-    width:100%; padding:12px 14px; border:2px solid #e0e0e0; border-radius:14px;
+    width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:14px;
     font-size:1.05rem; font-family:inherit; outline:none;
+    transition: border-color var(--transition);
   }
-  .auth-card input:focus { border-color:#ba68c8; }
+  .auth-card input:focus { border-color:var(--accent); }
   .auth-card .row { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
 
   .picker-grid {
@@ -699,15 +881,15 @@
     gap:14px; margin-top:18px;
   }
   .picker-tile {
-    background:linear-gradient(135deg, #fff, #f3e5f5);
-    border:3px solid #ce93d8; border-radius:20px;
+    background:var(--surface);
+    border:1.5px solid var(--line); border-radius:20px;
     padding:18px 12px; text-align:center; cursor:pointer; font-family:inherit;
-    transition:transform 0.15s;
+    transition:transform 0.15s, border-color var(--transition);
   }
-  .picker-tile:hover { transform:translateY(-2px); }
+  .picker-tile:hover { transform:translateY(-2px); border-color:var(--accent); }
   .picker-tile .pt-emoji { font-size:3rem; display:block; }
-  .picker-tile .pt-name  { font-weight:bold; color:#4527a0; margin-top:4px; }
-  .picker-tile .pt-lock  { font-size:0.85rem; color:#888; margin-top:2px; }
+  .picker-tile .pt-name  { font-weight:700; color:var(--ink); margin-top:4px; }
+  .picker-tile .pt-lock  { font-size:0.85rem; color:var(--muted); margin-top:2px; }
   .picker-tile.add { border-style:dashed; }
 
   .contact-modal {
@@ -717,31 +899,32 @@
   }
   .contact-modal .auth-card { text-align:right; }
   .contact-modal textarea {
-    width:100%; min-height:80px; padding:10px 12px; border:2px solid #e0e0e0;
+    width:100%; min-height:80px; padding:10px 12px; border:1.5px solid var(--line);
     border-radius:12px; font-family:inherit; font-size:1rem; outline:none; resize:vertical;
+    transition: border-color var(--transition);
   }
-  .contact-modal textarea:focus { border-color:#ba68c8; }
+  .contact-modal textarea:focus { border-color:var(--accent); }
   .honeypot {
     position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; opacity:0;
   }
 
   .request-row {
-    background:white; border:1px solid #eee; border-radius:14px;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
     padding:10px 14px; margin-bottom:8px;
   }
-  .request-row.pending { border-right:6px solid #ffb74d; }
-  .request-row.approved { border-right:6px solid #aed581; opacity:0.7; }
-  .request-row.rejected { border-right:6px solid #ef9a9a; opacity:0.5; }
-  .request-meta { color:#888; font-size:0.85rem; }
+  .request-row.pending { border-right:6px solid var(--reward); }
+  .request-row.approved { border-right:6px solid var(--success); opacity:0.7; }
+  .request-row.rejected { border-right:6px solid var(--danger); opacity:0.5; }
+  .request-meta { color:var(--muted); font-size:0.85rem; }
   .req-dot {
     display:inline-block; width:10px; height:10px; border-radius:50%;
-    background:#e53935; vertical-align:middle; margin-right:6px;
-    box-shadow:0 0 0 3px rgba(229,57,53,0.25);
+    background:var(--danger); vertical-align:middle; margin-right:6px;
+    box-shadow:0 0 0 3px rgba(198,40,40,0.25);
   }
 
   footer {
     text-align: center;
-    color: #888;
+    color: var(--muted);
     font-size: 0.85rem;
     margin-top: 24px;
   }
@@ -770,6 +953,31 @@
 </head>
 <body>
 
+<!-- Lucide icon sprite (MIT licensed). Inline so we keep the no-build promise. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="icon-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12a9 9 0 0 0-15-6.7L3 8"/><path d="M3 3v5h5"/>
+    <path d="M3 12a9 9 0 0 0 15 6.7L21 16"/><path d="M16 16h5v5"/>
+  </symbol>
+  <symbol id="icon-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+  </symbol>
+  <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </symbol>
+  <symbol id="icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+  </symbol>
+  <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+  </symbol>
+</svg>
+
 <header>
   <h1>לתרגל שפות עם חיוך 🌈</h1>
   <p class="subtitle">תרגול בין שיעורים — בהצלחה! ✨</p>
@@ -786,18 +994,15 @@
 </div>
 
 <div class="panel">
-  <div class="modes">
-    <button data-mode="flash" class="active">🎴 כרטיסיות</button>
-    <button data-mode="quiz">🎯 חידון</button>
-    <button data-mode="listen">🔊 הקשבה</button>
-    <button data-mode="match">🧩 התאמה</button>
-    <button data-mode="sentences">🗣️ משפטים</button>
-    <button data-mode="stories">📕 סיפורים</button>
-    <button data-mode="chat" data-auth-only hidden>💬 שיחה</button>
-    <button data-mode="units">📚 יחידות</button>
-    <button data-mode="guide">📖 הגייה</button>
-    <button data-mode="manage">📝 הוסיפי</button>
-    <button data-mode="user">👤 שלי</button>
+  <div class="modes" id="modesBar">
+    <button data-mode="flash" class="mode-tab active" aria-label="כרטיסיות" title="כרטיסיות"><span class="tab-emoji" aria-hidden="true">🎴</span><span class="tab-label">כרטיסיות</span></button>
+    <button data-mode="quiz" class="mode-tab" aria-label="חידון" title="חידון"><span class="tab-emoji" aria-hidden="true">🎯</span><span class="tab-label">חידון</span></button>
+    <button data-mode="listen" class="mode-tab" aria-label="הקשבה" title="הקשבה"><span class="tab-emoji" aria-hidden="true">🔊</span><span class="tab-label">הקשבה</span></button>
+    <button data-mode="match" class="mode-tab" aria-label="התאמה" title="התאמה"><span class="tab-emoji" aria-hidden="true">🧩</span><span class="tab-label">התאמה</span></button>
+    <button data-mode="sentences" class="mode-tab" aria-label="משפטים" title="משפטים"><span class="tab-emoji" aria-hidden="true">🗣️</span><span class="tab-label">משפטים</span></button>
+    <button data-mode="stories" class="mode-tab" aria-label="סיפורים" title="סיפורים"><span class="tab-emoji" aria-hidden="true">📕</span><span class="tab-label">סיפורים</span></button>
+    <button data-mode="chat" class="mode-tab" data-auth-only hidden aria-label="שיחה" title="שיחה"><span class="tab-emoji" aria-hidden="true">💬</span><span class="tab-label">שיחה</span></button>
+    <button class="mode-more" id="modesMoreBtn" aria-haspopup="true" aria-expanded="false" aria-label="עוד" title="עוד"><span class="tab-emoji" aria-hidden="true">☰</span><span class="tab-label">עוד</span></button>
   </div>
 
   <div class="filter-row" id="filters"></div>
@@ -807,7 +1012,7 @@
 
 <footer>
   נבנה באהבה ❤️ • לחיצה על המילה הזרה = שמיעת ההגייה<br>
-  <a href="#" id="contact-link" style="color:#7e57c2;">רוצה את זה למשפחה שלך? בקשי גישה</a>
+  <a href="#" id="contact-link" style="color:var(--accent);">רוצה את זה למשפחה שלך? בקשי גישה</a>
 </footer>
 
 <div id="auth-overlay" class="auth-overlay" hidden></div>
@@ -3643,7 +3848,21 @@ function getStories() {
 function getStoriesInScope() { return getStories().filter(inUnitScope); }
 
 const BUILTIN_VOCAB = VOCAB;  // alias — practice modes always use the merged list via getVocab()
-const BUILTIN_CAT_EMOJI = { "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨" };
+const BUILTIN_CAT_EMOJI = {
+  // Original five
+  "ברכות": "👋", "אנשים": "👨‍👩‍👧", "צבעים": "🎨", "אוכל": "🍽️", "שונות": "✨",
+  // Numbers / language tools
+  "מספרים": "🔢", "כינויים": "👥", "מילות קישור": "🔗", "בסיס": "🌱",
+  // Family / home / place / time
+  "משפחה": "👨‍👩‍👧‍👦", "בית": "🏠", "מקום": "📍", "זמן": "⏰", "נימוסים": "🙏",
+  // Descriptors / shapes / sizes
+  "תיאורים": "🔍", "צורות": "🔷", "גדלים": "📏",
+  // Nature / animals / body / school / outdoors / weather
+  "חיות": "🐾", "גוף": "💪", "בית ספר": "🎒", "חוץ": "🌳", "מזג אוויר": "🌦️",
+  "טבע": "🌿", "בריאות": "🩺",
+  // Emotions / verbs
+  "רגשות": "😊", "פעלים": "🏃",
+};
 const USER_VOCAB_KEY = "ro-kids-user-vocab-v1";
 
 // User-added words, persisted to localStorage. Shape: { id, he, ro, pron, cat, emoji, note }
@@ -3669,7 +3888,10 @@ function getCategories() {
 }
 function getCategoryEmoji(cat) {
   if (cat === "הכול") return "🌈";
-  return BUILTIN_CAT_EMOJI[cat] || "🏷️";
+  if (BUILTIN_CAT_EMOJI[cat]) return BUILTIN_CAT_EMOJI[cat];
+  // Custom user categories fall back to the current unit's emoji — never a generic tag.
+  try { return unitOf(state.currentUnit).emoji || "🌱"; }
+  catch (_) { return "🌱"; }
 }
 
 // ====== Curriculum units ======
@@ -3844,16 +4066,59 @@ function pickFeedback(good) {
 }
 
 // ====== Render: filters ======
+// Single trigger button that opens a popover listing every category.
 function renderFilters() {
   const wrap = document.getElementById("filters");
   if (["guide", "manage", "sentences", "user", "units", "requests"].includes(state.mode)) { wrap.innerHTML = ""; return; }
+  const cat = state.category || "הכול";
+  wrap.innerHTML = `
+    <button class="category-trigger" id="categoryTrigger" aria-haspopup="true" aria-expanded="false">
+      <span class="cat-emoji" aria-hidden="true">${getCategoryEmoji(cat)}</span>
+      <span>קטגוריה: ${escapeHtml(cat)}</span>
+      <span class="cat-caret" aria-hidden="true">▾</span>
+    </button>
+  `;
+  const trigger = document.getElementById("categoryTrigger");
+  if (trigger) trigger.onclick = (e) => { e.stopPropagation(); toggleCategoryPopover(); };
+}
+
+function toggleCategoryPopover() {
+  let pop = document.getElementById('categoryPopover');
+  const trigger = document.getElementById('categoryTrigger');
+  if (!trigger) return;
+  const wasOpen = pop && pop.getAttribute('data-open') === 'true';
+  closeShellPopovers();
+  if (wasOpen) return;
+  if (!pop) {
+    pop = document.createElement('div');
+    pop.id = 'categoryPopover';
+    pop.className = 'shell-popover';
+    pop.dataset.trigger = 'categoryTrigger';
+    pop.setAttribute('role', 'menu');
+    document.body.appendChild(pop);
+  }
+  refreshCategoryPopover(pop);
+  positionPopoverBelow(pop, trigger);
+  pop.setAttribute('data-open', 'true');
+  trigger.setAttribute('aria-expanded', 'true');
+}
+
+function refreshCategoryPopover(pop) {
   const cats = getCategories();
-  wrap.innerHTML = cats.map(c =>
-    `<button class="chip ${state.category === c ? "active" : ""}" data-cat="${c}">${getCategoryEmoji(c)} ${c}</button>`
-  ).join("");
-  wrap.querySelectorAll(".chip").forEach(b => {
+  const all = getVocab();
+  const countFor = (c) => c === "הכול" ? all.length : all.filter(w => w.cat === c).length;
+  const rows = cats.map(c => `
+    <button class="shell-popover-row ${state.category === c ? 'active' : ''}" data-cat="${escapeHtml(c)}" role="menuitem">
+      <span class="row-emoji" aria-hidden="true">${getCategoryEmoji(c)}</span>
+      <span>${escapeHtml(c)}</span>
+      <span class="row-count">${countFor(c)}</span>
+    </button>
+  `).join("");
+  pop.innerHTML = `<div class="shell-popover-scroll">${rows}</div>`;
+  pop.querySelectorAll('[data-cat]').forEach(b => {
     b.onclick = () => {
       state.category = b.dataset.cat;
+      closeShellPopovers();
       resetModeState();
       render();
     };
@@ -3888,7 +4153,7 @@ function renderFlash() {
 
   return `
     <div class="flashcard-area">
-      <p style="color:#888; font-size:0.95rem;">כרטיסייה ${state.flashIdx + 1} מתוך ${list.length} ${state.category !== "הכול" ? "(" + state.category + ")" : ""}</p>
+      <p style="color:var(--muted); font-size:0.95rem;">כרטיסייה ${state.flashIdx + 1} מתוך ${list.length} ${state.category !== "הכול" ? "(" + state.category + ")" : ""}</p>
       <div class="card" id="card">
         <div class="emoji">${word.emoji}</div>
         ${flipped ? `
@@ -4027,9 +4292,9 @@ function renderListen() {
   if (!state.listenCurrent) newListen();
   return `
     <div class="listen-area">
-      <p style="font-size:1.1rem; color:#555;">לחצי על הרמקול ונסי לזהות את המילה 👂</p>
+      <p style="font-size:1.1rem; color:var(--muted);">לחצי על הרמקול ונסי לזהות את המילה 👂</p>
       <button class="listen-btn" id="playRo">🔊</button>
-      <p style="color:#999; font-size:0.95rem;">אפשר ללחוץ שוב כמה פעמים</p>
+      <p style="color:var(--muted); font-size:0.95rem;">אפשר ללחוץ שוב כמה פעמים</p>
       <div class="options" id="opts" style="max-width:520px; margin:16px auto 0;">
         ${state.listenOptions.map((o, i) => `<button class="opt" data-i="${i}">${o.emoji} ${o.he}</button>`).join("")}
       </div>
@@ -4101,7 +4366,7 @@ function renderMatch() {
   const matched = state.matchMatched;
   const allDone = matched.size === picks.length;
   return `
-    <p style="text-align:center; color:#555;">לחצי על מילה בעברית ואז על המילה המתאימה ב${targetLangNameHe()} 🧩</p>
+    <p style="text-align:center; color:var(--muted);">לחצי על מילה בעברית ואז על המילה המתאימה ב${targetLangNameHe()} 🧩</p>
     <div class="match-grid" id="matchGrid" style="margin-top:12px;">
       ${left.map(item => `
         <button class="opt ${state.matchSelected && state.matchSelected.side === "he" && state.matchSelected.id === item.id ? "selected" : ""} ${matched.has("he-" + item.id) ? "matched" : ""}" data-side="he" data-id="${item.id}">${item.label}</button>
@@ -4194,7 +4459,7 @@ function renderSentences() {
   }).join("");
   return `
     <div style="text-align:center;">
-      <p style="color:#888;">משפט ${state.sentenceIdx + 1} מתוך ${list.length} ${s.theme ? "· " + s.theme : ""}</p>
+      <p style="color:var(--muted);">משפט ${state.sentenceIdx + 1} מתוך ${list.length} ${s.theme ? "· " + s.theme : ""}</p>
       <div class="card sentence-card" id="sentenceCard">
         <div class="emoji">${s.emoji || "💬"}</div>
         <div class="he" style="font-size:2rem;">${s.he}</div>
@@ -4361,7 +4626,7 @@ function renderStories() {
 
   return `
     <div style="text-align:center;">
-      <p style="color:#888;">סיפור ${state.storyIdx + 1} מתוך ${list.length} ${story.theme ? '· ' + story.theme : ''}</p>
+      <p style="color:var(--muted);">סיפור ${state.storyIdx + 1} מתוך ${list.length} ${story.theme ? '· ' + story.theme : ''}</p>
       <div class="card story-card">
         <div class="emoji">${story.emoji || '📕'}</div>
         <div class="story-title">${escapeHtml(story.titleHe || '')}</div>
@@ -4375,7 +4640,7 @@ function renderStories() {
         <button class="btn" id="storyNext">הבא ➡️</button>
         <button class="btn shuffle" id="storyShuffle">🔀 ערבבי</button>
       </div>
-      <p class="hint" style="margin-top:10px; color:#888; font-size:0.92rem;">
+      <p class="hint" style="margin-top:10px; color:var(--muted); font-size:0.92rem;">
         💡 ${matchMedia('(hover:hover)').matches ? 'ריחפי עם העכבר על מילה כדי לראות את המשמעות' : 'הקישי על מילה כדי לראות את המשמעות'}
       </p>
     </div>
@@ -4589,10 +4854,10 @@ function renderChat() {
   return `
     <div class="chat-wrap">
       <div class="chat-toolbar">
-        <button class="chat-reset" id="chatReset" ${state.chatPending || !hasMessages ? 'disabled' : ''} title="נקי את כל השיחה ותתחילי מחדש">🗑️ שיחה חדשה</button>
+        <button class="chat-reset" id="chatReset" ${state.chatPending || !hasMessages ? 'disabled' : ''} title="נקי את כל השיחה ותתחילי מחדש"><svg class="icon icon-sm"><use href="#icon-refresh-cw"/></svg> שיחה חדשה</button>
       </div>
       <div class="chat-list" id="chatList">
-        ${hasMessages ? messagesHtml : `<p class="hint" style="text-align:center; color:#888; padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
+        ${hasMessages ? messagesHtml : `<p class="hint" style="text-align:center; color:var(--muted); padding:16px;">💬 כתבי ב${targetLangNameHe()} כדי להתחיל לדבר!</p>`}
         ${pendingHtml}
       </div>
       ${errHtml}
@@ -4600,7 +4865,7 @@ function renderChat() {
         <input type="text" id="chatInput" placeholder="${placeholder}" dir="ltr" lang="${state.language === 'en' ? 'en' : 'ro'}" ${state.chatPending ? 'disabled' : ''} maxlength="500">
         <button type="submit" id="chatSend" class="btn speak" ${state.chatPending ? 'disabled' : ''}>שלחי ➤</button>
       </form>
-      <p class="hint" style="margin-top:8px; color:#888; font-size:0.9rem; text-align:center;">
+      <p class="hint" style="margin-top:8px; color:var(--muted); font-size:0.9rem; text-align:center;">
         💡 ${matchMedia('(hover:hover)').matches ? 'ריחפי על מילה כדי לראות תרגום' : 'הקישי על מילה כדי לראות תרגום'} · 🔊 משמיעה את התשובה · 🇮🇱 מציגה תרגום
       </p>
     </div>
@@ -4881,7 +5146,7 @@ function renderManage() {
     <div class="io-row">
       <button class="btn" id="exportBtn">⬇️ ייצוא גיבוי</button>
       <button class="btn shuffle" id="importBtn">⬆️ ייבוא גיבוי</button>
-      <button class="btn" style="background:linear-gradient(135deg,#bdbdbd,#757575)" id="resetBtn">🗑️ אפסי הכול</button>
+      <button class="btn" style="background:var(--muted)" id="resetBtn">🗑️ אפסי הכול</button>
     </div>
   `;
 }
@@ -5260,7 +5525,7 @@ function renderUser() {
       <div class="admin-body">
         <div class="ext-row" style="justify-content:flex-end;">
           <button class="btn prev" id="pinLockBtn">🔒 נעל</button>
-          <button class="btn" style="background:linear-gradient(135deg,#bdbdbd,#757575)" id="pinChangeBtn">🔑 שינוי קוד</button>
+          <button class="btn" style="background:var(--muted)" id="pinChangeBtn">🔑 שינוי קוד</button>
         </div>
 
         <h3 class="m-heading">📥 העלאת מילון הרחבה</h3>
@@ -5289,17 +5554,17 @@ ${state.language === 'en' ? '|         | סוס  | Horse | הוֹרס | |' : '| 
           <button class="btn shuffle" id="uImport">⬆️ ייבא קובץ גיבוי</button>
         </div>
 
-        <h3 class="m-heading" style="margin-top:24px; color:#c62828;">⚠️ פעולות הרסניות</h3>
+        <h3 class="m-heading" style="margin-top:24px; color:var(--danger);">⚠️ פעולות הרסניות</h3>
         <div class="ext-row">
-          <button class="btn" style="background:linear-gradient(135deg,#ef9a9a,#e57373);" id="uResetVocab">🗑️ אפס מילון מורחב</button>
-          <button class="btn" style="background:linear-gradient(135deg,#ef9a9a,#e57373);" id="uResetProgress">📉 אפס התקדמות (נקודות/רצף)</button>
+          <button class="btn" style="background:var(--danger)" id="uResetVocab">🗑️ אפס מילון מורחב</button>
+          <button class="btn" style="background:var(--danger)" id="uResetProgress">📉 אפס התקדמות (נקודות/רצף)</button>
         </div>
       </div>
     `;
   }
 
   return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">👤 הפרופיל שלי</h2>
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:12px;">👤 הפרופיל שלי</h2>
     ${statsHtml}
     <details class="admin-box" open>
       <summary>🔐 אזור אדמין — להורה</summary>
@@ -5315,7 +5580,7 @@ function renderPreview(preview) {
   return `
     <div class="preview-box">
       <h4>תצוגה מקדימה (${type === "json" ? "JSON" : "Markdown"})</h4>
-      <p style="color:#555;">זוהו <b>${words.length}</b> מילים ו-<b>${sentences.length}</b> משפטים.</p>
+      <p style="color:var(--muted);">זוהו <b>${words.length}</b> מילים ו-<b>${sentences.length}</b> משפטים.</p>
       ${words.length ? `
         <table class="m-table">
           <tr><th>אימוג'י</th><th>עברית</th><th>${targetLangNameHe()}</th><th>הגייה</th><th>קטגוריה</th></tr>
@@ -5324,7 +5589,7 @@ function renderPreview(preview) {
             <td dir="ltr"><b>${escapeHtml(w.ro)}</b></td>
             <td>${escapeHtml(w.pron)}</td><td>${escapeHtml(w.cat)}</td>
           </tr>`).join("")}
-          ${words.length > wPreview.length ? `<tr><td colspan="5" style="text-align:center; color:#888;">...ועוד ${words.length - wPreview.length} מילים</td></tr>` : ""}
+          ${words.length > wPreview.length ? `<tr><td colspan="5" style="text-align:center; color:var(--muted);">...ועוד ${words.length - wPreview.length} מילים</td></tr>` : ""}
         </table>
       ` : ""}
       ${sentences.length ? `
@@ -5334,7 +5599,7 @@ function renderPreview(preview) {
             <td>${s.emoji}</td><td>${escapeHtml(s.he)}</td>
             <td dir="ltr"><b>${escapeHtml(s.ro)}</b></td>
           </tr>`).join("")}
-          ${sentences.length > sPreview.length ? `<tr><td colspan="3" style="text-align:center; color:#888;">...ועוד ${sentences.length - sPreview.length} משפטים</td></tr>` : ""}
+          ${sentences.length > sPreview.length ? `<tr><td colspan="3" style="text-align:center; color:var(--muted);">...ועוד ${sentences.length - sPreview.length} משפטים</td></tr>` : ""}
         </table>
       ` : ""}
       <div class="ext-row" style="margin-top:14px;">
@@ -5540,7 +5805,7 @@ function renderUnits() {
       </button>`;
   }).join('');
   return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:6px;">📚 יחידות לימוד</h2>
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:6px;">📚 יחידות לימוד</h2>
     <p class="hint" style="text-align:center; margin-bottom:14px;">
       התרגול ביחידה N כולל את כל המילים והמשפטים מהמילון הבסיסי, הוספות שלך, ויחידות 1 עד N.
     </p>
@@ -5561,8 +5826,8 @@ function attachUnitsEvents() {
       state.flashIdx = 0; state.sentenceIdx = 0; state.storyIdx = 0; state.flashFlipped = false; state.sentenceRevealed = false;
       // jump back to last-used practice mode (flash by default)
       state.mode = 'flash';
-      document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
-      const flashBtn = document.querySelector('.modes button[data-mode="flash"]');
+      document.querySelectorAll('.modes .mode-tab').forEach(x => x.classList.remove('active'));
+      const flashBtn = document.querySelector('.modes .mode-tab[data-mode="flash"]');
       if (flashBtn) flashBtn.classList.add('active');
       render();
     };
@@ -5612,23 +5877,23 @@ function renderGuide() {
       <div class="letter">i סופית</div><div class="desc">בדרך כלל מרככת את העיצור שלפניה ולא נשמעת כהברה מלאה</div>
   `;
   return `
-    <h2 style="color:#d81b60; text-align:center; margin-bottom:12px;">📖 איך לקרוא ב${targetLangNameHe()}</h2>
+    <h2 style="color:var(--accent); text-align:center; margin-bottom:12px;">📖 איך לקרוא ב${targetLangNameHe()}</h2>
     <div class="guide">${guideRows}</div>
 
-    <h3 style="margin-top:20px; color:#4527a0;">🌟 כל המילים שלך:</h3>
+    <h3 style="margin-top:20px; color:var(--accent);">🌟 כל המילים שלך:</h3>
     <div style="margin-top:8px;">
       ${getCategories().filter(c => c !== "הכול").map(cat => {
         const words = getVocab().filter(v => v.cat === cat);
         return `
-          <details style="margin-bottom:10px; background:#fff; border-radius:14px; padding:8px 14px;">
-            <summary style="font-weight:bold; color:#c2185b; font-size:1.1rem; cursor:pointer;">${getCategoryEmoji(cat)} ${cat} (${words.length})</summary>
+          <details style="margin-bottom:10px; background:var(--surface); border-radius:14px; padding:8px 14px;">
+            <summary style="font-weight:bold; color:var(--accent); font-size:1.1rem; cursor:pointer;">${getCategoryEmoji(cat)} ${cat} (${words.length})</summary>
             <table style="width:100%; border-collapse:collapse; margin-top:8px;">
               ${words.map(w => `
-                <tr style="border-bottom:1px solid #f0f0f0;">
+                <tr style="border-bottom:1px solid var(--line);">
                   <td style="padding:6px 4px;">${w.emoji}</td>
                   <td style="padding:6px 4px; font-weight:bold;">${w.he}</td>
-                  <td style="padding:6px 4px; color:#c2185b; font-weight:bold;">${w.ro}</td>
-                  <td style="padding:6px 4px; color:#666;">${w.pron || ''}</td>
+                  <td style="padding:6px 4px; color:var(--accent); font-weight:bold;">${w.ro}</td>
+                  <td style="padding:6px 4px; color:var(--muted);">${w.pron || ''}</td>
                   <td style="padding:6px 4px;"><button class="btn speak" style="padding:4px 10px; font-size:0.9rem;" data-ro="${w.ro}">🔊</button></td>
                 </tr>
               `).join("")}
@@ -5924,59 +6189,134 @@ function saveProgressDebounced() {
 }
 
 // --- Renders for auth overlays ---
+function speedLabel(rate) {
+  return rate === 1.0 ? '×1' : `×${rate}`;
+}
+function langFlag(lang) { return lang === 'en' ? '🇬🇧' : '🇷🇴'; }
+
 function renderAuthBar() {
   const bar = document.getElementById('auth-bar');
   if (!bar) return;
   bar.hidden = false;
-  const langPill = `<span class="lang-pill" id="lang-pill">${state.language === 'en' ? '🇬🇧 English' : '🇷🇴 רומנית'}</span>`;
-  const speedPill = `<span class="speed-pill" id="speed-pill" title="מהירות דיבור">🐢 ${speedLabel(state.speechRate)}</span>`;
+
   if (!auth.client) {
-    bar.innerHTML = `${langPill}${speedPill}<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit} · ${escapeHtml(unitOf(state.currentUnit).name)}</span>
-      <span style="color:#888; font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:#7e57c2;">SETUP.md</a></span>`;
-    wireUnitPill(); wireLangPill(); wireSpeedPill();
+    bar.innerHTML = `
+      <button class="profile-chip" id="profileChip" aria-haspopup="true" aria-expanded="false">
+        ${langFlag(state.language)} <span class="chip-dot">·</span> ${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}
+      </button>
+      <span style="color:var(--muted); font-size:0.9rem;">⚙️ Supabase לא מוגדר — ראי <a href="SETUP.md" target="_blank" style="color:var(--accent);">SETUP.md</a></span>
+    `;
+    wireProfileChip();
     return;
   }
-  const profSpan = auth.currentProfile ? `<span class="ab-greet">${auth.currentProfile.emoji || '🌟'} ${escapeHtml(auth.currentProfile.name)}</span>` : '';
-  const unitPill = `<span class="unit-pill" id="unit-pill" data-go="units">${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}</span>`;
   if (!auth.session) {
-    bar.innerHTML = `${langPill}${speedPill}${unitPill}<button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>`;
-    document.getElementById('ab-signin').onclick = () => { auth.view = 'signing_in'; renderAuthOverlay(); };
-  } else {
     bar.innerHTML = `
-      ${langPill}
-      ${speedPill}
-      ${unitPill}
-      ${profSpan}
-      ${auth.currentProfile ? `<button class="ab-btn" id="ab-switch">🔄 החלפת פרופיל</button>` : ''}
-      <button class="ab-btn" id="ab-signout">🚪 יציאה</button>
+      <button class="profile-chip" id="profileChip" aria-haspopup="true" aria-expanded="false">
+        ${langFlag(state.language)} <span class="chip-dot">·</span> ${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}
+      </button>
+      <button class="ab-btn ab-primary" id="ab-signin">🔓 כניסה</button>
     `;
-    const sw = document.getElementById('ab-switch');
-    if (sw) sw.onclick = () => { auth.view = 'picker'; renderAuthOverlay(); };
-    document.getElementById('ab-signout').onclick = signOut;
+    document.getElementById('ab-signin').onclick = () => { auth.view = 'signing_in'; renderAuthOverlay(); };
+    wireProfileChip();
+    return;
   }
-  wireUnitPill();
-  wireLangPill();
-  wireSpeedPill();
+  // Signed-in: single chip — emoji, name, language flag, current unit. Speed lives in the popover.
+  const prof = auth.currentProfile;
+  const emoji = prof ? (prof.emoji || '🌟') : '🌟';
+  const name = prof ? escapeHtml(prof.name) : '';
+  const chipName = name ? ` ${name}` : '';
+  bar.innerHTML = `
+    <button class="profile-chip" id="profileChip" aria-haspopup="true" aria-expanded="false">
+      <span class="chip-emoji">${emoji}</span><span class="chip-name">${chipName}</span>
+      <span class="chip-dot">·</span><span>${langFlag(state.language)}</span>
+      <span class="chip-dot">·</span><span>${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}</span>
+    </button>
+  `;
+  wireProfileChip();
 }
 
-function speedLabel(rate) {
-  return rate === 1.0 ? '×1' : `×${rate}`;
+function wireProfileChip() {
+  const chip = document.getElementById('profileChip');
+  if (!chip) return;
+  chip.onclick = (e) => { e.stopPropagation(); toggleProfilePopover(); };
 }
 
-function wireLangPill() {
-  const pill = document.getElementById('lang-pill');
-  if (pill) pill.onclick = () => switchLanguage(state.language === 'en' ? 'ro' : 'en');
+function toggleProfilePopover() {
+  let pop = document.getElementById('profilePopover');
+  const wasOpen = pop && pop.getAttribute('data-open') === 'true';
+  closeShellPopovers();
+  if (wasOpen) return;
+  if (!pop) {
+    pop = document.createElement('div');
+    pop.id = 'profilePopover';
+    pop.className = 'shell-popover';
+    pop.dataset.trigger = 'profileChip';
+    pop.setAttribute('role', 'menu');
+    document.body.appendChild(pop);
+  }
+  refreshProfilePopover(pop);
+  positionPopoverBelow(pop, document.getElementById('profileChip'));
+  pop.setAttribute('data-open', 'true');
+  document.getElementById('profileChip').setAttribute('aria-expanded', 'true');
 }
 
-function wireSpeedPill() {
-  const pill = document.getElementById('speed-pill');
-  if (!pill) return;
-  pill.onclick = () => {
-    const idx = SPEECH_RATES.indexOf(state.speechRate);
-    state.speechRate = SPEECH_RATES[(idx + 1) % SPEECH_RATES.length];
-    try { localStorage.setItem('ro-kids-speech-rate', String(state.speechRate)); } catch (e) {}
-    pill.innerHTML = `🐢 ${speedLabel(state.speechRate)}`;
-  };
+function refreshProfilePopover(pop) {
+  const signedIn = !!(auth.session && auth.currentProfile);
+  const langPills = ['ro', 'en'].map(l => `
+    <button class="shell-popover-pill ${state.language === l ? 'active' : ''}" data-lang="${l}">
+      ${langFlag(l)} ${l === 'en' ? 'English' : 'רומנית'}
+    </button>`).join('');
+  const speedPills = SPEECH_RATES.map(r => `
+    <button class="shell-popover-pill ${state.speechRate === r ? 'active' : ''}" data-rate="${r}">
+      ${speedLabel(r)}
+    </button>`).join('');
+  pop.innerHTML = `
+    <div class="shell-popover-section">שפה</div>
+    <div class="shell-popover-pillrow">${langPills}</div>
+    <div class="shell-popover-section">מהירות דיבור</div>
+    <div class="shell-popover-pillrow">${speedPills}</div>
+    <div class="shell-popover-divider"></div>
+    <button class="shell-popover-row" data-action="goto-units" role="menuitem">
+      <span class="row-emoji">📚</span><span>יחידות</span>
+    </button>
+    ${signedIn ? `
+      <div class="shell-popover-divider"></div>
+      <button class="shell-popover-row" data-action="switch-profile" role="menuitem">
+        <span class="row-emoji"><svg class="icon"><use href="#icon-users"/></svg></span><span>החלפת פרופיל</span>
+      </button>
+      <button class="shell-popover-row" data-action="sign-out" role="menuitem">
+        <span class="row-emoji"><svg class="icon"><use href="#icon-log-out"/></svg></span><span>יציאה</span>
+      </button>
+    ` : ''}
+  `;
+  pop.querySelectorAll('[data-lang]').forEach(b => {
+    b.onclick = (e) => { e.stopPropagation(); switchLanguage(b.dataset.lang); refreshProfilePopover(pop); };
+  });
+  pop.querySelectorAll('[data-rate]').forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      state.speechRate = parseFloat(b.dataset.rate);
+      try { localStorage.setItem('ro-kids-speech-rate', String(state.speechRate)); } catch (err) {}
+      refreshProfilePopover(pop);
+      // Update the chip label too.
+      renderAuthBar();
+    };
+  });
+  pop.querySelectorAll('[data-action]').forEach(b => {
+    b.onclick = () => {
+      const a = b.dataset.action;
+      closeShellPopovers();
+      if (a === 'goto-units') {
+        const btn = document.createElement('button');
+        btn.dataset.mode = 'units';
+        activateMode(btn);
+      } else if (a === 'switch-profile') {
+        auth.view = 'picker'; renderAuthOverlay();
+      } else if (a === 'sign-out') {
+        signOut();
+      }
+    };
+  });
 }
 
 async function switchLanguage(newLang) {
@@ -6035,20 +6375,11 @@ function loadGuestStatsForLanguage() {
   state.streak = 0;
 }
 
-function wireUnitPill() {
-  const pill = document.getElementById('unit-pill');
-  if (pill) pill.onclick = () => {
-    state.mode = 'units';
-    document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
-    const b = document.querySelector('.modes button[data-mode="units"]');
-    if (b) b.classList.add('active');
-    render();
-  };
-}
-
+// Legacy helpers — the unit pill no longer exists in the bar. updateUnitPill
+// is kept as a no-op so older callers (e.g. updateStats wiring) don't blow up;
+// the chip refreshes via renderAuthBar() instead.
 function updateUnitPill() {
-  const pill = document.getElementById('unit-pill');
-  if (pill) pill.innerHTML = `${unitOf(state.currentUnit).emoji} יחידה ${state.currentUnit}`;
+  if (typeof renderAuthBar === 'function') renderAuthBar();
 }
 
 function renderAuthOverlay() {
@@ -6081,10 +6412,10 @@ function renderSignInCard() {
         <button class="btn speak" id="signin-submit">${isSignup ? 'הרשמה' : 'כניסה'}</button>
         <button class="btn prev" id="signin-cancel">חזרה</button>
       </div>
-      <div id="signin-feedback" style="color:#c62828; font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
+      <div id="signin-feedback" style="color:var(--danger); font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
       <p class="muted" style="margin-top:14px; font-size:0.85rem;">
-        ${isSignup ? '' : 'או <a href="#" id="signin-magic" style="color:#7e57c2;">קישור־קסם למייל</a> · '}
-        אין הזמנה? <a href="#" id="open-contact" style="color:#7e57c2;">בקשי גישה</a>.
+        ${isSignup ? '' : 'או <a href="#" id="signin-magic" style="color:var(--accent);">קישור־קסם למייל</a> · '}
+        אין הזמנה? <a href="#" id="open-contact" style="color:var(--accent);">בקשי גישה</a>.
       </p>
     </div>`;
 }
@@ -6130,7 +6461,7 @@ function renderPinCard() {
         <button class="btn speak" id="pin-submit">פתחי</button>
         <button class="btn prev" id="pin-back">חזרה</button>
       </div>
-      <div id="pin-err" style="color:#c62828; font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
+      <div id="pin-err" style="color:var(--danger); font-weight:bold; min-height:1.2em; margin-top:8px;"></div>
     </div>`;
 }
 
@@ -6345,15 +6676,15 @@ function openContactModal() {
     const hp    = (document.getElementById('cr-honeypot').value || '').trim();
     const fb    = document.getElementById('cr-feedback');
     if (hp || (Date.now() - _contactRenderedAt) < 3000) {
-      fb.style.color = '#43a047'; fb.textContent = '✨ נשלח! נחזור אליך.';
+      fb.style.color = 'var(--success)'; fb.textContent = '✨ נשלח! נחזור אליך.';
       setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 1200);
       return;
     }
-    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { fb.style.color = '#c62828'; fb.textContent = 'אימייל לא תקין'; return; }
-    if (!auth.client) { fb.style.color = '#c62828'; fb.textContent = 'Supabase לא מוגדר — ראה SETUP.md'; return; }
+    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { fb.style.color = 'var(--danger)'; fb.textContent = 'אימייל לא תקין'; return; }
+    if (!auth.client) { fb.style.color = 'var(--danger)'; fb.textContent = 'Supabase לא מוגדר — ראה SETUP.md'; return; }
     const { error } = await auth.client.from('access_requests').insert({ email, name: name || null, message: msg || null });
-    if (error) { fb.style.color = '#c62828'; fb.textContent = 'שגיאה: ' + error.message; return; }
-    fb.style.color = '#43a047'; fb.textContent = '✨ נשלח! נחזור אליך.';
+    if (error) { fb.style.color = 'var(--danger)'; fb.textContent = 'שגיאה: ' + error.message; return; }
+    fb.style.color = 'var(--success)'; fb.textContent = '✨ נשלח! נחזור אליך.';
     setTimeout(() => { m.hidden = true; m.innerHTML = ''; }, 1500);
   };
 }
@@ -6365,21 +6696,8 @@ function attachContactLink() {
 
 // --- Admin Requests tab ---
 function applyModeVisibility() {
-  // Add/remove the "requests" tab based on admin status
   const modes = document.querySelector('.modes');
   if (!modes) return;
-  let req = modes.querySelector('[data-mode="requests"]');
-  if (auth.isAdmin) {
-    if (!req) {
-      req = document.createElement('button');
-      req.setAttribute('data-mode', 'requests');
-      req.textContent = '📥 בקשות';
-      req.onclick = () => activateMode(req);
-      modes.appendChild(req);
-    }
-  } else if (req) {
-    req.remove();
-  }
   // Show the chat tab only when a profile is selected. Guests have no chat.
   const chatBtn = modes.querySelector('[data-mode="chat"]');
   if (chatBtn) {
@@ -6387,17 +6705,24 @@ function applyModeVisibility() {
     chatBtn.hidden = !show;
     if (!show && state.mode === 'chat') {
       state.mode = 'flash';
-      document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
-      const flashBtn = modes.querySelector('[data-mode="flash"]');
+      document.querySelectorAll('.modes .mode-tab').forEach(x => x.classList.remove('active'));
+      const flashBtn = modes.querySelector('.mode-tab[data-mode="flash"]');
       if (flashBtn) flashBtn.classList.add('active');
     }
   }
+  // The ⋯ popover is built on demand; if it's currently open, refresh
+  // so admin gains/loses the requests row immediately.
+  const openPop = document.getElementById('modesMorePopover');
+  if (openPop && openPop.getAttribute('data-open') === 'true') refreshModesMorePopover(openPop);
   updateRequestsBadge();
 }
 
 function activateMode(btn) {
-  document.querySelectorAll('.modes button').forEach(x => x.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.modes .mode-tab').forEach(x => x.classList.remove('active'));
+  // Highlight only practice tabs in the bar. Secondary modes (units/guide/etc)
+  // are activated from the ⋯ popover and have no tab — that's fine, the active
+  // class on practice tabs is for the bar's visual state only.
+  if (btn.classList && btn.classList.contains('mode-tab')) btn.classList.add('active');
   state.mode = btn.dataset.mode;
   resetModeState();
   render();
@@ -6405,7 +6730,7 @@ function activateMode(btn) {
 
 function renderRequests() {
   return `
-    <h2 style="text-align:center; color:#d81b60; margin-bottom:12px;">📥 בקשות גישה</h2>
+    <h2 style="text-align:center; color:var(--accent); margin-bottom:12px;">📥 בקשות גישה</h2>
     <div id="req-list" style="margin-top:10px;">טוען...</div>
   `;
 }
@@ -6460,17 +6785,120 @@ function subscribeAdminRealtime() {
 }
 
 function updateRequestsBadge() {
-  const btn = document.querySelector('.modes button[data-mode="requests"]');
-  if (!btn) return;
-  btn.innerHTML = auth.unreadRequests > 0
-    ? `📥 בקשות <span class="req-dot"></span>${auth.unreadRequests}`
-    : '📥 בקשות';
+  // Badge shows on the ⋯ button when there are pending admin requests.
+  const moreBtn = document.getElementById('modesMoreBtn');
+  if (moreBtn) {
+    if (auth.isAdmin && auth.unreadRequests > 0) moreBtn.classList.add('has-badge');
+    else moreBtn.classList.remove('has-badge');
+  }
+  // Also show the dot on the popover row if it's currently rendered.
+  const dot = document.getElementById('moreRequestsBadge');
+  if (dot) dot.hidden = !(auth.unreadRequests > 0);
 }
 
 // ====== Init ======
-document.querySelectorAll(".modes button").forEach(b => {
+// Wire only practice tabs to activateMode. Secondary modes live in the ⋯
+// popover and call activateMode programmatically per their row click.
+document.querySelectorAll(".modes .mode-tab").forEach(b => {
   b.onclick = () => activateMode(b);
 });
+const __moreBtn = document.getElementById('modesMoreBtn');
+if (__moreBtn) __moreBtn.onclick = (e) => { e.stopPropagation(); toggleModesMorePopover(); };
+
+// Global single popover-dismiss handler
+document.addEventListener('click', (e) => {
+  // If the click is on the open popover or its trigger, leave it.
+  const open = document.querySelector('.shell-popover[data-open="true"]');
+  if (!open) return;
+  const trigger = open.dataset.trigger ? document.getElementById(open.dataset.trigger) : null;
+  if (open.contains(e.target) || (trigger && trigger.contains(e.target))) return;
+  closeShellPopovers();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeShellPopovers();
+});
+
+function closeShellPopovers() {
+  document.querySelectorAll('.shell-popover[data-open="true"]').forEach(p => {
+    p.setAttribute('data-open', 'false');
+    if (p.dataset.trigger) {
+      const t = document.getElementById(p.dataset.trigger);
+      if (t) t.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+function toggleModesMorePopover() {
+  let pop = document.getElementById('modesMorePopover');
+  const wasOpen = pop && pop.getAttribute('data-open') === 'true';
+  closeShellPopovers();
+  if (wasOpen) return;
+  if (!pop) pop = buildModesMorePopover();
+  refreshModesMorePopover(pop);
+  positionPopoverBelow(pop, document.getElementById('modesMoreBtn'));
+  pop.setAttribute('data-open', 'true');
+  document.getElementById('modesMoreBtn').setAttribute('aria-expanded', 'true');
+}
+
+function buildModesMorePopover() {
+  const pop = document.createElement('div');
+  pop.id = 'modesMorePopover';
+  pop.className = 'shell-popover';
+  pop.dataset.trigger = 'modesMoreBtn';
+  pop.setAttribute('role', 'menu');
+  document.body.appendChild(pop);
+  return pop;
+}
+
+function refreshModesMorePopover(pop) {
+  const items = [
+    { mode: 'units',   label: 'יחידות',  emoji: '📚' },
+    { mode: 'guide',   label: 'הגייה',   emoji: '📖' },
+    { mode: 'manage',  label: 'הוסיפי',  emoji: '📝' },
+    { mode: 'user',    label: 'שלי',     emoji: '👤' },
+  ];
+  if (auth && auth.isAdmin) {
+    items.push({ mode: 'requests', label: 'בקשות', emoji: '📥', badge: true });
+  }
+  pop.innerHTML = items.map(it => `
+    <button class="shell-popover-row" data-go-mode="${it.mode}" role="menuitem">
+      <span class="row-emoji">${it.emoji}</span>
+      <span>${it.label}</span>
+      ${it.badge ? '<span class="badge-dot" id="moreRequestsBadge" hidden></span>' : ''}
+    </button>
+  `).join('');
+  pop.querySelectorAll('[data-go-mode]').forEach(row => {
+    row.onclick = () => {
+      const mode = row.dataset.goMode;
+      // Find or synthesize a "btn" with data-mode for activateMode().
+      let btn = document.querySelector(`.modes .mode-tab[data-mode="${mode}"]`);
+      if (!btn) {
+        // No tab for secondary modes; activateMode just needs the dataset.
+        btn = document.createElement('button');
+        btn.dataset.mode = mode;
+      }
+      closeShellPopovers();
+      activateMode(btn);
+    };
+  });
+  // Mirror the existing requests-badge dot on the row.
+  const moreBtn = document.getElementById('modesMoreBtn');
+  if (moreBtn && auth && auth.isAdmin) {
+    // Refresh the dot from the existing state.
+    updateRequestsBadge();
+  }
+}
+
+function positionPopoverBelow(pop, anchor) {
+  if (!anchor) return;
+  const r = anchor.getBoundingClientRect();
+  pop.style.position = 'absolute';
+  pop.style.top = (window.scrollY + r.bottom + 6) + 'px';
+  // RTL: align right edge of popover with right edge of anchor
+  const right = document.documentElement.clientWidth - (r.right);
+  pop.style.right = right + 'px';
+  pop.style.left = 'auto';
+}
 
 // Load saved guest stats (will be overridden by Supabase if authed)
 loadGuestStats();
