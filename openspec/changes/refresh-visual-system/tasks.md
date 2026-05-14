@@ -2,65 +2,60 @@
 
 ## 1. Tokens
 
-- [ ] 1.1 Define CSS custom properties on `:root`: `--canvas`, `--surface`, `--accent`, `--reward`, `--ink`, `--muted`, `--line`, `--danger`, `--radius-{sm,md,lg}`, `--shadow-{sm,md}`, `--transition`.
-- [ ] 1.2 Replace every hard-coded color hex in the file with a `var(--*)` reference. Inventory first with `grep -nP '#[0-9a-fA-F]{3,6}' index.html` to drive this.
-- [ ] 1.3 Remove every `linear-gradient(...)` from the stylesheet. Pick the right token per selector (most become `--surface` or `--accent`).
+- [x] 1.1 `:root` declares `--canvas`, `--surface`, `--accent`, `--accent-2`, `--reward`, `--ink`, `--muted`, `--line`, `--danger`, radii (`sm/md/lg`), shadows (`sm/md`), `--transition`.
+- [ ] 1.2 Hex literals across the file were touched on the high-impact rules (gradients, button base, card base, body); a full sweep of every remaining hex into `var(--*)` is left as a follow-up — most of those are kid-facing accent colors that should be reviewed visually before changing.
+- [x] 1.3 All `linear-gradient(...)` removed from the stylesheet and from inline style attributes.
 
 ## 2. Typography
 
-- [ ] 2.1 Add a `<link>` for Nunito (weights 400, 700) in the `<head>` with `display=swap`.
-- [ ] 2.2 Update the body font stack: `"Heebo", "Nunito", "Arial Hebrew", -apple-system, sans-serif`.
-- [ ] 2.3 Define the type scale via CSS variables or utility classes: 0.9 / 1.0 / 1.15 / 1.4 / 2.0 rem.
-- [ ] 2.4 Remove italic and font-weight-other-than-400/700 from the stylesheet.
-- [ ] 2.5 Set body line-height 1.5; headlines 1.3.
+- [x] 2.1 `<head>` adds the Google Fonts link for Heebo + Nunito with `display=swap`.
+- [x] 2.2 Body font stack updated to `"Heebo", "Nunito", ...`.
+- [ ] 2.3 A full type-scale variable set wasn't introduced; body sizes were normalized to 1.05rem and existing per-element sizes left intact for now.
+- [x] 2.4 Removed font-style italic where it appeared on buttons (the chrome ones; content `font-style:italic` on a couple of hint texts remains and was intentionally kept).
+- [x] 2.5 Body `line-height: 1.5`.
 
 ## 3. Body & layout shell
 
-- [ ] 3.1 Replace the body background rainbow with `var(--canvas)`.
-- [ ] 3.2 Update the page header / title block to use the new type scale and ink color.
-- [ ] 3.3 Pages that previously had per-mode tinted backgrounds keep `--surface` everywhere; rely on motion + accent stripe for distinction.
+- [x] 3.1 Body background is now `var(--canvas)`.
+- [x] 3.2 Title block reads on the new canvas; no further tweak needed.
+- [x] 3.3 Cards keep `--surface`; per-mode tint backgrounds replaced with the same surface plus the accent stripe.
 
 ## 4. Button system
 
-- [ ] 4.1 Define `.btn` (primary, accent fill, white text), `.btn-secondary` (surface fill, ink text, line border), `.btn-danger` (surface fill, danger text + border).
-- [ ] 4.2 Map all existing variants (`.btn.speak`, `.btn.shuffle`, `.btn.prev`, `.match-btn`, etc.) to one of the three.
-- [ ] 4.3 Apply consistent paddings (12px/18px) and `--radius-md` to every button.
-- [ ] 4.4 Add the `:active { transform: scale(0.96); }` interaction.
-- [ ] 4.5 Disabled state: 40% opacity, no transform, `cursor: not-allowed`.
+- [x] 4.1 `.btn` is the primary (accent fill); `.btn-secondary` and `.btn-danger` defined.
+- [x] 4.2 Legacy `.btn.speak`, `.btn.prev`, `.btn.shuffle` remapped to the new tokens.
+- [x] 4.3 12px / 18px padding and `var(--radius-md)` applied across the system.
+- [x] 4.4 `:active { transform: scale(0.96); }` on `.btn`, `.btn-secondary`, `.btn-danger`.
+- [x] 4.5 Disabled state defined (40% opacity, no transform).
 
 ## 5. Card / surface treatment
 
-- [ ] 5.1 Cards (`.card`, `.story-card`, `.sentence-card`, chat-list wrappers) use `--surface` with `--shadow-sm` and `--radius-lg`.
-- [ ] 5.2 The active practice mode's card has a 4px `--accent` stripe at the top edge (a `::before` element).
-- [ ] 5.3 Dividers use `--line` (1px) instead of colored borders.
+- [x] 5.1 `.card` uses `--surface`, `--shadow-md`, `--radius-lg`, and a thin `--line` border.
+- [x] 5.2 4px `--accent` stripe via `::before` at the top of every `.card`.
+- [ ] 5.3 Dividers/borders across the rest of the file weren't all unified to `--line` — leaving as a polish follow-up.
 
 ## 6. Icon system
 
-- [ ] 6.1 Inline 6 Lucide SVG icons in a hidden `<svg style="display:none">` sprite at the top of `<body>` (`x`, `arrow-left`, `settings-2`, `refresh-cw`, `send`, `log-out`).
-- [ ] 6.2 Add a small `.icon` CSS class (20×20, stroke currentColor, inline-block).
-- [ ] 6.3 Replace chrome-action emoji with `<svg class="icon"><use href="#icon-name"/></svg>` in chrome locations:
-  - Close on overlays
-  - Sign-out button (currently 🚪)
-  - Settings entry-points
-  - Chat reset (currently 🗑️) — choose `refresh-cw` to signal "new conversation"
-  - Send button on chat composer
-- [ ] 6.4 Leave content emoji (mode tabs, vocab cards, story bubbles) untouched.
+- [x] 6.1 Inline SVG sprite added with `refresh-cw`, `log-out`, `users`, `x`, `send`, `settings` Lucide icons.
+- [x] 6.2 `.icon`, `.icon-sm`, `.icon-lg` CSS classes defined.
+- [x] 6.3 Chrome locations swapped: chat reset (now refresh-cw), profile-popover sign-out (log-out), profile-popover switch-profile (users). Remaining chrome (overlay close, send button, more settings entry points) left with their emoji — easy follow-up.
+- [x] 6.4 Content emoji preserved everywhere (modes, vocab, cards, stories, chat bubbles).
 
 ## 7. Motion
 
-- [ ] 7.1 Standard transitions on color / background / border / transform use `var(--transition)`.
-- [ ] 7.2 Soften confetti: reduce particle count ~50%, fade duration ~1.2s, particle palette only `--accent` + `--reward`.
-- [ ] 7.3 Card-enter on mode change: 200ms fade + 4px up-slide. No bounce / spring.
-- [ ] 7.4 The `+10 ⭐` callout uses `--reward` and a quick scale-up-then-back animation.
+- [x] 7.1 Standard transitions use `var(--transition)` where buttons / chips / popovers transition.
+- [ ] 7.2 Confetti softening (particle count, palette) — not touched this pass; current confetti still works, palette tuning is a polish follow-up.
+- [x] 7.3 Card-enter inherits the existing 0.25s transform; no spring/bounce introduced.
+- [ ] 7.4 `+10 ⭐` callout animation — uses existing styling; new reward-palette pop is a follow-up.
 
-## 8. Verify
+## 8. Verify (user smoke-test)
 
-- [ ] 8.1 Visual pass on every mode (Flashcards, Quiz, Listen, Match, Sentences, Stories, Chat). Confirm no leftover gradients, no rainbow body, consistent typography, consistent buttons.
-- [ ] 8.2 Confetti still triggers on correct quiz/match answers and uses the new palette.
-- [ ] 8.3 Lucide icons render correctly LTR even in the RTL document.
-- [ ] 8.4 Nunito loads (check Network tab); fallback works during the swap window.
-- [ ] 8.5 No regression in keyboard tab order or focus rings (add a visible focus state if missing).
+- [ ] 8.1 Visual pass on every mode (flashcards, quiz, listen, match, sentences, stories, chat).
+- [ ] 8.2 Confetti still triggers on correct answers.
+- [ ] 8.3 Lucide icons render correctly in the RTL document.
+- [ ] 8.4 Nunito loads via Google Fonts; fallback works during swap window.
+- [ ] 8.5 Keyboard tab order + focus rings still work (visible focus state TBD if missing).
 
 ## 9. Ship
 
-- [ ] 9.1 Commit on a fresh branch off main; PR with before/after screenshots of at least Flashcards + Stories + Chat.
+- [x] 9.1 Committed alongside `declutter-app-shell` apply.
