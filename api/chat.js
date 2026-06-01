@@ -68,6 +68,7 @@ async function getTodayQuota(token, supabaseUrl, anonKey, profileId, day) {
 function buildSystemPrompt(language, vocabSnapshot, isOpener, profileName) {
   const langName = language === 'en' ? 'English'
     : language === 'es' ? 'Spanish'
+    : language === 'pl' ? 'Polish'
     : 'Romanian';
   const vocabSlice = (vocabSnapshot || []).slice(0, 200);
   const vocabStr = vocabSlice.map(v => v.ro + '=' + (v.he || '')).join(', ');
@@ -242,8 +243,8 @@ export default async function handler(req, res) {
   if (!isOpener && !message_text) {
     return jsonError(res, 400, 'missing message_text');
   }
-  if (language !== 'ro' && language !== 'en' && language !== 'es') {
-    return jsonError(res, 400, 'language must be ro, en, or es');
+  if (language !== 'ro' && language !== 'en' && language !== 'es' && language !== 'pl') {
+    return jsonError(res, 400, 'language must be ro, en, es, or pl');
   }
   if (!Array.isArray(vocab_snapshot) || vocab_snapshot.length > VOCAB_SNAPSHOT_MAX) {
     return jsonError(res, 400, 'vocab_snapshot too large');
