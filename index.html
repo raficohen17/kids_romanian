@@ -6689,12 +6689,51 @@ function lessonChatAvailable() {
   return !!(typeof auth !== "undefined" && auth.client && auth.session && auth.currentProfile);
 }
 
+// ---- vocabulary coverage ----
+// A lesson must never surface a vocab word from a unit the student hasn't
+// reached yet. Vocab steps are already safe (they draw only from units <= the
+// current one). Sentences and stories, though, contain real words — so we keep
+// only those whose words are all "seen": either a single-word vocab item from
+// a unit <= the current one (introduced by an earlier lesson/unit; the unit's
+// own words are introduced in its lesson 1, which is always done first because
+// lessons are sequential), or a glue/function word that isn't vocab at all
+// (taught inline by the sentence/story word breakdown).
+function _normRo(s) { return (s || "").toLowerCase().replace(/[.,!?;:'"()¿¡«»–—\-]/g, " ").replace(/\s+/g, " ").trim(); }
+function vocabUnitIndex() {
+  // Map single-word vocab -> earliest unit it appears in (0 = starter / user).
+  const idx = new Map();
+  getVocab().forEach(w => {
+    const ro = _normRo(w.ro);
+    if (!ro || ro.indexOf(" ") !== -1) return;   // skip multi-word phrases (mostly glue)
+    const u = (w.unit == null) ? 0 : w.unit;
+    if (!idx.has(ro) || u < idx.get(ro)) idx.set(ro, u);
+  });
+  return idx;
+}
+function textCoveredAt(text, unit, vidx) {
+  return _normRo(text).split(" ").every(tok => {
+    if (!tok) return true;
+    const u = vidx.get(tok);
+    return u == null || u <= unit;   // glue (not a vocab word) OR already introduced
+  });
+}
+function lessonCoveredSentences(unit) {
+  const vidx = vocabUnitIndex();
+  let pool = lessonUnitSentences(unit).filter(s => textCoveredAt(s.ro, unit, vidx));
+  if (!pool.length) pool = lessonScopeSentences(unit).filter(s => textCoveredAt(s.ro, unit, vidx));
+  return pool;
+}
+function lessonCoveredStories(unit) {
+  const vidx = vocabUnitIndex();
+  return lessonUnitStories(unit).filter(st => st.sentences.every(s => textCoveredAt(s.ro, unit, vidx)));
+}
+
 // Resolve a lesson's steps, dropping any that can't run for this unit/language
 // and appending a focused chat step on lesson 4 of the higher units.
 function resolveLessonSteps(unit, idx) {
   let steps = LESSON_TEMPLATES[idx - 1].steps.slice();
-  if (!lessonUnitStories(unit).length) steps = steps.filter(s => s.type !== "story");
-  if (!lessonScopeSentences(unit).length) steps = steps.filter(s => s.type !== "sentences");
+  if (!lessonCoveredStories(unit).length) steps = steps.filter(s => s.type !== "story");
+  if (!lessonCoveredSentences(unit).length) steps = steps.filter(s => s.type !== "sentences");
   if (idx === LESSONS_PER_UNIT && unit >= CHAT_LESSON_MIN_UNIT && lessonChatAvailable()) {
     steps = steps.concat([{ type: "chat", count: CHAT_LESSON_EXCHANGES }]);
   }
@@ -6751,10 +6790,10 @@ function initLessonStep() {
     ls.match = buildLessonMatch(pool);
     ls.total = ls.match.picks.length;
   } else if (step.type === "sentences") {
-    ls.items = shuffle(lessonUnitSentences(unit)).slice(0, step.count);
+    ls.items = shuffle(lessonCoveredSentences(unit)).slice(0, step.count);
     ls.total = ls.items.length;
   } else if (step.type === "story") {
-    ls.story = lessonUnitStories(unit)[0];
+    ls.story = lessonCoveredStories(unit)[0];
     ls.total = 1;
   } else if (step.type === "chat") {
     ls.need = step.count;
