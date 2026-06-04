@@ -41,7 +41,7 @@ create index profiles_family_idx on public.profiles(family_id);
 create table public.vocab (
   id                   uuid primary key default gen_random_uuid(),
   family_id            uuid not null references public.families(id) on delete cascade,
-  language             text not null default 'ro' check (language in ('ro','en','es')),
+  language             text not null default 'ro' check (language in ('ro','en','es','pl')),
   he                   text not null,
   ro                   text not null,
   pron                 text,
@@ -59,7 +59,7 @@ create index vocab_family_lang_idx on public.vocab(family_id, language);
 create table public.sentences (
   id                   uuid primary key default gen_random_uuid(),
   family_id            uuid not null references public.families(id) on delete cascade,
-  language             text not null default 'ro' check (language in ('ro','en','es')),
+  language             text not null default 'ro' check (language in ('ro','en','es','pl')),
   he                   text not null,
   ro                   text not null,
   pron                 text,
@@ -76,7 +76,7 @@ create index sentences_family_lang_idx on public.sentences(family_id, language);
 
 create table public.progress (
   profile_id          uuid not null references public.profiles(id) on delete cascade,
-  language            text not null default 'ro' check (language in ('ro','en','es')),
+  language            text not null default 'ro' check (language in ('ro','en','es','pl')),
   score               int not null default 0,
   best_streak         int not null default 0,
   seen                int not null default 0,

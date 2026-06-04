@@ -1709,6 +1709,126 @@ const VOCAB_ES = [
   { he:"לישון", ro:"Dormir", pron:"דוֹרְמִיר", cat:"פעלים", emoji:"😴", unit:10 },
 ];
 
+// ============ Polish starter + units (parallel structure to VOCAB_EN) ============
+const VOCAB_PL = [
+  // -- Starter Pack --
+  { he:"שלום / היי", ro:"Cześć", pron:"צֶ'שְץ'", cat:"ברכות", emoji:"👋" },
+  { he:"ביי", ro:"Pa", pron:"פָּה", cat:"ברכות", emoji:"👋" },
+  { he:"תודה", ro:"Dziękuję", pron:"גֶ'נְקוּיֶה", cat:"נימוסים", emoji:"🙏" },
+  { he:"בבקשה", ro:"Proszę", pron:"פְּרוֹשֶה", cat:"נימוסים", emoji:"🙏" },
+  { he:"סליחה", ro:"Przepraszam", pron:"פְּשֶפְּרָשָאם", cat:"נימוסים", emoji:"🙇" },
+  { he:"כן", ro:"Tak", pron:"טָאק", cat:"בסיס", emoji:"✅" },
+  { he:"לא", ro:"Nie", pron:"נְיֶה", cat:"בסיס", emoji:"❌" },
+  { he:"טוב", ro:"Dobry", pron:"דוֹבְּרי", cat:"תיאורים", emoji:"👍" },
+  { he:"גדול", ro:"Duży", pron:"דוּזִ'י", cat:"גדלים", emoji:"📏" },
+  { he:"קטן", ro:"Mały", pron:"מָאווי", cat:"גדלים", emoji:"🤏" },
+  { he:"אדום", ro:"Czerwony", pron:"צֶ'רְבוֹני", cat:"צבעים", emoji:"🔴" },
+  { he:"כחול", ro:"Niebieski", pron:"נְיֶבְּיֶסְקִי", cat:"צבעים", emoji:"🔵" },
+  { he:"צהוב", ro:"Żółty", pron:"ז' וּוְטי", cat:"צבעים", emoji:"🟡" },
+  { he:"ירוק", ro:"Zielony", pron:"זְ'יֶלוֹני", cat:"צבעים", emoji:"🟢" },
+  { he:"לבן", ro:"Biały", pron:"בְּיָאווי", cat:"צבעים", emoji:"⚪" },
+  { he:"שחור", ro:"Czarny", pron:"צָ'ארְני", cat:"צבעים", emoji:"⚫" },
+  { he:"חתול", ro:"Kot", pron:"קוֹט", cat:"חיות", emoji:"🐱" },
+  { he:"כלב", ro:"Pies", pron:"פְּיֶס", cat:"חיות", emoji:"🐕" },
+  { he:"מים", ro:"Woda", pron:"ווֹדָה", cat:"אוכל", emoji:"💧" },
+  { he:"לחם", ro:"Chleb", pron:"חְלֶב", cat:"אוכל", emoji:"🍞" },
+  { he:"תפוח", ro:"Jabłko", pron:"יָאבּווְקוֹ", cat:"אוכל", emoji:"🍎" },
+  { he:"אמא", ro:"Mama", pron:"מָאמָה", cat:"משפחה", emoji:"👩" },
+  { he:"אבא", ro:"Tata", pron:"טָאטָה", cat:"משפחה", emoji:"👨" },
+  { he:"אני", ro:"Ja", pron:"יָה", cat:"כינויים", emoji:"🙋" },
+  { he:"אתה / את", ro:"Ty", pron:"טי", cat:"כינויים", emoji:"👉" },
+
+  // -- Unit 1: Numbers & basics --
+  { he:"אחת", ro:"Jeden", pron:"יֶדֶן", cat:"מספרים", emoji:"1️⃣", unit:1 },
+  { he:"שתיים", ro:"Dwa", pron:"דְבָה", cat:"מספרים", emoji:"2️⃣", unit:1 },
+  { he:"שלוש", ro:"Trzy", pron:"טְשי", cat:"מספרים", emoji:"3️⃣", unit:1 },
+  { he:"ארבע", ro:"Cztery", pron:"צְ'טֶרי", cat:"מספרים", emoji:"4️⃣", unit:1 },
+  { he:"חמש", ro:"Pięć", pron:"פְּיֶנְץ'", cat:"מספרים", emoji:"5️⃣", unit:1 },
+  { he:"שש", ro:"Sześć", pron:"שֶשְץ'", cat:"מספרים", emoji:"6️⃣", unit:1 },
+  { he:"שבע", ro:"Siedem", pron:"שְיֶדֶם", cat:"מספרים", emoji:"7️⃣", unit:1 },
+  { he:"שמונה", ro:"Osiem", pron:"אוֹשֶם", cat:"מספרים", emoji:"8️⃣", unit:1 },
+  { he:"תשע", ro:"Dziewięć", pron:"גֶ'בְיֶנְץ'", cat:"מספרים", emoji:"9️⃣", unit:1 },
+  { he:"עשר", ro:"Dziesięć", pron:"גֶ'שֶנְץ'", cat:"מספרים", emoji:"🔟", unit:1 },
+  { he:"הוא", ro:"On", pron:"אוֹן", cat:"כינויים", emoji:"👦", unit:1 },
+  { he:"היא", ro:"Ona", pron:"אוֹנָה", cat:"כינויים", emoji:"👧", unit:1 },
+
+  // -- Unit 2: Family & home --
+  { he:"אחות", ro:"Siostra", pron:"שוֹסְטְרָה", cat:"משפחה", emoji:"👧", unit:2 },
+  { he:"אח", ro:"Brat", pron:"בְּרָאט", cat:"משפחה", emoji:"👦", unit:2 },
+  { he:"סבתא", ro:"Babcia", pron:"בָּאבְּצָ'ה", cat:"משפחה", emoji:"👵", unit:2 },
+  { he:"סבא", ro:"Dziadek", pron:"גָ'אדֶק", cat:"משפחה", emoji:"👴", unit:2 },
+  { he:"בית", ro:"Dom", pron:"דוֹם", cat:"בית", emoji:"🏠", unit:2 },
+  { he:"חדר", ro:"Pokój", pron:"פּוֹקוּי", cat:"בית", emoji:"🛏️", unit:2 },
+  { he:"שולחן", ro:"Stół", pron:"סְטוּוו", cat:"בית", emoji:"🪑", unit:2 },
+  { he:"כיסא", ro:"Krzesło", pron:"קְשֶסְווֹ", cat:"בית", emoji:"🪑", unit:2 },
+
+  // -- Unit 3: Colors & shapes --
+  { he:"ורוד", ro:"Różowy", pron:"רוּז'וֹבי", cat:"צבעים", emoji:"🌸", unit:3 },
+  { he:"כתום", ro:"Pomarańczowy", pron:"פּוֹמָרָאנְצ'וֹבי", cat:"צבעים", emoji:"🟠", unit:3 },
+  { he:"סגול", ro:"Fioletowy", pron:"פְיוֹלֶטוֹבי", cat:"צבעים", emoji:"🟣", unit:3 },
+  { he:"חום", ro:"Brązowy", pron:"בְּרוֹנְזוֹבי", cat:"צבעים", emoji:"🟤", unit:3 },
+  { he:"עיגול", ro:"Koło", pron:"קוֹווֹ", cat:"צורות", emoji:"⭕", unit:3 },
+  { he:"ריבוע", ro:"Kwadrat", pron:"קְבָאדְרָאט", cat:"צורות", emoji:"⬜", unit:3 },
+  { he:"משולש", ro:"Trójkąt", pron:"טְרוּיְקוֹנְט", cat:"צורות", emoji:"🔺", unit:3 },
+
+  // -- Unit 4: Food & drinks --
+  { he:"חלב", ro:"Mleko", pron:"מְלֶקוֹ", cat:"אוכל", emoji:"🥛", unit:4 },
+  { he:"גבינה", ro:"Ser", pron:"סֶר", cat:"אוכל", emoji:"🧀", unit:4 },
+  { he:"בננה", ro:"Banan", pron:"בָּאנָאן", cat:"אוכל", emoji:"🍌", unit:4 },
+  { he:"ביצה", ro:"Jajko", pron:"יָאיְקוֹ", cat:"אוכל", emoji:"🥚", unit:4 },
+  { he:"אורז", ro:"Ryż", pron:"ריז'", cat:"אוכל", emoji:"🍚", unit:4 },
+  { he:"עוף", ro:"Kurczak", pron:"קוּרְצָ'אק", cat:"אוכל", emoji:"🍗", unit:4 },
+  { he:"מיץ", ro:"Sok", pron:"סוֹק", cat:"אוכל", emoji:"🧃", unit:4 },
+
+  // -- Unit 5: Animals --
+  { he:"ציפור", ro:"Ptak", pron:"פְּטָאק", cat:"חיות", emoji:"🐦", unit:5 },
+  { he:"דג", ro:"Ryba", pron:"ריבָּה", cat:"חיות", emoji:"🐟", unit:5 },
+  { he:"סוס", ro:"Koń", pron:"קוֹן", cat:"חיות", emoji:"🐴", unit:5 },
+  { he:"פרה", ro:"Krowa", pron:"קְרוֹבָה", cat:"חיות", emoji:"🐄", unit:5 },
+  { he:"פרפר", ro:"Motyl", pron:"מוֹטיל", cat:"חיות", emoji:"🦋", unit:5 },
+  { he:"אריה", ro:"Lew", pron:"לֶב", cat:"חיות", emoji:"🦁", unit:5 },
+
+  // -- Unit 6: Body & health --
+  { he:"ראש", ro:"Głowa", pron:"גְווֹבָה", cat:"גוף", emoji:"🧠", unit:6 },
+  { he:"יד", ro:"Ręka", pron:"רֶנְקָה", cat:"גוף", emoji:"✋", unit:6 },
+  { he:"רגל", ro:"Noga", pron:"נוֹגָה", cat:"גוף", emoji:"🦶", unit:6 },
+  { he:"עין", ro:"Oko", pron:"אוֹקוֹ", cat:"גוף", emoji:"👁️", unit:6 },
+  { he:"אף", ro:"Nos", pron:"נוֹס", cat:"גוף", emoji:"👃", unit:6 },
+  { he:"פה", ro:"Usta", pron:"אוּסְטָה", cat:"גוף", emoji:"👄", unit:6 },
+
+  // -- Unit 7: School --
+  { he:"ספר", ro:"Książka", pron:"קְשוֹנְשְקָה", cat:"בית ספר", emoji:"📖", unit:7 },
+  { he:"מורה", ro:"Nauczyciel", pron:"נָאוּצִ'יצֶ'ל", cat:"בית ספר", emoji:"👩‍🏫", unit:7 },
+  { he:"בית ספר", ro:"Szkoła", pron:"שְקוֹווָה", cat:"בית ספר", emoji:"🏫", unit:7 },
+  { he:"עפרון", ro:"Ołówek", pron:"אוֹווּבֶק", cat:"בית ספר", emoji:"✏️", unit:7 },
+  { he:"ילד", ro:"Chłopiec", pron:"חְווֹפְּיֶץ", cat:"אנשים", emoji:"👦", unit:7 },
+  { he:"ילדה", ro:"Dziewczynka", pron:"גֶ'בְצִ'ינְקָה", cat:"אנשים", emoji:"👧", unit:7 },
+
+  // -- Unit 8: Nature & weather --
+  { he:"שמש", ro:"Słońce", pron:"סְווֹנְצֶה", cat:"טבע", emoji:"☀️", unit:8 },
+  { he:"ירח", ro:"Księżyc", pron:"קְשֶנְזִ'יץ", cat:"טבע", emoji:"🌙", unit:8 },
+  { he:"כוכב", ro:"Gwiazda", pron:"גְבְיָאזְדָה", cat:"טבע", emoji:"⭐", unit:8 },
+  { he:"עץ", ro:"Drzewo", pron:"גְ'זֶבוֹ", cat:"טבע", emoji:"🌳", unit:8 },
+  { he:"פרח", ro:"Kwiat", pron:"קְבְיָאט", cat:"טבע", emoji:"🌸", unit:8 },
+  { he:"גשם", ro:"Deszcz", pron:"דֶשְץ'", cat:"מזג אוויר", emoji:"🌧️", unit:8 },
+
+  // -- Unit 9: Feelings & time --
+  { he:"שמח", ro:"Szczęśliwy", pron:"שְצֶ'נְשְלִיבי", cat:"רגשות", emoji:"😊", unit:9 },
+  { he:"עצוב", ro:"Smutny", pron:"סְמוּטְני", cat:"רגשות", emoji:"😢", unit:9 },
+  { he:"היום", ro:"Dzisiaj", pron:"גִ'ישָאי", cat:"זמן", emoji:"📅", unit:9 },
+  { he:"מחר", ro:"Jutro", pron:"יוּטְרוֹ", cat:"זמן", emoji:"📆", unit:9 },
+  { he:"אתמול", ro:"Wczoraj", pron:"וְצ'וֹרָאי", cat:"זמן", emoji:"🗓️", unit:9 },
+  { he:"אהבה", ro:"Miłość", pron:"מִיווֹשְץ'", cat:"רגשות", emoji:"❤️", unit:9 },
+
+  // -- Unit 10: Everyday verbs --
+  { he:"ללכת", ro:"Iść", pron:"אִישְץ'", cat:"פעלים", emoji:"🚶", unit:10 },
+  { he:"לאכול", ro:"Jeść", pron:"יֶשְץ'", cat:"פעלים", emoji:"🍴", unit:10 },
+  { he:"לשתות", ro:"Pić", pron:"פִּיץ'", cat:"פעלים", emoji:"🥤", unit:10 },
+  { he:"לקרוא", ro:"Czytać", pron:"צ'יטָאץ'", cat:"פעלים", emoji:"📚", unit:10 },
+  { he:"לכתוב", ro:"Pisać", pron:"פִּיסָאץ'", cat:"פעלים", emoji:"✍️", unit:10 },
+  { he:"לישון", ro:"Spać", pron:"סְפָּאץ'", cat:"פעלים", emoji:"😴", unit:10 },
+];
+
 const BUILTIN_SENTENCES = [
   // === Bună ===
   { he:"שלום, אמא!", ro:"Bună, mamă!", pron:"בּוּנָה, מאמא!", emoji:"👋", theme:"ברכות", words:[{ro:"Bună",he:"שלום",pron:"בּוּנָה"},{ro:"mamă",he:"אמא",pron:"מאמא"}]},
@@ -3475,6 +3595,82 @@ const BUILTIN_SENTENCES_ES = [
   { he:"הוא ישן", ro:"Él duerme", pron:"אֵל דוּאֶרְמֶה", emoji:"😴", unit:10, theme:"verbs", words:[{ro:"duerme",he:"ישן",pron:"דוּאֶרְמֶה"}]},
 ];
 
+// ============ Polish starter + units (parallel structure to BUILTIN_SENTENCES_EN) ============
+const BUILTIN_SENTENCES_PL = [
+  // -- Starter Pack --
+  { he:"שלום!", ro:"Cześć!", pron:"צֶ'שְץ'", emoji:"👋", theme:"greetings", words:[{ro:"Cześć",he:"שלום",pron:"צֶ'שְץ'"}]},
+  { he:"שלום, מה שלומך?", ro:"Cześć, jak się masz?", pron:"צֶ'שְץ', יָאק שֶ מָאש", emoji:"😊", theme:"greetings", words:[{ro:"Cześć",he:"שלום",pron:"צֶ'שְץ'"},{ro:"jak",he:"איך",pron:"יָאק"},{ro:"się masz",he:"שלומך",pron:"שֶ מָאש"}]},
+  { he:"אני בסדר, תודה", ro:"Dobrze, dziękuję", pron:"דוֹבְּזֶ'ה, גֶ'נְקוּיֶה", emoji:"😊", theme:"greetings", words:[{ro:"Dobrze",he:"טוב",pron:"דוֹבְּזֶ'ה"},{ro:"dziękuję",he:"תודה",pron:"גֶ'נְקוּיֶה"}]},
+  { he:"להתראות!", ro:"Do widzenia!", pron:"דוֹ וִידְזֶנְיָה", emoji:"👋", theme:"greetings", words:[{ro:"Do widzenia",he:"להתראות",pron:"דוֹ וִידְזֶנְיָה"}]},
+  { he:"בבקשה", ro:"Proszę", pron:"פְּרוֹשֶה", emoji:"🙏", theme:"manners", words:[{ro:"Proszę",he:"בבקשה",pron:"פְּרוֹשֶה"}]},
+  { he:"תודה רבה", ro:"Dziękuję bardzo", pron:"גֶ'נְקוּיֶה בָּארְדְזוֹ", emoji:"🙏", theme:"manners", words:[{ro:"Dziękuję",he:"תודה",pron:"גֶ'נְקוּיֶה"},{ro:"bardzo",he:"מאוד",pron:"בָּארְדְזוֹ"}]},
+  { he:"סליחה", ro:"Przepraszam", pron:"פְּשֶפְּרָשָאם", emoji:"🙇‍♀️", theme:"manners", words:[{ro:"Przepraszam",he:"סליחה",pron:"פְּשֶפְּרָשָאם"}]},
+  { he:"שמי דנה", ro:"Mam na imię Dana", pron:"מָאם נָה אִימְיֶה דָנָה", emoji:"🙋‍♀️", theme:"about me", words:[{ro:"Mam na imię",he:"שמי",pron:"מָאם נָה אִימְיֶה"}]},
+  { he:"אני בת תשע", ro:"Mam dziewięć lat", pron:"מָאם גֶ'בְיֶנְץ' לָאט", emoji:"🎂", theme:"about me", words:[{ro:"Mam",he:"יש לי",pron:"מָאם"},{ro:"dziewięć",he:"תשע",pron:"גֶ'בְיֶנְץ'"},{ro:"lat",he:"שנים",pron:"לָאט"}]},
+  { he:"אני אוהבת תפוחים", ro:"Lubię jabłka", pron:"לוּבְּיֶה יָאבּווְקָה", emoji:"🍎", theme:"food", words:[{ro:"Lubię",he:"אני אוהבת",pron:"לוּבְּיֶה"},{ro:"jabłka",he:"תפוחים",pron:"יָאבּווְקָה"}]},
+  { he:"אני אוהבת חתולים", ro:"Kocham koty", pron:"קוֹחָאם קוֹטי", emoji:"🐱", theme:"animals", words:[{ro:"Kocham",he:"אני אוהבת מאוד",pron:"קוֹחָאם"},{ro:"koty",he:"חתולים",pron:"קוֹטי"}]},
+  { he:"החתול לבן", ro:"Kot jest biały", pron:"קוֹט יֶסְט בְּיָאווי", emoji:"🐱", theme:"animals", words:[{ro:"Kot",he:"חתול",pron:"קוֹט"},{ro:"jest",he:"הוא",pron:"יֶסְט"},{ro:"biały",he:"לבן",pron:"בְּיָאווי"}]},
+  { he:"כלב גדול", ro:"Duży pies", pron:"דוּזִ'י פְּיֶס", emoji:"🐕", theme:"animals", words:[{ro:"Duży",he:"גדול",pron:"דוּזִ'י"},{ro:"pies",he:"כלב",pron:"פְּיֶס"}]},
+  { he:"השמש צהובה", ro:"Słońce jest żółte", pron:"סְווֹנְצֶה יֶסְט ז'וּוְטֶה", emoji:"☀️", theme:"colors", words:[{ro:"Słońce",he:"שמש",pron:"סְווֹנְצֶה"},{ro:"żółte",he:"צהוב",pron:"ז'וּוְטֶה"}]},
+  { he:"השמיים כחולים", ro:"Niebo jest niebieskie", pron:"נְיֶבּוֹ יֶסְט נְיֶבְּיֶסְקְיֶה", emoji:"☁️", theme:"colors", words:[{ro:"Niebo",he:"שמיים",pron:"נְיֶבּוֹ"},{ro:"niebieskie",he:"כחול",pron:"נְיֶבְּיֶסְקְיֶה"}]},
+  { he:"אני שותה מים", ro:"Piję wodę", pron:"פִּיֶה ווֹדֶה", emoji:"💧", theme:"food", words:[{ro:"Piję",he:"אני שותה",pron:"פִּיֶה"},{ro:"wodę",he:"מים",pron:"ווֹדֶה"}]},
+  { he:"אני אוכלת לחם", ro:"Jem chleb", pron:"יֶם חְלֶב", emoji:"🍞", theme:"food", words:[{ro:"Jem",he:"אני אוכלת",pron:"יֶם"},{ro:"chleb",he:"לחם",pron:"חְלֶב"}]},
+  { he:"אמא בבית", ro:"Mama jest w domu", pron:"מָאמָה יֶסְט וְדוֹמוּ", emoji:"🏠", theme:"family", words:[{ro:"Mama",he:"אמא",pron:"מָאמָה"},{ro:"w domu",he:"בבית",pron:"וְדוֹמוּ"}]},
+  { he:"אבא רוצה מים", ro:"Tata chce wody", pron:"טָאטָה חְצֶה ווֹדי", emoji:"💧", theme:"family", words:[{ro:"Tata",he:"אבא",pron:"טָאטָה"},{ro:"chce",he:"רוצה",pron:"חְצֶה"},{ro:"wody",he:"מים",pron:"ווֹדי"}]},
+  { he:"היום יום יפה", ro:"Dziś jest ładny dzień", pron:"גִ'ישְ יֶסְט וָאדְני גֶ'יֶן", emoji:"☀️", theme:"time", words:[{ro:"Dziś",he:"היום",pron:"גִ'ישְ"},{ro:"ładny",he:"יפה",pron:"וָאדְני"},{ro:"dzień",he:"יום",pron:"גֶ'יֶן"}]},
+  { he:"מחר בית ספר", ro:"Jutro jest szkoła", pron:"יוּטְרוֹ יֶסְט שְקוֹווָה", emoji:"🏫", theme:"time", words:[{ro:"Jutro",he:"מחר",pron:"יוּטְרוֹ"},{ro:"szkoła",he:"בית ספר",pron:"שְקוֹווָה"}]},
+  { he:"אני לומדת פולנית", ro:"Uczę się polskiego", pron:"אוּצֶ'ה שֶ פּוֹלְסְקְיֶגוֹ", emoji:"📚", theme:"about me", words:[{ro:"Uczę się",he:"אני לומדת",pron:"אוּצֶ'ה שֶ"},{ro:"polskiego",he:"פולנית",pron:"פּוֹלְסְקְיֶגוֹ"}]},
+  { he:"זה ספר", ro:"To jest książka", pron:"טוֹ יֶסְט קְשוֹנְשְקָה", emoji:"📖", theme:"basics", words:[{ro:"To jest",he:"זה",pron:"טוֹ יֶסְט"},{ro:"książka",he:"ספר",pron:"קְשוֹנְשְקָה"}]},
+  { he:"בית גדול", ro:"Duży dom", pron:"דוּזִ'י דוֹם", emoji:"🏠", theme:"basics", words:[{ro:"Duży",he:"גדול",pron:"דוּזִ'י"},{ro:"dom",he:"בית",pron:"דוֹם"}]},
+  { he:"חתול קטן", ro:"Mały kot", pron:"מָאווי קוֹט", emoji:"🐱", theme:"basics", words:[{ro:"Mały",he:"קטן",pron:"מָאווי"},{ro:"kot",he:"חתול",pron:"קוֹט"}]},
+  { he:"אני אוהבת לקרוא", ro:"Lubię czytać", pron:"לוּבְּיֶה צ'יטָאץ'", emoji:"📖", theme:"hobbies", words:[{ro:"Lubię",he:"אני אוהבת",pron:"לוּבְּיֶה"},{ro:"czytać",he:"לקרוא",pron:"צ'יטָאץ'"}]},
+  { he:"אני אוהבת לרקוד", ro:"Lubię tańczyć", pron:"לוּבְּיֶה טָאנְצ'יץ'", emoji:"💃", theme:"hobbies", words:[{ro:"tańczyć",he:"לרקוד",pron:"טָאנְצ'יץ'"}]},
+  { he:"לילה טוב", ro:"Dobranoc", pron:"דוֹבְּרָנוֹץ", emoji:"🌙", theme:"greetings", words:[{ro:"Dobranoc",he:"לילה טוב",pron:"דוֹבְּרָנוֹץ"}]},
+  { he:"בוקר טוב", ro:"Dzień dobry", pron:"גֶ'יֶן דוֹבְּרי", emoji:"🌅", theme:"greetings", words:[{ro:"Dzień",he:"יום",pron:"גֶ'יֶן"},{ro:"dobry",he:"טוב",pron:"דוֹבְּרי"}]},
+  // -- Unit 1: Numbers --
+  { he:"יש לי שלושה חתולים", ro:"Mam trzy koty", pron:"מָאם טְשי קוֹטי", emoji:"🐱", unit:1, theme:"numbers", words:[{ro:"trzy",he:"שלוש",pron:"טְשי"},{ro:"koty",he:"חתולים",pron:"קוֹטי"}]},
+  { he:"הוא בן חמש", ro:"On ma pięć lat", pron:"אוֹן מָה פְּיֶנְץ' לָאט", emoji:"👦", unit:1, theme:"numbers", words:[{ro:"On",he:"הוא",pron:"אוֹן"},{ro:"ma",he:"יש לו",pron:"מָה"},{ro:"pięć",he:"חמש",pron:"פְּיֶנְץ'"}]},
+  { he:"שתי ילדות", ro:"Dwie dziewczynki", pron:"דְבְיֶה גֶ'בְצִ'ינְקִי", emoji:"👧", unit:1, theme:"numbers", words:[{ro:"dwie",he:"שתיים",pron:"דְבְיֶה"},{ro:"dziewczynki",he:"ילדות",pron:"גֶ'בְצִ'ינְקִי"}]},
+  { he:"עשרה כלבים", ro:"Dziesięć psów", pron:"גֶ'שֶנְץ' פְּסוּב", emoji:"🐕", unit:1, theme:"numbers", words:[{ro:"dziesięć",he:"עשרה",pron:"גֶ'שֶנְץ'"},{ro:"psów",he:"כלבים",pron:"פְּסוּב"}]},
+  { he:"אחד, שתיים, שלוש", ro:"Jeden, dwa, trzy", pron:"יֶדֶן, דְבָה, טְשי", emoji:"1️⃣", unit:1, theme:"numbers", words:[]},
+  // -- Unit 2: Family --
+  { he:"אחות שלי גדולה", ro:"Moja siostra jest duża", pron:"מוֹיָה שוֹסְטְרָה יֶסְט דוּזָ'ה", emoji:"👧", unit:2, theme:"family", words:[{ro:"Moja",he:"שלי",pron:"מוֹיָה"},{ro:"siostra",he:"אחות",pron:"שוֹסְטְרָה"},{ro:"duża",he:"גדולה",pron:"דוּזָ'ה"}]},
+  { he:"סבא שלי בבית", ro:"Mój dziadek jest w domu", pron:"מוּי גָ'אדֶק יֶסְט וְדוֹמוּ", emoji:"👴", unit:2, theme:"family", words:[{ro:"Mój",he:"שלי",pron:"מוּי"},{ro:"dziadek",he:"סבא",pron:"גָ'אדֶק"}]},
+  { he:"אני אוהבת את משפחתי", ro:"Kocham moją rodzinę", pron:"קוֹחָאם מוֹיוֹן רוֹדְזִ'ינֶה", emoji:"❤️", unit:2, theme:"family", words:[{ro:"Kocham",he:"אני אוהבת",pron:"קוֹחָאם"},{ro:"rodzinę",he:"משפחה",pron:"רוֹדְזִ'ינֶה"}]},
+  // -- Unit 3: Colors --
+  { he:"פרח ורוד", ro:"Różowy kwiat", pron:"רוּז'וֹבי קְבְיָאט", emoji:"🌸", unit:3, theme:"colors", words:[{ro:"Różowy",he:"ורוד",pron:"רוּז'וֹבי"},{ro:"kwiat",he:"פרח",pron:"קְבְיָאט"}]},
+  { he:"כדור כתום", ro:"Pomarańczowa piłka", pron:"פּוֹמָרָאנְצ'וֹבָה פִּיווְקָה", emoji:"🟠", unit:3, theme:"colors", words:[{ro:"Pomarańczowa",he:"כתום",pron:"פּוֹמָרָאנְצ'וֹבָה"},{ro:"piłka",he:"כדור",pron:"פִּיווְקָה"}]},
+  { he:"עיגול גדול", ro:"Duże koło", pron:"דוּזֶ'ה קוֹווֹ", emoji:"⭕", unit:3, theme:"shapes", words:[{ro:"koło",he:"עיגול",pron:"קוֹווֹ"}]},
+  // -- Unit 4: Food --
+  { he:"אני אוהבת בננות", ro:"Lubię banany", pron:"לוּבְּיֶה בָּאנָאני", emoji:"🍌", unit:4, theme:"food", words:[{ro:"banany",he:"בננות",pron:"בָּאנָאני"}]},
+  { he:"הוא שותה חלב", ro:"On pije mleko", pron:"אוֹן פִּיֶה מְלֶקוֹ", emoji:"🥛", unit:4, theme:"food", words:[{ro:"pije",he:"שותה",pron:"פִּיֶה"},{ro:"mleko",he:"חלב",pron:"מְלֶקוֹ"}]},
+  { he:"ביצה אחת", ro:"Jedno jajko", pron:"יֶדְנוֹ יָאיְקוֹ", emoji:"🥚", unit:4, theme:"food", words:[{ro:"Jedno",he:"אחת",pron:"יֶדְנוֹ"},{ro:"jajko",he:"ביצה",pron:"יָאיְקוֹ"}]},
+  // -- Unit 5: Animals --
+  { he:"הציפור עפה", ro:"Ptak lata", pron:"פְּטָאק לָאטָה", emoji:"🐦", unit:5, theme:"animals", words:[{ro:"Ptak",he:"ציפור",pron:"פְּטָאק"},{ro:"lata",he:"עפה",pron:"לָאטָה"}]},
+  { he:"סוס לבן", ro:"Biały koń", pron:"בְּיָאווי קוֹן", emoji:"🐴", unit:5, theme:"animals", words:[{ro:"koń",he:"סוס",pron:"קוֹן"}]},
+  { he:"פרפר קטן", ro:"Mały motyl", pron:"מָאווי מוֹטיל", emoji:"🦋", unit:5, theme:"animals", words:[{ro:"motyl",he:"פרפר",pron:"מוֹטיל"}]},
+  // -- Unit 6: Body --
+  { he:"יש לי שתי ידיים", ro:"Mam dwie ręce", pron:"מָאם דְבְיֶה רֶנְצֶה", emoji:"✋", unit:6, theme:"body", words:[{ro:"ręce",he:"ידיים",pron:"רֶנְצֶה"}]},
+  { he:"הראש שלי גדול", ro:"Moja głowa jest duża", pron:"מוֹיָה גְווֹבָה יֶסְט דוּזָ'ה", emoji:"🧠", unit:6, theme:"body", words:[{ro:"głowa",he:"ראש",pron:"גְווֹבָה"}]},
+  { he:"עיניים כחולות", ro:"Niebieskie oczy", pron:"נְיֶבְּיֶסְקְיֶה אוֹצִ'י", emoji:"👁️", unit:6, theme:"body", words:[{ro:"oczy",he:"עיניים",pron:"אוֹצִ'י"},{ro:"niebieskie",he:"כחולות",pron:"נְיֶבְּיֶסְקְיֶה"}]},
+  // -- Unit 7: School --
+  { he:"הספר שלי", ro:"Moja książka", pron:"מוֹיָה קְשוֹנְשְקָה", emoji:"📖", unit:7, theme:"school", words:[{ro:"książka",he:"ספר",pron:"קְשוֹנְשְקָה"}]},
+  { he:"אני בבית הספר", ro:"Jestem w szkole", pron:"יֶסְטֶם וּשְקוֹלֶה", emoji:"🏫", unit:7, theme:"school", words:[{ro:"Jestem",he:"אני",pron:"יֶסְטֶם"},{ro:"w szkole",he:"בבית ספר",pron:"וּשְקוֹלֶה"}]},
+  { he:"המורה נחמדה", ro:"Nauczycielka jest miła", pron:"נָאוּצִ'יצֶ'לְקָה יֶסְט מִיווָה", emoji:"👩‍🏫", unit:7, theme:"school", words:[{ro:"Nauczycielka",he:"מורה",pron:"נָאוּצִ'יצֶ'לְקָה"},{ro:"miła",he:"נחמדה",pron:"מִיווָה"}]},
+  // -- Unit 8: Nature --
+  { he:"השמש זורחת", ro:"Słońce świeci", pron:"סְווֹנְצֶה שְבְיֶצִ'י", emoji:"☀️", unit:8, theme:"nature", words:[{ro:"Słońce",he:"שמש",pron:"סְווֹנְצֶה"},{ro:"świeci",he:"זורחת",pron:"שְבְיֶצִ'י"}]},
+  { he:"הירח לבן", ro:"Księżyc jest biały", pron:"קְשֶנְזִ'יץ יֶסְט בְּיָאווי", emoji:"🌙", unit:8, theme:"nature", words:[{ro:"Księżyc",he:"ירח",pron:"קְשֶנְזִ'יץ"}]},
+  { he:"גשם בחוץ", ro:"Na dworze pada deszcz", pron:"נָה דְבוֹזֶ'ה פָּאדָה דֶשְץ'", emoji:"🌧️", unit:8, theme:"weather", words:[{ro:"pada",he:"יורד",pron:"פָּאדָה"},{ro:"deszcz",he:"גשם",pron:"דֶשְץ'"}]},
+  // -- Unit 9: Feelings/time --
+  { he:"אני שמחה", ro:"Jestem szczęśliwa", pron:"יֶסְטֶם שְצֶ'נְשְלִיבָה", emoji:"😊", unit:9, theme:"feelings", words:[{ro:"szczęśliwa",he:"שמחה",pron:"שְצֶ'נְשְלִיבָה"}]},
+  { he:"היום יום חמישי", ro:"Dziś jest czwartek", pron:"גִ'ישְ יֶסְט צְ'בָארְטֶק", emoji:"📅", unit:9, theme:"time", words:[{ro:"czwartek",he:"יום חמישי",pron:"צְ'בָארְטֶק"}]},
+  { he:"אני אוהבת אותך", ro:"Kocham cię", pron:"קוֹחָאם צֶ'ה", emoji:"❤️", unit:9, theme:"feelings", words:[{ro:"Kocham",he:"אני אוהבת",pron:"קוֹחָאם"},{ro:"cię",he:"אותך",pron:"צֶ'ה"}]},
+  // -- Unit 10: Verbs --
+  { he:"אני קוראת ספר", ro:"Czytam książkę", pron:"צִ'יטָאם קְשוֹנְשְקֶה", emoji:"📖", unit:10, theme:"verbs", words:[{ro:"Czytam",he:"אני קוראת",pron:"צִ'יטָאם"}]},
+  { he:"אני הולכת לבית הספר", ro:"Idę do szkoły", pron:"אִידֶה דוֹ שְקוֹווי", emoji:"🏫", unit:10, theme:"verbs", words:[{ro:"Idę",he:"אני הולכת",pron:"אִידֶה"},{ro:"do szkoły",he:"לבית הספר",pron:"דוֹ שְקוֹווי"}]},
+  { he:"הוא ישן", ro:"On śpi", pron:"אוֹן שְפִּי", emoji:"😴", unit:10, theme:"verbs", words:[{ro:"śpi",he:"ישן",pron:"שְפִּי"}]},
+];
+
 // =====================================================================
 // STORIES — 2-3 sentences each, with per-word translations + niqqud pron.
 // Used by the Stories mode. `unit` is undefined for Starter Pack stories.
@@ -4117,6 +4313,85 @@ const STORIES_ES = [
   }
 ];
 
+const STORIES_PL = [
+  { id:"pl-s1", titleHe:"בוקר טוב!", emoji:"🌅", theme:"ברכות",
+    sentences:[
+      {ro:"Dzień dobry, mamo!", he:"בוקר טוב, אמא!", pron:"גֶ'יֶן דוֹבְּרי, מָאמוֹ!"},
+      {ro:"Kocham cię bardzo!", he:"אני אוהבת אותך מאוד!", pron:"קוֹחָאם צֶ'ה בָּארְדְזוֹ!"}
+    ],
+    words:[
+      {ro:"dzień", he:"יום", pron:"גֶ'יֶן"},
+      {ro:"dobry", he:"טוב", pron:"דוֹבְּרי"},
+      {ro:"mamo", he:"אמא", pron:"מָאמוֹ"},
+      {ro:"kocham", he:"אני אוהבת", pron:"קוֹחָאם"},
+      {ro:"cię", he:"אותך", pron:"צֶ'ה"},
+      {ro:"bardzo", he:"מאוד", pron:"בָּארְדְזוֹ"}
+    ]
+  },
+  { id:"pl-s2", titleHe:"שמי מאיה", emoji:"👧", theme:"אנשים",
+    sentences:[
+      {ro:"Cześć! Mam na imię Maja.", he:"שלום! קוראים לי מאיה.", pron:"צֶ'שְץ'! מָאם נָה אִימְיֶה מָאיָה."},
+      {ro:"Jestem miłą dziewczynką.", he:"אני ילדה נחמדה.", pron:"יֶסְטֶם מִיווֹן גֶ'בְצִ'ינְקוֹן."}
+    ],
+    words:[
+      {ro:"cześć", he:"שלום", pron:"צֶ'שְץ'"},
+      {ro:"mam na imię", he:"שמי", pron:"מָאם נָה אִימְיֶה"},
+      {ro:"jestem", he:"אני", pron:"יֶסְטֶם"},
+      {ro:"miła", he:"נחמדה", pron:"מִיווָה"},
+      {ro:"dziewczynka", he:"ילדה", pron:"גֶ'בְצִ'ינְקָה"}
+    ]
+  },
+  { id:"pl-u1-1", titleHe:"אני בת תשע", emoji:"9️⃣", unit:1, theme:"מספרים",
+    sentences:[
+      {ro:"Mam dziewięć lat.", he:"אני בת תשע.", pron:"מָאם גֶ'בְיֶנְץ' לָאט."},
+      {ro:"Mam na imię Maja.", he:"קוראים לי מאיה.", pron:"מָאם נָה אִימְיֶה מָאיָה."}
+    ],
+    words:[
+      {ro:"mam", he:"יש לי", pron:"מָאם"},
+      {ro:"dziewięć", he:"תשע", pron:"גֶ'בְיֶנְץ'"},
+      {ro:"lat", he:"שנים", pron:"לָאט"}
+    ]
+  },
+  { id:"pl-u4-1", titleHe:"אני אוהבת תפוחים", emoji:"🍎", unit:4, theme:"אוכל",
+    sentences:[
+      {ro:"Lubię jabłka.", he:"אני אוהבת תפוחים.", pron:"לוּבְּיֶה יָאבּווְקָה."},
+      {ro:"Jem jabłko każdego dnia.", he:"אני אוכלת תפוח כל יום.", pron:"יֶם יָאבְּקוֹ קָאז'דֶגוֹ דְנְיָה."}
+    ],
+    words:[
+      {ro:"lubię", he:"אני אוהבת", pron:"לוּבְּיֶה"},
+      {ro:"jabłka", he:"תפוחים", pron:"יָאבּווְקָה"},
+      {ro:"jem", he:"אני אוכלת", pron:"יֶם"},
+      {ro:"każdego dnia", he:"כל יום", pron:"קָאז'דֶגוֹ דְנְיָה"}
+    ]
+  },
+  { id:"pl-u5-1", titleHe:"החתול שלי", emoji:"🐱", unit:5, theme:"חיות",
+    sentences:[
+      {ro:"Mam małego kota.", he:"יש לי חתול קטן.", pron:"מָאם מָאוֶגוֹ קוֹטָה."},
+      {ro:"Jest biały i bardzo ładny.", he:"הוא לבן ומאוד יפה.", pron:"יֶסְט בְּיָאווי אִי בָּארְדְזוֹ וָאדְני."}
+    ],
+    words:[
+      {ro:"kota", he:"חתול", pron:"קוֹטָה"},
+      {ro:"małego", he:"קטן", pron:"מָאוֶגוֹ"},
+      {ro:"biały", he:"לבן", pron:"בְּיָאווי"},
+      {ro:"bardzo", he:"מאוד", pron:"בָּארְדְזוֹ"},
+      {ro:"ładny", he:"יפה", pron:"וָאדְני"}
+    ]
+  },
+  { id:"pl-u8-1", titleHe:"השמש בשמיים", emoji:"☀️", unit:8, theme:"טבע",
+    sentences:[
+      {ro:"Słońce świeci na niebie.", he:"השמש זורחת בשמיים.", pron:"סְווֹנְצֶה שְבְיֶצִ'י נָה נְיֶבְּיֶה."},
+      {ro:"Niebo jest niebieskie i ładne.", he:"השמיים כחולים ויפים.", pron:"נְיֶבּוֹ יֶסְט נְיֶבְּיֶסְקְיֶה אִי וָאדְנֶה."}
+    ],
+    words:[
+      {ro:"słońce", he:"שמש", pron:"סְווֹנְצֶה"},
+      {ro:"świeci", he:"זורחת", pron:"שְבְיֶצִ'י"},
+      {ro:"niebo", he:"שמיים", pron:"נְיֶבּוֹ"},
+      {ro:"niebieskie", he:"כחול", pron:"נְיֶבְּיֶסְקְיֶה"},
+      {ro:"ładne", he:"יפה", pron:"וָאדְנֶה"}
+    ]
+  }
+];
+
 const SENTENCES_KEY = "ro-kids-user-sentences-v1";
 let userSentences = [];
 try {
@@ -4131,6 +4406,7 @@ function saveUserSentences() {
 function builtinSentencesFor(lang) {
   if (lang === 'en') return BUILTIN_SENTENCES_EN;
   if (lang === 'es') return BUILTIN_SENTENCES_ES;
+  if (lang === 'pl') return BUILTIN_SENTENCES_PL;
   return BUILTIN_SENTENCES;
 }
 function getSentences() {
@@ -4142,6 +4418,7 @@ function getSentencesInScope() { return getSentences().filter(inUnitScope); }
 function builtinStoriesFor(lang) {
   if (lang === 'en') return STORIES_EN;
   if (lang === 'es') return STORIES_ES;
+  if (lang === 'pl') return STORIES_PL;
   return STORIES_RO;
 }
 function getStories() { return builtinStoriesFor(state.language); }
@@ -4179,6 +4456,7 @@ function saveUserVocab() {
 function builtinVocabFor(lang) {
   if (lang === 'en') return VOCAB_EN;
   if (lang === 'es') return VOCAB_ES;
+  if (lang === 'pl') return VOCAB_PL;
   return BUILTIN_VOCAB;
 }
 function getVocab() {
@@ -4239,9 +4517,22 @@ const UNITS_ES = [
   { n:  9, name: "Sentimientos y tiempo", emoji: "⏰", threshold: 4000 },
   { n: 10, name: "Verbos cotidianos",     emoji: "🏃", threshold: 4500 },
 ];
+const UNITS_PL = [
+  { n:  1, name: "Liczby i podstawy",      emoji: "🔢", threshold:    0 },
+  { n:  2, name: "Rodzina i dom",          emoji: "🏠", threshold:  500 },
+  { n:  3, name: "Kolory i kształty",      emoji: "🎨", threshold: 1000 },
+  { n:  4, name: "Jedzenie i napoje",      emoji: "🍽️", threshold: 1500 },
+  { n:  5, name: "Zwierzęta",              emoji: "🐾", threshold: 2000 },
+  { n:  6, name: "Ciało i zdrowie",        emoji: "💪", threshold: 2500 },
+  { n:  7, name: "Szkoła",                 emoji: "🎒", threshold: 3000 },
+  { n:  8, name: "Przyroda i pogoda",      emoji: "🌳", threshold: 3500 },
+  { n:  9, name: "Uczucia i czas",         emoji: "⏰", threshold: 4000 },
+  { n: 10, name: "Codzienne czasowniki",   emoji: "🏃", threshold: 4500 },
+];
 function getUnits() {
   if (state.language === 'en') return UNITS_EN;
   if (state.language === 'es') return UNITS_ES;
+  if (state.language === 'pl') return UNITS_PL;
   return UNITS_RO;
 }
 // Backwards-compat alias (some code may still reference UNITS)
@@ -4256,7 +4547,7 @@ function maxUnitForScore(score) {
 // ====== State ======
 let state = {
   mode: "flash",
-  language: "ro",                // 'ro' | 'en' | 'es'  — target language to learn
+  language: "ro",                // 'ro' | 'en' | 'es' | 'pl'  — target language to learn
   category: "הכול",
   currentUnit: 1,
   maxUnlockedUnit: 1,
@@ -4339,12 +4630,14 @@ function pickOne(arr, exclude) {
 function ttsLang() {
   if (state.language === 'en') return 'en-US';
   if (state.language === 'es') return 'es-ES';
+  if (state.language === 'pl') return 'pl-PL';
   return 'ro-RO';
 }
 // Hebrew name for the current target language (for hint text inside the kid's UI)
 function targetLangNameHe() {
   if (state.language === 'en') return 'אנגלית';
   if (state.language === 'es') return 'ספרדית';
+  if (state.language === 'pl') return 'פולנית';
   return 'רומנית';
 }
 
@@ -4354,8 +4647,8 @@ function targetLangNameHe() {
 // with English phonetics. We re-pick on every onvoiceschanged so the first
 // speak after voices load gets the right voice, and we warn the parent when
 // no Romanian voice exists at all.
-const _voiceCache = { ro: null, en: null, es: null };
-const _exactByPrefix = { ro: 'ro-ro', en: 'en-us', es: 'es-es' };
+const _voiceCache = { ro: null, en: null, es: null, pl: null };
+const _exactByPrefix = { ro: 'ro-ro', en: 'en-us', es: 'es-es', pl: 'pl-pl' };
 function _pickVoice(prefix) {
   if (!("speechSynthesis" in window)) return null;
   const voices = speechSynthesis.getVoices();
@@ -4380,18 +4673,20 @@ function _refreshVoiceCache() {
   _voiceCache.ro = _pickVoice('ro');
   _voiceCache.en = _pickVoice('en');
   _voiceCache.es = _pickVoice('es');
+  _voiceCache.pl = _pickVoice('pl');
   _refreshTtsBanner();
 }
 function pickVoiceFor(lang) {
   if (lang === 'en') return _voiceCache.en;
   if (lang === 'es') return _voiceCache.es;
+  if (lang === 'pl') return _voiceCache.pl;
   return _voiceCache.ro;
 }
 function _refreshTtsBanner() {
   if (typeof state === 'undefined') return;
   // Only warn for languages that don't ship a voice on every OS. English voices
-  // are universal; Romanian and Spanish are missing from default Windows.
-  const needsWarn = (state.language === 'ro' || state.language === 'es')
+  // are universal; Romanian, Spanish and Polish are missing from default Windows.
+  const needsWarn = (state.language === 'ro' || state.language === 'es' || state.language === 'pl')
     && !_voiceCache[state.language]
     && speechSynthesis.getVoices().length;
   if (needsWarn) _showTtsMissingVoiceBanner(); else _hideTtsMissingVoiceBanner();
@@ -4400,13 +4695,15 @@ function _showTtsMissingVoiceBanner() {
   if (localStorage.getItem('ro-kids-tts-warn-dismissed') === '1') return;
   if (document.querySelector('.tts-warn-banner')) return;
   const langName = targetLangNameHe();
-  const addLang = state.language === 'es' ? 'Spanish' : 'Romanian';
+  const addLang = state.language === 'es' ? 'Spanish'
+    : state.language === 'pl' ? 'Polish'
+    : 'Romanian';
   const el = document.createElement('div');
   el.className = 'tts-warn-banner';
   el.innerHTML = `
     <div class="tts-warn-text">
       <b>אין קול ב${langName} מותקן במחשב הזה.</b><br>
-      ההקראה תישמע לא נכונה. אפשר להתקין שפה ${langName === 'רומנית' ? 'רומנית' : 'ספרדית'} ב-Windows
+      ההקראה תישמע לא נכונה. אפשר להתקין שפה ${langName} ב-Windows
       (Settings → Time & Language → Language → Add ${addLang} → Text-to-speech)
       או להשתמש בדפדפן Edge שיש בו קול מובנה.
     </div>
@@ -5251,7 +5548,9 @@ function renderChat() {
     ? 'Type in English…'
     : state.language === 'es'
       ? 'Escribe en español…'
-      : 'Scrie în română…';
+      : state.language === 'pl'
+        ? 'Pisz po polsku…'
+        : 'Scrie în română…';
   const hasMessages = state.chatMessages.length > 0;
   return `
     <div class="chat-wrap">
@@ -6036,9 +6335,18 @@ const SAMPLE_MARKDOWN_ES = `| קטגוריה | עברית | ספרדית | הג�
 | **Números** | אחד | Uno | אוּנוֹ | |
 |         | שתיים | Dos | דוֹס | |
 |         | שלוש | Tres | טְרֶס | |`;
+const SAMPLE_MARKDOWN_PL = `| קטגוריה | עברית | פולנית | הגייה | הערות |
+| :--- | :--- | :--- | :--- | :--- |
+| **Zwierzęta** | חתול | Kot | קוֹט | |
+|         | סוס  | Koń | קוֹן | |
+|         | ציפור | Ptak | פְּטָאק | |
+| **Liczby** | אחד | Jeden | יֶדֶן | |
+|         | שתיים | Dwa | דְבָה | |
+|         | שלוש | Trzy | טְשי | |`;
 function getSampleMarkdown() {
   if (state.language === 'en') return SAMPLE_MARKDOWN_EN;
   if (state.language === 'es') return SAMPLE_MARKDOWN_ES;
+  if (state.language === 'pl') return SAMPLE_MARKDOWN_PL;
   return SAMPLE_MARKDOWN_RO;
 }
 
@@ -6307,8 +6615,24 @@ function renderGuide() {
       <div class="letter">rr</div>    <div class="desc">"ר" מתגלגלת חזקה — perro = "פֶּרּוֹ"</div>
       <div class="letter">¿ ¡</div>  <div class="desc">סימני שאלה/קריאה הפוכים בתחילת המשפט</div>
   `;
+  const guidePl = `
+      <div class="letter">w</div>     <div class="desc">צליל "ו" — woda = "ווֹדָה" (מים)</div>
+      <div class="letter">ł</div>     <div class="desc">צליל "ו" (כמו w באנגלית) — mały = "מָאווי"</div>
+      <div class="letter">sz</div>    <div class="desc">צליל "ש" — szkoła = "שְקוֹווָה"</div>
+      <div class="letter">cz</div>    <div class="desc">צליל "צ'" — czarny = "צָ'ארְני"</div>
+      <div class="letter">rz / ż</div><div class="desc">צליל "ז'" (כמו J צרפתית) — rzeka = "ז'אֶקָה"</div>
+      <div class="letter">ch / h</div><div class="desc">צליל "ח" — chleb = "חְלֶב" (לחם)</div>
+      <div class="letter">c</div>     <div class="desc">צליל "צ" — co = "צוֹ"</div>
+      <div class="letter">ci / ć</div><div class="desc">צליל "צ'" רך — dzień = "ג'יֶן"</div>
+      <div class="letter">si / ś</div><div class="desc">צליל "ש" רך — środa = "שְרוֹדָה"</div>
+      <div class="letter">j</div>     <div class="desc">צליל "י" — jeden = "יֶדֶן" (אחד)</div>
+      <div class="letter">ą</div>     <div class="desc">צליל "ון" אפי — mają = "מָאיוֹן"</div>
+      <div class="letter">ę</div>     <div class="desc">צליל "ֶן" אפי — ręka = "רֶנְקָה" (יד)</div>
+      <div class="letter">ó / u</div> <div class="desc">צליל "וּ" — mój = "מוּי" (שלי)</div>
+  `;
   const guideRows = state.language === 'en' ? guideEn
                   : state.language === 'es' ? guideEs
+                  : state.language === 'pl' ? guidePl
                   : guideRo;
   return `
     <h2 style="color:var(--accent); text-align:center; margin-bottom:12px;">📖 איך לקרוא ב${targetLangNameHe()}</h2>
@@ -6437,7 +6761,7 @@ function loadGuestStats() {
   // Apply last-used language from localStorage if present
   try {
     const lang = localStorage.getItem('ro-kids-language');
-    if (lang === 'ro' || lang === 'en' || lang === 'es') state.language = lang;
+    if (lang === 'ro' || lang === 'en' || lang === 'es' || lang === 'pl') state.language = lang;
   } catch (e) {}
   try {
     const saved = JSON.parse(localStorage.getItem("ro-kids-stats-" + state.language) || "{}");
@@ -6631,31 +6955,37 @@ function speedLabel(rate) {
 function langFlag(lang) {
   if (lang === 'en') return '🇬🇧';
   if (lang === 'es') return '🇪🇸';
+  if (lang === 'pl') return '🇵🇱';
   return '🇷🇴';
 }
 function langLabel(lang) {
   if (lang === 'en') return 'English';
   if (lang === 'es') return 'Español';
+  if (lang === 'pl') return 'Polski';
   return 'רומנית';
 }
 function wordPlaceholderFor(lang) {
   if (lang === 'en') return 'e.g., Cat';
   if (lang === 'es') return 'p.ej., Gato';
+  if (lang === 'pl') return 'np. Kot';
   return 'לדוגמה: Pisică';
 }
 function sentencePlaceholderFor(lang) {
   if (lang === 'en') return 'e.g., I like to dance';
   if (lang === 'es') return 'p.ej., Me gusta bailar';
+  if (lang === 'pl') return 'np. Lubię tańczyć';
   return 'לדוגמה: Îmi place să dansez';
 }
 function sampleExampleRow1(lang) {
   if (lang === 'en') return '| **Animals** | חתול | Cat | קָאט | |';
   if (lang === 'es') return '| **Animales** | חתול | Gato | גָאטוֹ | מילה בזכר |';
+  if (lang === 'pl') return '| **Zwierzęta** | חתול | Kot | קוֹט | |';
   return '| **חיות** | חתול | Pisică | פִּיסִיקָה | מילה בנקבה |';
 }
 function sampleExampleRow2(lang) {
   if (lang === 'en') return '|         | סוס  | Horse | הוֹרס | |';
   if (lang === 'es') return '|         | סוס  | Caballo | קָבָּאיוֹ | |';
+  if (lang === 'pl') return '|         | סוס  | Koń | קוֹן | |';
   return '|         | סוס  | Cal    | קָאל      | |';
 }
 
@@ -6727,7 +7057,7 @@ function toggleProfilePopover() {
 
 function refreshProfilePopover(pop) {
   const signedIn = !!(auth.session && auth.currentProfile);
-  const langPills = ['ro', 'en', 'es'].map(l => `
+  const langPills = ['ro', 'en', 'es', 'pl'].map(l => `
     <button class="shell-popover-pill ${state.language === l ? 'active' : ''}" data-lang="${l}">
       ${langFlag(l)} ${langLabel(l)}
     </button>`).join('');
