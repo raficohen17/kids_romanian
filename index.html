@@ -819,6 +819,71 @@
     100% { transform:translate(-50%, 0)     scale(1);   opacity:1; }
   }
 
+  /* ===== Lessons: home (lesson path) ===== */
+  .home-wrap { max-width: 560px; margin: 0 auto; }
+  .home-title { text-align:center; color:var(--accent); margin-bottom:4px; font-size:1.4rem; }
+  .home-progress { text-align:center; color:var(--muted); margin-bottom:12px; font-size:0.95rem; }
+  .home-units { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px; }
+  .home-unit-pill {
+    border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
+    border-radius:999px; padding:6px 14px; font-size:1rem; font-weight:700; cursor:pointer;
+    transition: var(--transition);
+  }
+  .home-unit-pill.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .home-cta-row { display:flex; justify-content:center; margin-bottom:18px; }
+  .home-cta {
+    background:var(--reward); color:#fff; border:none; border-radius:var(--radius-lg);
+    padding:14px 26px; font-size:1.15rem; font-weight:700; cursor:pointer;
+    box-shadow:0 8px 24px rgba(255,122,89,0.4); transition: var(--transition);
+  }
+  .home-cta:hover { transform:translateY(-2px); }
+  .home-alldone { text-align:center; color:var(--success); font-weight:700; font-size:1.1rem; padding:8px 0 18px; }
+  .lesson-cards { display:flex; flex-direction:column; gap:12px; }
+  .lesson-card {
+    width:100%; text-align:right; border:2px solid var(--line); background:var(--surface);
+    border-radius:var(--radius-md); padding:14px 16px; cursor:pointer; transition: var(--transition);
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .lesson-card.available { border-color:var(--accent); }
+  .lesson-card.available:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .lesson-card.done { border-color:var(--success); background:#f1faf4; }
+  .lesson-card.locked { opacity:0.55; cursor:not-allowed; }
+  .lesson-card .lc-row { display:flex; align-items:center; gap:10px; }
+  .lesson-card .lc-num {
+    flex-shrink:0; width:30px; height:30px; border-radius:50%; display:inline-flex;
+    align-items:center; justify-content:center; font-weight:700;
+    background:var(--accent-soft); color:var(--accent);
+  }
+  .lesson-card.done .lc-num { background:transparent; }
+  .lesson-card .lc-name { font-weight:700; font-size:1.1rem; }
+  .lesson-card .lc-steps { font-size:1.1rem; letter-spacing:3px; padding-right:40px; }
+  .lesson-card .lc-status { font-size:0.85rem; color:var(--muted); padding-right:40px; }
+  .home-foot { display:flex; justify-content:center; margin-top:18px; }
+
+  /* ===== Lessons: player ===== */
+  .lesson-wrap { max-width: 600px; margin: 0 auto; }
+  .lesson-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .lp-title { font-weight:700; color:var(--accent); font-size:1.05rem; }
+  .lp-exit { padding:6px 12px; font-size:0.9rem; }
+  .lp-steps { display:flex; gap:8px; justify-content:center; margin-bottom:16px; }
+  .lp-step {
+    width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center;
+    justify-content:center; font-size:1.05rem; background:var(--surface); border:2px solid var(--line);
+  }
+  .lp-step.current { border-color:var(--accent); background:var(--accent-soft); transform:scale(1.12); }
+  .lp-step.done { border-color:var(--success); background:#f1faf4; }
+  .lp-count { text-align:center; color:var(--muted); font-size:0.95rem; margin-bottom:8px; }
+  .lesson-complete { text-align:center; padding:24px 0; }
+  .lesson-complete .lc-emoji { font-size:4rem; animation: unitPop 0.5s ease-out; }
+  .lesson-complete h2 { color:var(--reward); margin:8px 0; }
+  .lesson-complete .lc-unit { color:var(--success); font-weight:700; margin-top:8px; }
+  .lesson-chat-note {
+    background:var(--accent-soft); color:var(--accent); border-radius:var(--radius-md);
+    padding:10px 14px; text-align:center; font-weight:700; margin-bottom:10px; font-size:0.95rem;
+  }
+  .lesson-chat-skip { display:block; margin:10px auto 0; background:none; border:none; color:var(--muted);
+    text-decoration:underline; cursor:pointer; font-size:0.9rem; }
+
   .tts-warn-banner {
     position:fixed; left:50%; top:12px; transform:translateX(-50%);
     background:#fff7e0; border:1.5px solid #f4c150; color:#5a4310;
@@ -1011,7 +1076,8 @@
 
 <div class="panel">
   <div class="modes" id="modesBar">
-    <button data-mode="flash" class="mode-tab active" aria-label="כרטיסיות" title="כרטיסיות"><span class="tab-emoji" aria-hidden="true">🎴</span><span class="tab-label">כרטיסיות</span></button>
+    <button data-mode="home" class="mode-tab active" aria-label="שיעורים" title="שיעורים"><span class="tab-emoji" aria-hidden="true">🏠</span><span class="tab-label">שיעורים</span></button>
+    <button data-mode="flash" class="mode-tab" aria-label="כרטיסיות" title="כרטיסיות"><span class="tab-emoji" aria-hidden="true">🎴</span><span class="tab-label">כרטיסיות</span></button>
     <button data-mode="quiz" class="mode-tab" aria-label="חידון" title="חידון"><span class="tab-emoji" aria-hidden="true">🎯</span><span class="tab-label">חידון</span></button>
     <button data-mode="listen" class="mode-tab" aria-label="הקשבה" title="הקשבה"><span class="tab-emoji" aria-hidden="true">🔊</span><span class="tab-label">הקשבה</span></button>
     <button data-mode="match" class="mode-tab" aria-label="התאמה" title="התאמה"><span class="tab-emoji" aria-hidden="true">🧩</span><span class="tab-label">התאמה</span></button>
@@ -4546,7 +4612,7 @@ function maxUnitForScore(score) {
 
 // ====== State ======
 let state = {
-  mode: "flash",
+  mode: "home",                  // 'home' (lesson path) is the landing screen
   language: "ro",                // 'ro' | 'en' | 'es' | 'pl'  — target language to learn
   category: "הכול",
   currentUnit: 1,
@@ -4590,6 +4656,15 @@ let state = {
   manageDraft: null,
   // user / admin
   adminUnlocked: false,
+  // lessons — completed lesson keys ('u1l1'...) for the CURRENT language,
+  // reloaded on language switch like score. The active lesson player state.
+  completedLessons: [],
+  lessonUnit: null,
+  lessonIdx: null,
+  lessonSteps: [],
+  lessonStepIdx: 0,
+  lessonDone: false,
+  ls: null,                      // working state for the active lesson step
   // TTS playback rate (one of SPEECH_RATES). Persisted in localStorage.
   speechRate: 0.85,
 };
@@ -4767,7 +4842,7 @@ function pickFeedback(good) {
 // Single trigger button that opens a popover listing every category.
 function renderFilters() {
   const wrap = document.getElementById("filters");
-  if (["guide", "manage", "sentences", "user", "units", "requests"].includes(state.mode)) { wrap.innerHTML = ""; return; }
+  if (["home", "lesson", "guide", "manage", "sentences", "user", "units", "requests"].includes(state.mode)) { wrap.innerHTML = ""; return; }
   const cat = state.category || "הכול";
   wrap.innerHTML = `
     <button class="category-trigger" id="categoryTrigger" aria-haspopup="true" aria-expanded="false">
@@ -6501,11 +6576,13 @@ function attachUserEvents() {
   };
 
   document.getElementById("uResetProgress").onclick = () => {
-    if (!confirm("לאפס נקודות, רצף שיא ומונה תרגולים?")) return;
+    if (!confirm("לאפס נקודות, רצף שיא, מונה תרגולים והתקדמות בשיעורים?")) return;
     state.score = 0; state.bestStreak = 0; state.streak = 0; state.seen = 0;
     state.maxUnlockedUnit = 1; state.currentUnit = 1;
-    try { localStorage.setItem("ro-kids-stats", JSON.stringify({})); } catch (e) {}
-    render();
+    state.completedLessons = [];
+    if (isAuthed()) { saveProgressDebounced(); }
+    else { try { localStorage.setItem("ro-kids-stats-" + state.language, JSON.stringify({})); } catch (e) {} }
+    goHome();
   };
 }
 
@@ -6514,9 +6591,10 @@ function renderUnits() {
   const tiles = UNITS.map(u => {
     const unlocked = u.n <= state.maxUnlockedUnit;
     const current = u.n === state.currentUnit;
+    const doneLessons = [1,2,3,4].filter(i => isLessonDone(u.n, i)).length;
     const hint = unlocked
-      ? (current ? '✓ נוכחית' : 'זמינה')
-      : `נעולה · ${u.threshold - state.score} נקודות עד הפתיחה`;
+      ? (current ? `✓ נוכחית · ${doneLessons}/4 שיעורים` : `${doneLessons}/4 שיעורים`)
+      : `נעולה · סיימי את 4 השיעורים של יחידה ${u.n - 1}`;
     const vocabInUnit = getVocab().filter(w => w.unit === u.n).length;
     const sentencesInUnit = getSentences().filter(s => s.unit === u.n).length;
     return `
@@ -6530,7 +6608,7 @@ function renderUnits() {
   return `
     <h2 style="text-align:center; color:var(--accent); margin-bottom:6px;">📚 יחידות לימוד</h2>
     <p class="hint" style="text-align:center; margin-bottom:14px;">
-      התרגול ביחידה N כולל את כל המילים והמשפטים מהמילון הבסיסי, הוספות שלך, ויחידות 1 עד N.
+      כל יחידה כוללת 4 שיעורים. בחרי יחידה כדי לראות את מסלול השיעורים שלה. סיום כל 4 השיעורים פותח את היחידה הבאה.
     </p>
     <div class="units-grid">${tiles}</div>
   `;
@@ -6547,19 +6625,508 @@ function attachUnitsEvents() {
       state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
       state.storyOrder = [];
       state.flashIdx = 0; state.sentenceIdx = 0; state.storyIdx = 0; state.flashFlipped = false; state.sentenceRevealed = false;
-      // jump back to last-used practice mode (flash by default)
-      state.mode = 'flash';
-      document.querySelectorAll('.modes .mode-tab').forEach(x => x.classList.remove('active'));
-      const flashBtn = document.querySelector('.modes .mode-tab[data-mode="flash"]');
-      if (flashBtn) flashBtn.classList.add('active');
-      render();
+      // Picking a unit shows that unit's lesson path (the hub), not raw practice.
+      goHome();
     };
   });
 }
 
+// =====================================================================
+// LESSON ENGINE
+// 4 lessons per unit, generated from the existing per-language content so
+// every language works with zero extra authoring. A lesson is a short
+// sequence of "steps", each a finite slice of one exercise type. Completing
+// all 4 lessons of a unit unlocks the next unit; score grows as you go.
+// =====================================================================
+const LESSON_BONUS = 50;          // score awarded per completed lesson
+const LESSONS_PER_UNIT = 4;
+const CHAT_LESSON_MIN_UNIT = 8;   // units >= this get a chat step on lesson 4
+const CHAT_LESSON_EXCHANGES = 3;  // messages the kid sends in a chat step
+
+const LESSON_TEMPLATES = [
+  { titleHe: "מילים חדשות", emoji: "✨", steps: [ {type:"flash"}, {type:"quiz",count:5}, {type:"listen",count:4} ] },
+  { titleHe: "תרגול",       emoji: "🎯", steps: [ {type:"match"}, {type:"quiz",count:5}, {type:"listen",count:4} ] },
+  { titleHe: "משפטים",      emoji: "🗣️", steps: [ {type:"sentences",count:4}, {type:"quiz",count:5} ] },
+  { titleHe: "סיפור ומבחן", emoji: "🏆", steps: [ {type:"story"}, {type:"quiz",count:6}, {type:"listen",count:4} ] },
+];
+const STEP_META = {
+  flash:     { emoji:"🎴", he:"מילה" },
+  quiz:      { emoji:"🎯", he:"שאלה" },
+  listen:    { emoji:"🔊", he:"הקשבה" },
+  match:     { emoji:"🧩", he:"התאמה" },
+  sentences: { emoji:"🗣️", he:"משפט" },
+  story:     { emoji:"📕", he:"סיפור" },
+  chat:      { emoji:"💬", he:"שיחה" },
+};
+
+// ---- lesson progress helpers ----
+function lessonKey(unit, idx) { return "u" + unit + "l" + idx; }
+function isLessonDone(unit, idx) { return state.completedLessons.includes(lessonKey(unit, idx)); }
+function unitLessonsDone(unit) {
+  for (let i = 1; i <= LESSONS_PER_UNIT; i++) if (!isLessonDone(unit, i)) return false;
+  return true;
+}
+// Next unit unlocks only when the current unit's 4 lessons are all done.
+function maxUnlockedUnitFromLessons() {
+  let m = 1;
+  for (let u = 1; u <= 10; u++) { if (unitLessonsDone(u)) m = Math.min(u + 1, 10); else break; }
+  return m;
+}
+// A lesson is playable if its unit is unlocked and it's lesson 1 or the
+// previous lesson in the same unit is already done (sequential within a unit).
+function isLessonUnlocked(unit, idx) {
+  if (unit > state.maxUnlockedUnit) return false;
+  return idx === 1 || isLessonDone(unit, idx - 1);
+}
+
+// ---- content pools scoped to a target unit (independent of currentUnit) ----
+function lessonScopeVocab(unit) { return getVocab().filter(w => w.unit == null || w.unit <= unit); }
+function lessonUnitVocab(unit) { const nw = getVocab().filter(w => w.unit === unit); return nw.length ? nw : lessonScopeVocab(unit); }
+function lessonScopeSentences(unit) { return getSentences().filter(s => s.unit == null || s.unit <= unit); }
+function lessonUnitSentences(unit) { const ns = getSentences().filter(s => s.unit === unit); return ns.length ? ns : lessonScopeSentences(unit); }
+function lessonUnitStories(unit) { return getStories().filter(s => s.unit === unit); }
+function lessonChatAvailable() {
+  return !!(typeof auth !== "undefined" && auth.client && auth.session && auth.currentProfile);
+}
+
+// Resolve a lesson's steps, dropping any that can't run for this unit/language
+// and appending a focused chat step on lesson 4 of the higher units.
+function resolveLessonSteps(unit, idx) {
+  let steps = LESSON_TEMPLATES[idx - 1].steps.slice();
+  if (!lessonUnitStories(unit).length) steps = steps.filter(s => s.type !== "story");
+  if (!lessonScopeSentences(unit).length) steps = steps.filter(s => s.type !== "sentences");
+  if (idx === LESSONS_PER_UNIT && unit >= CHAT_LESSON_MIN_UNIT && lessonChatAvailable()) {
+    steps = steps.concat([{ type: "chat", count: CHAT_LESSON_EXCHANGES }]);
+  }
+  return steps;
+}
+
+// Build N quiz/listen questions, preferring the unit's NEW words as prompts
+// and drawing 3 distractors from the broader (cumulative) pool.
+function buildLessonQuestions(pool, n, unit) {
+  const primary = shuffle(getVocab().filter(w => w.unit === unit));
+  const fill = shuffle(pool);
+  const seq = [], used = new Set();
+  const add = arr => { for (const w of arr) { if (seq.length >= n) break; if (!used.has(w.ro)) { used.add(w.ro); seq.push(w); } } };
+  add(primary); add(fill);
+  return seq.map(correct => ({ correct, options: shuffle([correct, ...pickRandom(pool, 3, correct)]) }));
+}
+function buildLessonMatch(pool) {
+  const n = Math.min(6, pool.length);
+  const picks = shuffle(pool).slice(0, n);
+  return {
+    picks,
+    left: shuffle(picks.map((w, i) => ({ side:"he", id:i, label: w.emoji + " " + w.he }))),
+    right: shuffle(picks.map((w, i) => ({ side:"ro", id:i, label: w.ro }))),
+    matched: new Set(), selected: null,
+  };
+}
+
+// ---- lesson lifecycle ----
+function startLesson(unit, idx) {
+  if (!isLessonUnlocked(unit, idx)) return;
+  state.lessonUnit = unit;
+  state.lessonIdx = idx;
+  state.lessonSteps = resolveLessonSteps(unit, idx);
+  state.lessonStepIdx = 0;
+  state.lessonDone = false;
+  initLessonStep();
+  state.mode = "lesson";
+  document.querySelectorAll(".modes .mode-tab").forEach(x => x.classList.remove("active"));
+  render();
+}
+function initLessonStep() {
+  const step = state.lessonSteps[state.lessonStepIdx];
+  const unit = state.lessonUnit;
+  const ls = { type: step.type, idx: 0, answered: false, correct: 0, flipped: false, revealed: false };
+  if (step.type === "flash") {
+    ls.items = shuffle(lessonUnitVocab(unit));
+    ls.total = ls.items.length;
+  } else if (step.type === "quiz" || step.type === "listen") {
+    const pool = lessonScopeVocab(unit);
+    ls.questions = buildLessonQuestions(pool, Math.min(step.count, pool.length), unit);
+    ls.total = ls.questions.length;
+  } else if (step.type === "match") {
+    const pool = lessonUnitVocab(unit).length >= 4 ? lessonUnitVocab(unit) : lessonScopeVocab(unit);
+    ls.match = buildLessonMatch(pool);
+    ls.total = ls.match.picks.length;
+  } else if (step.type === "sentences") {
+    ls.items = shuffle(lessonUnitSentences(unit)).slice(0, step.count);
+    ls.total = ls.items.length;
+  } else if (step.type === "story") {
+    ls.story = lessonUnitStories(unit)[0];
+    ls.total = 1;
+  } else if (step.type === "chat") {
+    ls.need = step.count;
+    ls.baseUserMsgs = (state.chatMessages || []).filter(m => m.role === "user").length;
+  }
+  state.ls = ls;
+}
+function lessonStepComplete() {
+  if (state.lessonStepIdx < state.lessonSteps.length - 1) {
+    state.lessonStepIdx += 1;
+    initLessonStep();
+    render();
+  } else {
+    finishLesson();
+  }
+}
+function finishLesson() {
+  const key = lessonKey(state.lessonUnit, state.lessonIdx);
+  if (!state.completedLessons.includes(key)) {
+    state.completedLessons.push(key);
+    state.score += LESSON_BONUS;
+  }
+  state.lessonDone = true;
+  if (typeof maybeUnlockNextUnit === "function") maybeUnlockNextUnit();
+  updateStats();   // persists progress + refreshes the unit pill / stats bar
+  confetti();
+  render();
+}
+function goHome() {
+  state.mode = "home";
+  document.querySelectorAll(".modes .mode-tab").forEach(x => x.classList.remove("active"));
+  const homeBtn = document.querySelector('.modes .mode-tab[data-mode="home"]');
+  if (homeBtn) homeBtn.classList.add("active");
+  render();
+}
+
+// ====== Render: home (lesson path) ======
+function homeUnit() { return Math.min(state.currentUnit || 1, state.maxUnlockedUnit); }
+function renderHome() {
+  const unit = homeUnit();
+  const u = unitOf(unit);
+  const doneCount = [1, 2, 3, 4].filter(i => isLessonDone(unit, i)).length;
+
+  let unitPills = "";
+  for (let n = 1; n <= state.maxUnlockedUnit; n++) {
+    const un = unitOf(n);
+    unitPills += `<button class="home-unit-pill ${n === unit ? "active" : ""}" data-hunit="${n}">${unitLessonsDone(n) ? "✅" : un.emoji} ${n}</button>`;
+  }
+
+  const cards = LESSON_TEMPLATES.map((t, k) => {
+    const idx = k + 1;
+    const done = isLessonDone(unit, idx);
+    const unlocked = isLessonUnlocked(unit, idx);
+    const steps = resolveLessonSteps(unit, idx).map(s => STEP_META[s.type].emoji).join(" ");
+    const status = done ? "✅ הושלם" : (unlocked ? "▶ אפשר להתחיל" : "🔒 נעול");
+    const cls = done ? "done" : (unlocked ? "available" : "locked");
+    return `
+      <button class="lesson-card ${cls}" data-lesson="${idx}" ${unlocked ? "" : "disabled"}>
+        <div class="lc-row"><span class="lc-num">${done ? "✅" : idx}</span><span class="lc-name">${t.emoji} ${escapeHtml(t.titleHe)}</span></div>
+        <div class="lc-steps">${steps}</div>
+        <div class="lc-status">${status}</div>
+      </button>`;
+  }).join("");
+
+  let contIdx = null;
+  for (let i = 1; i <= 4; i++) { if (isLessonUnlocked(unit, i) && !isLessonDone(unit, i)) { contIdx = i; break; } }
+  const cta = contIdx
+    ? `<button class="home-cta" data-lesson="${contIdx}">▶ ${doneCount ? "המשיכי" : "התחילי"} · ${escapeHtml(LESSON_TEMPLATES[contIdx - 1].titleHe)}</button>`
+    : `<div class="home-alldone">🏆 סיימת את כל השיעורים ביחידה הזו!</div>`;
+
+  return `
+    <div class="home-wrap">
+      <h2 class="home-title">${u.emoji} יחידה ${unit} · ${escapeHtml(u.name)}</h2>
+      <div class="home-progress">${doneCount}/4 שיעורים הושלמו · בחרי שיעור והתחילי ללמוד</div>
+      <div class="home-units">${unitPills}</div>
+      <div class="home-cta-row">${cta}</div>
+      <div class="lesson-cards">${cards}</div>
+      <div class="home-foot"><button class="btn prev" id="homeAllUnits">🗺️ כל היחידות</button></div>
+    </div>`;
+}
+function attachHomeEvents() {
+  const unit = homeUnit();
+  document.querySelectorAll("[data-hunit]").forEach(b => {
+    b.onclick = () => { state.currentUnit = parseInt(b.dataset.hunit, 10); render(); };
+  });
+  document.querySelectorAll(".home-wrap [data-lesson]").forEach(b => {
+    b.onclick = () => { startLesson(unit, parseInt(b.dataset.lesson, 10)); };
+  });
+  const all = document.getElementById("homeAllUnits");
+  if (all) all.onclick = () => { const btn = document.createElement("button"); btn.dataset.mode = "units"; activateMode(btn); };
+}
+
+// ====== Render: lesson player ======
+function renderLesson() {
+  if (state.lessonDone) return renderLessonComplete();
+  if (!state.lessonSteps.length || !state.ls) return renderLessonComplete();
+  const steps = state.lessonSteps;
+  const i = state.lessonStepIdx;
+  const progress = steps.map((s, k) => {
+    const cls = k < i ? "done" : (k === i ? "current" : "todo");
+    return `<span class="lp-step ${cls}">${k < i ? "✅" : STEP_META[s.type].emoji}</span>`;
+  }).join("");
+  const u = unitOf(state.lessonUnit);
+  const tmpl = LESSON_TEMPLATES[state.lessonIdx - 1];
+  return `
+    <div class="lesson-wrap">
+      <div class="lesson-top">
+        <button class="btn prev lp-exit" id="lpExit">⬅️ יציאה</button>
+        <div class="lp-title">${tmpl.emoji} ${escapeHtml(tmpl.titleHe)} · ${u.emoji} יחידה ${state.lessonUnit}</div>
+      </div>
+      <div class="lp-steps">${progress}</div>
+      <div class="lesson-step">${renderLessonStepBody()}</div>
+    </div>`;
+}
+function renderLessonStepBody() {
+  const ls = state.ls;
+  const meta = STEP_META[ls.type];
+  if (ls.type === "flash") {
+    const w = ls.items[ls.idx];
+    return `
+      <p class="lp-count">${meta.he} ${ls.idx + 1} מתוך ${ls.total}</p>
+      <div class="flashcard-area">
+        <div class="card" id="lpCard">
+          <div class="emoji">${w.emoji}</div>
+          ${ls.flipped
+            ? `<div class="ro">${w.ro}</div>${w.pron ? `<div class="pron">${w.pron}</div>` : ""}<div class="hint">👆 לחיצה להפוך חזרה</div>`
+            : `<div class="he">${w.he}</div><div class="hint">👆 לחיצה כדי לגלות את המילה ב${targetLangNameHe()}</div>`}
+        </div>
+        <div class="nav-row">
+          <button class="btn speak" id="lpSpeak">🔊 שמעי</button>
+          <button class="btn" id="lpNext">${ls.idx === ls.total - 1 ? "סיום ✅" : "הבאה ➡️"}</button>
+        </div>
+      </div>`;
+  }
+  if (ls.type === "quiz" || ls.type === "listen") {
+    const q = ls.questions[ls.idx];
+    const promptHtml = ls.type === "listen"
+      ? `<button class="btn speak" id="lpAudio">🔊 שמעי שוב</button><div class="prompt">איזו מילה שמעת? בחרי את התרגום 🤔</div>`
+      : `<span class="emoji">${q.correct.emoji}</span> ${q.correct.he}<div class="prompt">איך אומרים את זה ב${targetLangNameHe()}? 🤔</div>`;
+    return `
+      <p class="lp-count">${meta.he} ${ls.idx + 1} מתוך ${ls.total}</p>
+      <div class="quiz-q">${promptHtml}</div>
+      <div class="options" id="lpOpts">
+        ${q.options.map((o, k) => `<button class="opt" data-i="${k}">${ls.type === "listen" ? o.he : o.ro}</button>`).join("")}
+      </div>
+      <div class="feedback" id="lpFb"></div>
+      <div class="nav-row" id="lpNextRow" style="display:none">
+        <button class="btn" id="lpNextQ">${ls.idx === ls.total - 1 ? "סיום ✅" : "המשך ➡️"}</button>
+      </div>`;
+  }
+  if (ls.type === "match") {
+    const { left, right, picks, matched, selected } = ls.match;
+    const allDone = matched.size / 2 === picks.length;
+    return `
+      <p class="lp-count">מצאי את כל הזוגות 🧩</p>
+      <div class="match-grid" id="lpMatchL">
+        ${left.map(item => `<button class="opt ${selected && selected.side === "he" && selected.id === item.id ? "selected" : ""} ${matched.has("he-" + item.id) ? "matched" : ""}" data-side="he" data-id="${item.id}">${item.label}</button>`).join("")}
+      </div>
+      <div class="match-grid" id="lpMatchR" style="margin-top:10px;">
+        ${right.map(item => `<button class="opt ${selected && selected.side === "ro" && selected.id === item.id ? "selected" : ""} ${matched.has("ro-" + item.id) ? "matched" : ""}" data-side="ro" data-id="${item.id}">${item.label}</button>`).join("")}
+      </div>
+      <div class="feedback" id="lpFb">${allDone ? "🎉 מצאת את כל הזוגות!" : ""}</div>
+      ${allDone ? `<div class="nav-row"><button class="btn" id="lpMatchDone">סיום ✅</button></div>` : ""}`;
+  }
+  if (ls.type === "sentences") {
+    const s = ls.items[ls.idx];
+    return `
+      <p class="lp-count">משפט ${ls.idx + 1} מתוך ${ls.total} ${s.theme ? "· " + s.theme : ""}</p>
+      <div style="text-align:center;">
+        <div class="card sentence-card" id="lpSentence">
+          <div class="emoji">${s.emoji || "💬"}</div>
+          <div class="he" style="font-size:2rem;">${s.he}</div>
+          ${ls.revealed
+            ? `<div class="ro" style="margin-top:14px; font-size:1.8rem;">${s.ro}</div>${s.pron ? `<div class="pron">${s.pron}</div>` : ""}`
+            : `<div class="hint" style="margin-top:18px;">👆 לחיצה לגלות את המשפט ב${targetLangNameHe()}</div>`}
+        </div>
+        <div class="nav-row">
+          <button class="btn speak" id="lpSentSpeak">🔊 השמיעי</button>
+          <button class="btn" id="lpNext">${ls.idx === ls.total - 1 ? "סיום ✅" : "הבא ➡️"}</button>
+        </div>
+      </div>`;
+  }
+  if (ls.type === "story") {
+    const story = ls.story;
+    const lines = story.sentences.map((s, k) => `
+      <div class="story-line" style="margin-bottom:12px;">
+        <button class="btn speak lp-line-play" data-s="${k}" style="padding:4px 10px;">🔊</button>
+        <span dir="ltr" style="font-size:1.5rem;">${escapeHtml(s.ro)}</span>
+        ${s.pron ? `<div class="pron">${escapeHtml(s.pron)}</div>` : ""}
+        <div style="color:var(--muted);">${escapeHtml(s.he)}</div>
+      </div>`).join("");
+    return `
+      <p class="lp-count">📕 ${escapeHtml(story.titleHe || "")}</p>
+      <div class="card story-card">
+        <div class="emoji">${story.emoji || "📕"}</div>
+        ${lines}
+      </div>
+      <div class="nav-row">
+        <button class="btn speak" id="lpStoryPlay">🔊 השמיעי הכל</button>
+        <button class="btn" id="lpStoryDone">סיימתי לקרוא ✅</button>
+      </div>`;
+  }
+  if (ls.type === "chat") {
+    const exchanges = (state.chatMessages || []).filter(m => m.role === "user").length - ls.baseUserMsgs;
+    const remaining = Math.max(0, ls.need - exchanges);
+    const note = remaining > 0
+      ? `💬 דברי עם החבר ב${targetLangNameHe()} — שלחי עוד ${remaining} ${remaining === 1 ? "הודעה" : "הודעות"} כדי לסיים`
+      : `🎉 מעולה! אפשר לסיים את השיעור`;
+    return `
+      <div class="lesson-chat-note">${note}</div>
+      ${renderChat()}
+      <div class="nav-row" style="justify-content:center;">
+        <button class="btn" id="lpChatDone" ${remaining > 0 ? "disabled" : ""}>סיום ✅</button>
+      </div>
+      <button class="lesson-chat-skip" id="lpChatSkip">אי אפשר עכשיו? דלגי לסיום</button>`;
+  }
+  return "";
+}
+function attachLessonEvents() {
+  const exit = document.getElementById("lpExit");
+  if (exit) exit.onclick = () => { if ("speechSynthesis" in window) speechSynthesis.cancel(); goHome(); };
+  if (state.lessonDone) {
+    const next = document.getElementById("lcNext");
+    if (next) next.onclick = () => startLesson(state.lessonUnit, state.lessonIdx + 1);
+    const home = document.getElementById("lcHome");
+    if (home) home.onclick = () => goHome();
+    return;
+  }
+  const ls = state.ls;
+  if (!ls) return;
+
+  if (ls.type === "flash") {
+    const w = ls.items[ls.idx];
+    const card = document.getElementById("lpCard");
+    if (card) card.onclick = () => { ls.flipped = !ls.flipped; if (ls.flipped) { speak(w.ro); state.seen += 1; updateStats(); } render(); };
+    const sp = document.getElementById("lpSpeak");
+    if (sp) sp.onclick = e => { e.stopPropagation(); speak(w.ro); };
+    const nx = document.getElementById("lpNext");
+    if (nx) nx.onclick = () => {
+      if (ls.idx === ls.total - 1) return lessonStepComplete();
+      ls.idx += 1; ls.flipped = false; render();
+    };
+    return;
+  }
+  if (ls.type === "quiz" || ls.type === "listen") {
+    const q = ls.questions[ls.idx];
+    if (ls.type === "listen" && !ls.answered) speak(q.correct.ro);
+    const audio = document.getElementById("lpAudio");
+    if (audio) audio.onclick = e => { e.stopPropagation(); speak(q.correct.ro); };
+    document.querySelectorAll("#lpOpts .opt").forEach(b => {
+      b.onclick = () => {
+        if (ls.answered) return;
+        const picked = q.options[parseInt(b.dataset.i, 10)];
+        const correct = picked === q.correct;
+        ls.answered = true;
+        state.seen += 1;
+        speak(q.correct.ro);
+        document.querySelectorAll("#lpOpts .opt").forEach((bb, j) => {
+          bb.disabled = true;
+          if (q.options[j] === q.correct) bb.classList.add("correct");
+          else if (q.options[j] === picked) bb.classList.add("wrong");
+        });
+        const fb = document.getElementById("lpFb");
+        if (correct) {
+          state.score += 10; state.streak += 1; ls.correct += 1;
+          if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+          if (fb) { fb.textContent = pickFeedback(true) + " (+10 ⭐)"; fb.className = "feedback good"; }
+          confetti();
+        } else {
+          state.streak = 0;
+          if (fb) { fb.textContent = pickFeedback(false) + "  התשובה: " + q.correct.ro; fb.className = "feedback bad"; }
+        }
+        updateStats();
+        const row = document.getElementById("lpNextRow");
+        if (row) row.style.display = "flex";
+      };
+    });
+    const nq = document.getElementById("lpNextQ");
+    if (nq) nq.onclick = () => {
+      if (ls.idx === ls.total - 1) return lessonStepComplete();
+      ls.idx += 1; ls.answered = false; render();
+    };
+    return;
+  }
+  if (ls.type === "match") {
+    const m = ls.match;
+    const handler = (btn) => {
+      const side = btn.dataset.side, id = parseInt(btn.dataset.id, 10);
+      if (m.matched.has(side + "-" + id)) return;
+      if (!m.selected) { m.selected = { side, id }; return render(); }
+      if (m.selected.side === side && m.selected.id === id) { m.selected = null; return render(); }
+      const a = m.selected;
+      if (a.side !== side && a.id === id) {
+        m.matched.add("he-" + id); m.matched.add("ro-" + id);
+        state.score += 10; state.streak += 1; state.seen += 1;
+        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+        updateStats();
+        speak(m.picks[id].ro);
+        m.selected = null;
+        const allDone = m.matched.size / 2 === m.picks.length;
+        render();
+        if (allDone) confetti();
+      } else {
+        state.streak = 0; updateStats(); m.selected = null;
+        btn.classList.add("wrong");
+        setTimeout(() => render(), 350);
+      }
+    };
+    document.querySelectorAll("#lpMatchL .opt, #lpMatchR .opt").forEach(b => { b.onclick = () => handler(b); });
+    const done = document.getElementById("lpMatchDone");
+    if (done) done.onclick = () => lessonStepComplete();
+    return;
+  }
+  if (ls.type === "sentences") {
+    const s = ls.items[ls.idx];
+    const card = document.getElementById("lpSentence");
+    if (card) card.onclick = () => { ls.revealed = !ls.revealed; if (ls.revealed) { speak(s.ro); state.seen += 1; updateStats(); } render(); };
+    const sp = document.getElementById("lpSentSpeak");
+    if (sp) sp.onclick = e => { e.stopPropagation(); speak(s.ro); };
+    const nx = document.getElementById("lpNext");
+    if (nx) nx.onclick = () => {
+      if (ls.idx === ls.total - 1) return lessonStepComplete();
+      ls.idx += 1; ls.revealed = false; render();
+    };
+    return;
+  }
+  if (ls.type === "story") {
+    const story = ls.story;
+    const play = document.getElementById("lpStoryPlay");
+    if (play) play.onclick = e => { e.stopPropagation(); playStory(story); };
+    document.querySelectorAll(".lp-line-play").forEach(b => {
+      b.onclick = e => { e.stopPropagation(); playStory(story, parseInt(b.dataset.s, 10)); };
+    });
+    const done = document.getElementById("lpStoryDone");
+    if (done) done.onclick = () => { if ("speechSynthesis" in window) speechSynthesis.cancel(); state.seen += 1; updateStats(); lessonStepComplete(); };
+    return;
+  }
+  if (ls.type === "chat") {
+    attachChatEvents();
+    const done = document.getElementById("lpChatDone");
+    if (done) done.onclick = () => lessonStepComplete();
+    const skip = document.getElementById("lpChatSkip");
+    if (skip) skip.onclick = () => lessonStepComplete();
+    return;
+  }
+}
+function renderLessonComplete() {
+  const tmpl = LESSON_TEMPLATES[state.lessonIdx - 1] || { titleHe: "", emoji: "🏆" };
+  const unitDone = unitLessonsDone(state.lessonUnit);
+  const nextIdx = state.lessonIdx < LESSONS_PER_UNIT ? state.lessonIdx + 1 : null;
+  const showNext = nextIdx && isLessonUnlocked(state.lessonUnit, nextIdx);
+  return `
+    <div class="lesson-wrap">
+      <div class="lesson-complete">
+        <div class="lc-emoji">🎉</div>
+        <h2>כל הכבוד!</h2>
+        <p>סיימת את "${escapeHtml(tmpl.titleHe)}" · +${LESSON_BONUS} ⭐</p>
+        ${unitDone ? `<p class="lc-unit">🏆 סיימת את כל ${LESSONS_PER_UNIT} השיעורים ביחידה ${state.lessonUnit}!</p>` : ""}
+        <div class="nav-row" style="justify-content:center; margin-top:16px;">
+          ${showNext ? `<button class="btn" id="lcNext">השיעור הבא ➡️</button>` : ""}
+          <button class="btn prev" id="lcHome">🏠 חזרה לשיעורים</button>
+        </div>
+      </div>
+    </div>`;
+}
+
 // ====== Unit unlocking ======
 function maybeUnlockNextUnit() {
-  const calculatedMax = maxUnitForScore(state.score);
+  // Lessons are the gate: a unit unlocks once the previous unit's 4 lessons
+  // are done. The legacy score threshold is kept as a fallback so existing
+  // accounts that earned score before lessons existed stay unlocked.
+  const calculatedMax = Math.max(maxUnlockedUnitFromLessons(), maxUnitForScore(state.score));
   if (calculatedMax > state.maxUnlockedUnit) {
     state.maxUnlockedUnit = calculatedMax;
     state.currentUnit = calculatedMax;  // auto-advance to the new unit
@@ -6673,7 +7240,9 @@ function render() {
   renderFilters();
   const content = document.getElementById("content");
   let html = "";
-  if      (state.mode === "flash")     html = renderFlash();
+  if      (state.mode === "home")      html = renderHome();
+  else if (state.mode === "lesson")    html = renderLesson();
+  else if (state.mode === "flash")     html = renderFlash();
   else if (state.mode === "quiz")      html = renderQuiz();
   else if (state.mode === "listen")    html = renderListen();
   else if (state.mode === "match")     html = renderMatch();
@@ -6686,7 +7255,9 @@ function render() {
   else if (state.mode === "user")      html = renderUser();
   else if (state.mode === "requests")  html = renderRequests();
   content.innerHTML = html;
-  if      (state.mode === "flash")     attachFlashEvents();
+  if      (state.mode === "home")      attachHomeEvents();
+  else if (state.mode === "lesson")    attachLessonEvents();
+  else if (state.mode === "flash")     attachFlashEvents();
   else if (state.mode === "quiz")      attachQuizEvents();
   else if (state.mode === "listen")    attachListenEvents();
   else if (state.mode === "match")     attachMatchEvents();
@@ -6769,6 +7340,7 @@ function loadGuestStats() {
     state.bestStreak = saved.bestStreak || 0;
     state.seen = saved.seen || 0;
     state.maxUnlockedUnit = saved.maxUnlockedUnit || 1;
+    state.completedLessons = Array.isArray(saved.lessons) ? saved.lessons : [];
     state.currentUnit = state.maxUnlockedUnit;
   } catch (e) {}
 }
@@ -6838,9 +7410,11 @@ async function loadFamilyData() {
     state.bestStreak = prog.best_streak || 0;
     state.seen = prog.seen || 0;
     state.maxUnlockedUnit = prog.max_unlocked_unit || maxUnitForScore(state.score);
+    state.completedLessons = Array.isArray(prog.lessons) ? prog.lessons : [];
   } else {
     state.score = 0; state.bestStreak = 0; state.seen = 0;
     state.maxUnlockedUnit = 1;
+    state.completedLessons = [];
     try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id, language: state.language, max_unlocked_unit: 1 }); } catch (e) {}
   }
   state.currentUnit = state.maxUnlockedUnit;
@@ -6942,6 +7516,7 @@ function saveProgressDebounced() {
         best_streak: state.bestStreak,
         seen: state.seen,
         max_unlocked_unit: state.maxUnlockedUnit,
+        lessons: state.completedLessons,
         updated_at: new Date().toISOString(),
       });
     } catch (e) { console.warn('progress sync', e); }
@@ -7153,8 +7728,10 @@ async function loadLanguageProgress() {
     state.bestStreak = prog.best_streak || 0;
     state.seen = prog.seen || 0;
     state.maxUnlockedUnit = prog.max_unlocked_unit || 1;
+    state.completedLessons = Array.isArray(prog.lessons) ? prog.lessons : [];
   } else {
     state.score = 0; state.bestStreak = 0; state.seen = 0; state.maxUnlockedUnit = 1;
+    state.completedLessons = [];
     try { await auth.client.from('progress').insert({ profile_id: auth.currentProfile.id, language: state.language, max_unlocked_unit: 1 }); } catch (e) {}
   }
   state.streak = 0;
@@ -7167,6 +7744,7 @@ function loadGuestStatsForLanguage() {
     state.bestStreak = saved.bestStreak || 0;
     state.seen = saved.seen || 0;
     state.maxUnlockedUnit = saved.maxUnlockedUnit || 1;
+    state.completedLessons = Array.isArray(saved.lessons) ? saved.lessons : [];
   } catch (e) {}
   state.streak = 0;
 }
@@ -7705,6 +8283,7 @@ window.addEventListener("beforeunload", () => {
   try {
     localStorage.setItem("ro-kids-stats-" + state.language, JSON.stringify({
       score: state.score, bestStreak: state.bestStreak, seen: state.seen, maxUnlockedUnit: state.maxUnlockedUnit,
+      lessons: state.completedLessons,
     }));
   } catch (e) {}
 });
