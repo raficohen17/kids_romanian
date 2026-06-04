@@ -81,6 +81,7 @@ create table public.progress (
   best_streak         int not null default 0,
   seen                int not null default 0,
   max_unlocked_unit   int not null default 1,
+  lessons             jsonb not null default '[]'::jsonb,   -- completed lesson keys, e.g. ["u1l1","u1l2"]
   updated_at          timestamptz not null default now(),
   primary key (profile_id, language)
 );
