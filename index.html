@@ -4832,8 +4832,16 @@ function updateStats() {
   if (typeof updateUnitPill === 'function') updateUnitPill();
 }
 
+// A short praise phrase in the language being learned (so it never shows
+// Romanian while practicing English/Spanish/Polish).
+function praiseInTargetLang() {
+  if (state.language === 'en') return "Great job! 👏";
+  if (state.language === 'es') return "¡Muy bien! 👏";
+  if (state.language === 'pl') return "Brawo! 👏";
+  return "Foarte bine! 👏";
+}
 function pickFeedback(good) {
-  const goods = ["מעולה! 🌟", "כל הכבוד! 💖", "כן! 🎉", "וואו! ✨", "מדהים! 🦋", "Foarte bine! 👏"];
+  const goods = ["מעולה! 🌟", "כל הכבוד! 💖", "כן! 🎉", "וואו! ✨", "מדהים! 🦋", praiseInTargetLang()];
   const bads  = ["אופס, נסי שוב 🤗", "כמעט! 💪", "לא נורא, ננסה עוד! 🌱", "פעם הבאה תפצחי 🔑"];
   return (good ? goods : bads)[Math.floor(Math.random() * (good ? goods.length : bads.length))];
 }
@@ -5934,7 +5942,7 @@ function renderManageWords() {
     <div class="form-grid">
       <label>עברית <span class="req">*</span><input type="text" id="f-he" value="${escapeAttr(draft.he)}" placeholder="לדוגמה: חתול"></label>
       <label>${targetLangNameHe()} <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="${wordPlaceholderFor(state.language)}" dir="ltr"></label>
-      <label>הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="לדוגמה: פִּי-סִי-קָה"></label>
+      <label>הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="${wordPronPlaceholderFor(state.language)}"></label>
       <label>קטגוריה
         <input type="text" id="f-cat" value="${escapeAttr(draft.cat)}" placeholder="חיות / מספרים / משפחה..." list="cat-options">
         <datalist id="cat-options">${cats.map(c => `<option value="${escapeAttr(c)}">`).join("")}</datalist>
@@ -5989,12 +5997,12 @@ function renderManageSentences() {
     <div class="form-grid">
       <label style="grid-column:1/-1;">עברית <span class="req">*</span><input type="text" id="f-he" value="${escapeAttr(draft.he)}" placeholder="לדוגמה: אני אוהבת לרקוד"></label>
       <label style="grid-column:1/-1;">${targetLangNameHe()} <span class="req">*</span><input type="text" id="f-ro" value="${escapeAttr(draft.ro)}" placeholder="${sentencePlaceholderFor(state.language)}" dir="ltr"></label>
-      <label style="grid-column:1/-1;">הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="אִימְי פְּלָאצֶ'ה סָה דָאן-זֶז"></label>
+      <label style="grid-column:1/-1;">הגייה בעברית<input type="text" id="f-pron" value="${escapeAttr(draft.pron)}" placeholder="${sentencePronPlaceholderFor(state.language)}"></label>
       <label>נושא<input type="text" id="f-theme" value="${escapeAttr(draft.theme)}" placeholder="תחביבים"></label>
       <label>אימוג'י<input type="text" id="f-emoji" value="${escapeAttr(draft.emoji)}" placeholder="💃" maxlength="4"></label>
     </div>
     <p class="hint" style="margin-top:8px;">פירוק מילה-מילה (אופציונלי, אבל מומלץ): שורה אחת לכל מילה בפורמט <code>${targetLangNameHe()} | עברית | הגייה</code></p>
-    <textarea id="f-words" class="words-textarea" placeholder="Îmi | לי | אִימְי&#10;place | מוצא חן | פְּלָאצֶ'ה&#10;să | ש- | סָה&#10;dansez | אני רוקדת | דָאן-זֶז">${draft.words && draft.words.length ? draft.words.map(w => `${w.ro} | ${w.he} | ${w.pron || ""}`).join("\n") : ""}</textarea>
+    <textarea id="f-words" class="words-textarea" placeholder="${wordsBreakdownPlaceholderFor(state.language)}">${draft.words && draft.words.length ? draft.words.map(w => `${w.ro} | ${w.he} | ${w.pron || ""}`).join("\n") : ""}</textarea>
     <div class="nav-row">
       <button class="btn speak" id="saveBtn">${state.manageEditingId ? "💾 שמרי שינויים" : "➕ הוסיפי לרשימה"}</button>
       ${state.manageEditingId ? `<button class="btn prev" id="cancelBtn">❌ ביטול</button>` : ""}
@@ -7640,6 +7648,27 @@ function sentencePlaceholderFor(lang) {
   if (lang === 'es') return 'p.ej., Me gusta bailar';
   if (lang === 'pl') return 'np. Lubię tańczyć';
   return 'לדוגמה: Îmi place să dansez';
+}
+// Hebrew-niqqud pronunciation example for the word "add" form, in the language being learned.
+function wordPronPlaceholderFor(lang) {
+  if (lang === 'en') return 'לדוגמה: קָאט';
+  if (lang === 'es') return 'לדוגמה: גָאטוֹ';
+  if (lang === 'pl') return 'לדוגמה: קוֹט';
+  return 'לדוגמה: פִּי-סִי-קָה';
+}
+// Pronunciation example for the sentence "add" form (matches sentencePlaceholderFor).
+function sentencePronPlaceholderFor(lang) {
+  if (lang === 'en') return "אַיי לַייק טוּ דֵאנְס";
+  if (lang === 'es') return "מֶה גוּסְטָה בָּאיְלָאר";
+  if (lang === 'pl') return "לוּבְּיֶה טָאנְצ'יץ'";
+  return "אִימְי פְּלָאצֶ'ה סָה דָאן-זֶז";
+}
+// Per-word breakdown example for the sentence "add" form textarea (newline-separated rows).
+function wordsBreakdownPlaceholderFor(lang) {
+  if (lang === 'en') return "like | אוהבת | לַייק&#10;dance | לרקוד | דֵאנְס";
+  if (lang === 'es') return "gusta | אוהבת | גוּסְטָה&#10;bailar | לרקוד | בָּאיְלָאר";
+  if (lang === 'pl') return "lubię | אוהבת | לוּבְּיֶה&#10;tańczyć | לרקוד | טָאנְצ'יץ'";
+  return "Îmi | לי | אִימְי&#10;place | מוצא חן | פְּלָאצֶ'ה&#10;să | ש- | סָה&#10;dansez | אני רוקדת | דָאן-זֶז";
 }
 function sampleExampleRow1(lang) {
   if (lang === 'en') return '| **Animals** | חתול | Cat | קָאט | |';
