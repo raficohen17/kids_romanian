@@ -7824,6 +7824,12 @@ async function switchLanguage(newLang) {
   state.sentenceOrder = shuffle(getSentencesInScope().map((_, i) => i));
   state.storyOrder = [];
   state.flashIdx = 0; state.sentenceIdx = 0; state.storyIdx = 0;
+  // Abandon any in-progress lesson — its steps were built from the OLD
+  // language's content. A language switch returns to the new language's
+  // lesson path so the content actually changes.
+  state.lessonUnit = null; state.lessonIdx = null; state.lessonSteps = [];
+  state.lessonStepIdx = 0; state.lessonDone = false; state.ls = null;
+  if (state.mode === 'lesson') state.mode = 'home';
   // Chat history is scoped to (profile, language); clear and let the chat
   // mode re-fetch on next entry.
   state.chatMessages = [];
